@@ -1,24 +1,26 @@
 /*
- * "Date", of the bcpieSDK
+ * Date
  * http://bcpie.com
  * Copyright 2015, ONE Creative
  * Free to use in BC Pie, or as licensed in Dev-in-a-Box from http://www.bcappstore.com/apps/dev-in-a-box
 */
 
-bcpie.tricks.Date = function(selector,settings) {
-	defaults = {
-		format: 'YYYY',
-		add: '',
-		subtract: '',
-		moment: 'auto',
-		utc: false,
-		timezone: '',
-		ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
-		target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
-		event: 'load' // specify the window event that triggers Date's behavior
-	};
-	selector.data('bcpie-date-settings', $.extend({}, defaults, settings));
-	var settings = selector.data('bcpie-date-settings');
+bcpie.extensions.tricks.Date = function(selector,options){
+	var settings = bcpie.extensions.settings(selector,options,{
+		name: 'Date',
+		version: '2015.01.29',
+		defaults: {
+			format: 'YYYY',
+			add: '',
+			subtract: '',
+			moment: 'auto',
+			utc: false,
+			timezone: '',
+			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
+			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
+			event: 'load' // specify the window event that triggers Date's behavior
+		}
+	});
 
 	if (settings.add !== '') settings.add = $.parseJSON(bcpie.utils.jsonify(settings.add));
 	if (settings.subtract !== '') settings.subtract = $.parseJSON(bcpie.utils.jsonify(settings.subtract));
@@ -36,8 +38,8 @@ bcpie.tricks.Date = function(selector,settings) {
 				if (settings.utc === true) value = moment.utc(moment.unix(ref)).local();
 				else value = moment.unix(ref);
 			}else {
-				if (typeof bcpie.globals.countryCode === 'undefined') bcpie.globals.countryCode = 'US';
-				switch(bcpie.globals.countries[bcpie.globals.countryCode].ContinentCode) {
+				if (typeof settings.site.countryCode === 'undefined') settings.site.countryCode = 'US';
+				switch(settings.countries[settings.site.countryCode].ContinentCode) {
 					case 'NA': order = 'MDY'; break;
 					default: order = 'DMY';
 				}
@@ -64,6 +66,4 @@ bcpie.tricks.Date = function(selector,settings) {
 			runDate();
 		});
 	}
-}
-bcpie.versions.Date = '2015.01.26';
-bcpie.run('Date');
+};

@@ -1,0 +1,16 @@
+{
+	"name": "bcpie",
+	"version": "2015.01.27",
+	"main": "/build/bcpie.js",
+	"dependencies": {
+		"jquery": "latest",
+		"moment": "latest",
+		"moment-parseformat": "latest",
+		"moment-timezone": "latest",
+		"silentmatt/js-expression-eval": "latest",
+		"jquery.mobilephonenumber": "latest"
+	},
+	"install": {
+
+	}
+}

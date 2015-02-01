@@ -1,15 +1,10 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
-	versions: {
-		bcpieSDK: '2015.01.26'
+	active: {
+		bcpieSDK: '2015.01.31',
+		tricks: {}
 	},
 	globals: {
-		pageName: globals.pageName,
-		pageAddress: globals.pageAddress,
-		primaryDomain: globals.primaryDomain,
-		secureDomain: globals.secureDomain,
-		loginStatus: globals.loginStatus,
-		countryCode: globals.countryCode,
 		path: win.location.pathname.toLowerCase(),
 		pathArray: win.location.pathname.toLowerCase().split(/(?=\/#?[a-zA-Z0-9])/g),
 		param: win.location.search,
@@ -27,7 +22,7 @@ win.bcpie = {
 				if (targets.length === 1 && targets.is('form')) targets = form.find('input,textarea,select,[data-name]').not('[data-noplace]');
 				else targets = targets.not('[data-noplace]');
 				if (typeof data === 'string') data = $.parseJSON(data);
-				for (key in data) {
+				for (var key in data) {
 					var value = data[key], unescapedValue = value;
 					if(typeof value === 'string') unescapedValue = value.replace(/&#(\d+);/g, function (m, n) { return String.fromCharCode(n); });
 					field = targets.filter('[name="'+key+'"]').not('[data-noplace]');
@@ -127,7 +122,7 @@ win.bcpie = {
 						for (var i=0; i<msg.items.length; i++) if (typeof formData[msg.items[i].name] !== 'undefined') data.fields[msg.items[i].name] = '';
 
 						// Fill the data object with form values
-						for (key in formData) {
+						for (var key in formData) {
 							if (typeof allFields[key] !== 'undefined') data[key] = formData[key];
 							else if (typeof data.fields[key] !== 'undefined') data.fields[key] = formData[key];
 						}
@@ -155,7 +150,6 @@ win.bcpie = {
 			}
 		}
 	},
-
 	frontend: {
 		webapp: {
 			item: {
@@ -240,38 +234,73 @@ win.bcpie = {
 				else o[a[i].name] = a[i].value || '';
 			}
 			return o;
+		},
+		closestChildren: function(selector,match,findAll,results) {
+			/* the results parameter is used internally by the function */
+			var $children = (selector instanceof jQuery) ? selector.children() : $(selector).children();
+			if ($children.length === 0) {
+				if (typeof results === 'object') return results;
+				else return $();
+			}
+			if (typeof results === 'object') results = results.add($children.filter(match));
+			else results = $children.filter(match);
+
+			if (findAll !== true) return (results.length > 0) ? results : $children.closestChildren(match);
+			else return bcpie.utils.closestChildren($children.not(results),match,findAll,results);
+		},
+		searchArray: function(array,value) {
+			// Best for large arrays. For tiny arrays, use indexOf.
+			for (var i = 0; i < array.length; i++) {
+				if (array[i] === value) return i;
+			}
+			return -1;
 		}
 	},
-	run: function(trick) {
-		var options,obj,arr=[],str="",settings={},module = [],functions = {},defaults = {};
-		obj = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
-		if (obj.length > 0){
-			for (var a = 0; a<obj.length; a++) {
-				settings = {},obj.cur = $(obj[a]);
-				str = obj.cur.data('bcpie-'+trick.toLowerCase());
-				if ($.type(str) === 'string' && str.indexOf(':') > -1) {
-					if (str.indexOf(';') > -1) {
-						str = str.split(';');
-						for (var e=0;e<str.length;e++){
-							arr = str[e].split(':');
-							settings[$.trim(arr[0])] = GetOptionValue($.trim(arr.slice(1).join(':')));
+	extensions: {
+		settings: function(selector,options,settings) {
+			if (typeof settings.name === 'string' && settings.name.toLowerCase() !== 'run' && settings.name.toLowerCase() !== 'settings') {
+				if (typeof settings.defaults === 'undefined') settings.defaults = {};
+				selector.data('bcpie-'+settings.name.toLowerCase()+'-settings', $.extend({}, settings.defaults, options, bcpie.globals));
+				bcpie.active.tricks[settings.name] = settings.version;
+				return selector.data('bcpie-'+settings.name.toLowerCase()+'-settings');
+			}
+		},
+		engine: function() {
+			var tricks = bcpie.extensions.tricks,trick,options,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
+			for (trick in tricks) {
+				arr=[],str="",options={},module = [],functions = {},defaults = {};
+				instances = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
+				for (var a = 0; a<instances.length; a++) {
+					options = {},instance = $(instances[a]);
+					str = instance.data('bcpie-'+trick.toLowerCase());
+					if (typeof str === 'string' && str.indexOf(':') > -1) {
+						if (str.indexOf(';') > -1) {
+							str = str.split(';');
+							for (var e=0;e<str.length;e++){
+								arr = str[e].split(':');
+								options[$.trim(arr[0])] = GetOptionValue($.trim(arr.slice(1).join(':')));
+							}
+						}else {
+							arr = str.split(':');
+							options[$.trim(arr[0])] = GetOptionValue($.trim(arr.slice(1).join(':')));
 						}
-					}else {
-						arr = str.split(':');
-						settings[$.trim(arr[0])] = GetOptionValue($.trim(arr.slice(1).join(':')));
 					}
+					bcpie.extensions.tricks[trick](instance,options);
 				}
-				defaults = {}; // Reset defaults before each instance of a trick is called.
-				bcpie.tricks[trick](obj.cur,settings);
 			}
-		}
-		function GetOptionValue(valstr){
-			switch(valstr.toLowerCase()){
-				case 'true': return true;
-				case 'false': return false;
-				default: return valstr;
+			function GetOptionValue(valstr){
+				switch(valstr.toLowerCase()){
+					case 'true': return true;
+					case 'false': return false;
+					default: return valstr;
+				}
 			}
-		}
-	},
-	tricks: {} // Leave this empty
+		},
+		tricks: {} // populated automatically
+	}
 };
+bcpie.globals = $.extend({},bcpie.globals,globals);
+// Initialize tricks
+$(function() {
+	bcpie.extensions.engine();
+});

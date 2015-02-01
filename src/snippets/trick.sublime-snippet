@@ -1,0 +1,25 @@
+<snippet>
+	<content><![CDATA[
+/*
+ * "${1/.*/$0/}". An awesome trick for BC Pie.
+ * http://bcpie.com
+ * Copyright 2015, ONE Creative
+ * Free to use in BC Pie${2:, or as licensed in Dev-in-a-Box from http://www.bcappstore.com/apps/dev-in-a-box}
+*/
+
+bcpie.extensions.tricks.${1:Trick} = function(selector,options) {
+	var settings = bcpie.extensions.settings(selector,options,{
+		name: '${1/.*/$0/}',
+		version: '${3:YYYY}.${4:MM}.${5:DD}',
+		defaults: {
+
+		}
+	});
+
+	${0:// Write your trick here}
+};
+]]></content>
+	<tabTrigger>trick</tabTrigger>
+	<scope>source.js</scope>
+	<description>A snippet for creating a BC Pie trick</description>
+</snippet>
