@@ -15,7 +15,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'errorGroupClass' : 'error-group',
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
-			'messageBoxID' : bc.modulesID,
+			'messageBoxID' : null,
 			'messageMode' : 'prepend', // 'append', 'box'
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
@@ -424,8 +424,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	// setup some local variables
 	var action = selector.attr('action'),requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
-		errorTarget,successMessage,messageElement,messageBox,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false, multistepContainers = [],requiredMultistep=[],
-		containerIndex=0, lockSubmit = false, messageBoxContents = $('#'+settings.messageBoxID).html(), customFlag = false,
+		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
+		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false, multistepContainers = [],requiredMultistep=[],
+		containerIndex=0, lockSubmit = false, messageBox = (settings.messageBoxID === null) ? $('<div id="ajaxresponse" />') : $('#'+settings.messageBoxID),
+		 messageBoxContents = $('#'+settings.messageBoxID).html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha'};
 
 	if (settings.customErrorFields !== '') settings.customErrorFields = settings.customErrorFields.split(',');
@@ -511,7 +513,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			switch (required.type) {
 				case 'radio' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
 				case 'checkbox' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
-				case 'captcha' : (selector.find('#recaptcha_widget_div').length > 0) ? errorTarget = selector.find('#recaptcha_widget_div') : errorTarget = required.field; break;
+				case 'captcha' : errorTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
 				default : errorTarget = required.field;
 			}
 			if (errorTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass)) {
@@ -569,17 +571,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					url: action,
 					data: selector.serialize(),
 					success: function(response) {
-						if (response.indexOf(settings.systemMessageClass) > 0) {
-							var msg = $(response).find('.'+settings.systemMessageClass);
-							if ($(msg).size() > 0) successMessage = msg;
-							else successMessage = $(response).filter('.'+settings.systemMessageClass);
-							showSuccess(selector,successMessage);
-						}else if (response.indexOf(settings.systemErrorMessageClass) > 0) {
-							var msg = $(response).find('.'+settings.systemErrorMessageClass);
-							if ($(msg).size() > 0) successMessage = msg;
-							else successMessage = $(response).filter('.'+settings.systemErrorMessageClass);
-							showSuccess(selector,successMessage);
-						}
+						var messageClass = '';
+						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
+						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
+
+						if (messageClass !== '') msg = $(response).find('.'+messageClass);
+						else if ($(response).is('font')) msg = $(response);
+
+						if ($(msg).size() > 0) successMessage = msg;
+						else successMessage = $(response).filter('.'+messageClass);
+						showSuccess(selector,successMessage);
+
 						if (settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response);
 					},
 					error: function(xhr,status) {
@@ -610,15 +612,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}
 	}
 	function showSuccess(selector,successMessage) {
-		messageBox = $('#'+settings.messageBoxID);
-
 		if (settings.afterAjax!=='show') {selector.fadeOut(0);}
-		switch (settings.messageMode) {
-			case 'append' : selector.after(messageBox);break;
-			case 'prepend': selector.before(messageBox);break;
-			case 'box': true;break;
-			default : true;
-		}
+		if (settings.messageMode === 'append') selector.after(messageBox);
+		else if (settings.messageMode === 'prepend') selector.before(messageBox);
 
 		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
