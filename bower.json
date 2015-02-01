@@ -1,0 +1,18 @@
+{
+  "name": "bcpie",
+  "version": "2015.01.31",
+  "homepage": "https://github.com/onecreative/bcpie",
+  "authors": [
+    "Adam Cook <adam@onecreative.pro>"
+  ],
+  "main": "src/bcpie.min.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
