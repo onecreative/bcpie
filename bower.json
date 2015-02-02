@@ -1,48 +1,50 @@
 {
-  "name": "bcpie",
-  "version": "2015.01.31",
-  "homepage": "https://github.com/onecreative/bcpie",
-  "authors": [
-    "Adam Cook <adam@onecreative.pro>"
-  ],
-  "main": "build/bcpie.min.js",
-  "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests",
-    "*.codekit"
-  ],
-  "dependencies": {
-    "moment": "latest",
-    "moment-timezone": "latest",
-    "moment-parseformat": "latest",
-    "jquery.mobilephonenumber": "latest",
-    "js-expression-eval": "latest"
-  },
-  "install": {
-    "path": {
-      "js": "src/vendor"
-    },
-    "sources": {
-      "moment": "bower_components/moment/moment.js",
-      "moment-timezone": [
-        "bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js",
-        "bower_components/moment-timezone/moment-timezone-utils.js"
-      ],
-      "moment-parseformat": "bower_components/moment-parseformat/moment.parseFormat.js",
-      "jquery.mobilephonenumber": [
-        "bower_components/jquery.mobilephonenumber/vendor/jquery.caret.js",
-        "bower_components/jquery.mobilephonenumber/lib/jquery.mobilePhoneNumber.js"
-      ],
-      "js-expression-eval": "bower_components/js-expression-eval/parser.js"
-    },
-    "ignore": [
-      "jquery",
-      "momentjs"
-    ]
-  }
+	"name": "bcpie",
+	"version": "2015.01.31",
+	"homepage": "https://github.com/onecreative/bcpie",
+	"authors": [
+		"Adam Cook <adam@onecreative.pro>"
+	],
+	"main": "build/bcpie.min.js",
+	"license": "MIT",
+	"private": true,
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests",
+		"*.codekit"
+	],
+	"dependencies": {
+		"moment": "latest",
+		"moment-timezone": "latest",
+		"moment-parseformat": "latest",
+		"jquery.mobilephonenumber": "latest",
+		"js-expression-eval": "latest",
+		"clndr": "latest"
+	},
+	"install": {
+		"path": {
+			"js": "src/vendor"
+		},
+		"sources": {
+			"moment": "bower_components/moment/moment.js",
+			"moment-timezone": [
+				"bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js",
+				"bower_components/moment-timezone/moment-timezone-utils.js"
+			],
+			"moment-parseformat": "bower_components/moment-parseformat/moment.parseFormat.js",
+			"jquery.mobilephonenumber": [
+				"bower_components/jquery.mobilephonenumber/vendor/jquery.caret.js",
+				"bower_components/jquery.mobilephonenumber/lib/jquery.mobilePhoneNumber.js"
+			],
+			"js-expression-eval": "bower_components/js-expression-eval/parser.js",
+			"clndr": "bower_components/clndr/src/clndr.js"
+		},
+		"ignore": [
+			"jquery",
+			"momentjs"
+		]
+	}
 }
