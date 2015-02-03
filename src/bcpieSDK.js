@@ -2,7 +2,7 @@ var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
 		bcpieSDK: '2015.01.31',
-		tricks: {}
+		tricks: {} // populated automatically
 	},
 	globals: {
 		path: win.location.pathname.toLowerCase(),

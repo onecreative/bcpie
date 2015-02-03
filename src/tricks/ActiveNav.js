@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.01.31',
+		version: '2015.02.02',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -23,7 +23,8 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 			activeHash: false,
 			hashSupport: true,
 			hashOffset: 30,
-			removeClass: ''
+			removeClass: '',
+			paramSupport: false
 		}
 	});
 
@@ -74,8 +75,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	}
 
 	function initHashChange(hash) {
-		if (hash !== null) settings.hash = hash;
-		else settings.hash = win.location.hash; // reset the settings.hash
+		settings.hash = hash || win.location.hash;
 
 		currentHash = settings.hash;
 		settings.pathArray = $.grep(settings.pathArray, function(el) {
@@ -85,15 +85,18 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	}
 
 	function initActiveNav() {
-		shortPath = settings.path.toLowerCase() + settings.hash.toLowerCase();
+		shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase();
 		selector.find(settings.activeClass.selector).removeClass(settings.activeClass.names);
+		if (settings.paramSupport === true) settings.pathArray.push(win.location.search);
 		if (settings.hash !== '') settings.pathArray.push(settings.hash.toLowerCase());
 
 		// This loop returns all matching links from the first iteration that has a match (within level), then exits the loop;
 		for (var i = settings.pathArray.length - 1; i >= 0; i--) {
 			// Go through each link
 			activeLinks = first.find('a').filter(function(index) {
-				currentLink = $(this).attr('href').split('?')[0].toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
+				if (settings.paramSupport === true) currentLink = $(this).attr('href');
+				else currentLink = $(this).attr('href').split('?')[0];
+				currentLink = currentLink.toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
 				if (currentLink.indexOf('/') !== 0) currentLink = '/'+currentLink;
 
 				if (currentLink === shortPath) {
@@ -119,7 +122,8 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 					return true;
 				} else {
 					for (var i = settings.pathArray.length - 1; i >= 0; i--) {
-						currentLink = $(this).attr('href').split('?')[0].toLowerCase();
+						if (settings.paramSupport === true) currentLink = $(this).attr('href').toLowerCase();
+						else currentLink = $(this).attr('href').split('?')[0].toLowerCase();
 						if (currentLink === shortPath) {
 							return true;
 						} else if (shortPath !== "") {
