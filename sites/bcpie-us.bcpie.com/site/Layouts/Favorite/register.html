@@ -1,0 +1,129 @@
+<h3>Login or Register</h3>
+
+<div class="row">
+    <div class="medium-12 columns">{module_error}</div>
+</div>
+
+<h2>Existing User - Login</h2>
+
+<form onsubmit="return check_RegistrationForm(this,'login')" action="FavoriteProcess.aspx?A=login&amp;OID={module_oid}&amp;OTYPE={module_otype}"
+method="post">
+    <div class="row">
+        <div class="medium-12 columns">
+            <input name="OrderLogin_Info" type="hidden" />
+            <label>Username
+                <input maxlength="255" name="Username" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Password
+                <input class="cat_textbox" maxlength="255" name="Password" type="password"
+                />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <button type="submit" class="radius button">Login</button>
+            <a onclick="document.getElementById('lostpassword').style.display='inline';return false;"
+            href="#">Forgot your username/password?</a>
+        </div>
+    </div>
+</form>
+<h2>Forgot Password</h2>
+
+<form id="lostpassword" style="display: none;" name="catseczonelpform57982" action="/LostPasswordProcess.aspx"
+method="post">
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Enter Username or Email Address
+                <input class="cat_textbox" maxlength="255" name="Username"
+                />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <button type="submit" class="radius button">Retrieve</button>
+        </div>
+    </div>
+</form>
+
+<h2>New User - Registration</h2>
+
+<form onsubmit="return check_RegistrationForm(this,'newuser')" action="FavoriteProcess.aspx?A=register&amp;OID={module_oid}&amp;OTYPE={module_otype}"
+method="post">
+    <div class="row">
+        <div class="medium-12 columns">
+            <input name="OrderRegistration_Info" type="hidden" />
+            <label>Name
+                <input class="cat_textbox" name="Registration_Name" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Email
+                <input class="cat_textbox" name="Registration_Email" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>User Name
+                <input class="cat_textbox" name="Registration_Username" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Password
+                <input class="cat_textbox" name="Registration_Password" type="password"
+                />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Confirm Password
+                <input class="cat_textbox" maxlength="255" name="Registration_ConfirmPassword"
+                type="password" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <label>Enter Word Verification in box below</label>{module_captchav2}</div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <button type="submit" class="radius button">Register</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="/CatalystScripts/ValidationFunctions.js"></script>
+<script type="text/javascript">
+    //<![CDATA[ 
+    function check_RegistrationForm(theForm, name) {
+        var why = "";
+        if (name == 'login') {
+            why += isEmpty(theForm.Username.value, "Username");
+            why += isEmpty(theForm.Password.value, "Password");
+        } else {
+            why += isEmpty(theForm.Registration_Name.value, "Full Name");
+            why += isEmpty(theForm.Registration_Email.value, "Email Address");
+            why += isEmpty(theForm.Registration_Username.value, "Username");
+            why += isEmpty(theForm.Registration_Password.value, "Password");
+            why += isEmpty(theForm.Registration_ConfirmPassword.value, "Password Confirmation");
+        }
+        if (theForm.CaptchaV2) why += captchaIsInvalid(theForm, "Enter Word Verification in box below", "Please enter the correct Word Verification as seen in the image");
+        if (why != "") {
+            alert(why);
+            return false;
+        }
+        return true;
+    }
+    //]]>
+</script>

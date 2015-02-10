@@ -1,0 +1,15 @@
+{
+	"menu-bcpie-dev-tools": {
+		"weight": 210000,
+		"title": "Dev Tools",
+		"icon": "/_System/Apps/bcpie-dev/images/dev-tools.png"
+	},
+	"menu-bc-api-discovery": {
+		"parent": "menu-bcpie-dev-tools",
+		"weight": 30000,
+		"title": "BC API Discovery",
+		"attr" : {
+			"href" : "index.html"
+		}
+	}
+}

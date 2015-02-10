@@ -1,0 +1,59 @@
+<html>
+    
+    <head>
+        <style type="text/css">
+            body {
+                margin: 30px;
+            }
+            body, table {
+                font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+            }
+            table {
+                border-right: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+            }
+            table td {
+                border-top: 1px solid #eee;
+                border-left: 1px solid #eee;
+            }
+            table span {
+                color: #888;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <p>Dear {tag_RecipientName},</p>
+        <p>A forum that you are subscribed to has been posted to. Below is the details of
+            this new post.</p>
+        <table>
+            <tr>
+                <td width="20%"><span>Topic:</span>
+                    
+                </td>
+                <td width="80%">{tag_topicname}</td>
+            </tr>
+            <tr>
+                <td width="20%"><span>Last Post Author:</span>
+                    
+                </td>
+                <td width="80%">{tag_postauthor}</td>
+            </tr>
+            <tr>
+                <td width="20%"><span>Last Post Date:</span>
+                    
+                </td>
+                <td width="80%">{tag_postdate}</td>
+            </tr>
+            <tr>
+                <td width="20%"><span>Click to View:</span>
+                    
+                </td>
+                <td width="80%">{tag_topicurl}</td>
+            </tr>
+        </table>
+        <p>Click to unsubscribe from this topic: {tag_unsubscribe}</p>
+        <p>Thank you!</p>
+    </body>
+    
+</html>

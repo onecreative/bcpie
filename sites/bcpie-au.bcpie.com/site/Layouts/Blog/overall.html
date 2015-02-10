@@ -1,0 +1,15 @@
+{% if pageTitle == 'Blog' %}<h1>{{title}}</h1>{% endif %}
+<div class="row">
+	<div class="medium-8 columns">
+		{tag_postlist}
+	</div>
+	<div class="medium-4 columns">
+		<aside>
+			{% for post in posts.items %}
+				{% unless itemid == post.itemid %}
+					<a href="{{url}}">{{post.name}}</a>
+				{% endunless %}
+			{% endfor %}
+		</aside>
+	</div>
+</div>

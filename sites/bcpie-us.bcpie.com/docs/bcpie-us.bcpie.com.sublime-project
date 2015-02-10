@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"config.codekit",
+				"sftp-config.json"
+			],
+			"folder_exclude_patterns":
+			[
+				".codekit-cache"
+			],
+			"path": "/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site"
+		}
+	]
+}

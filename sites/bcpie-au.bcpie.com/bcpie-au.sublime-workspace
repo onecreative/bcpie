@@ -1,0 +1,546 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"get",
+				"get	$.get()"
+			],
+			[
+				"else",
+				"else	else"
+			],
+			[
+				"if",
+				"if	if"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 225.0,
+		"selected_items":
+		[
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"cta",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"rmov",
+				"Package Control: Remove Package"
+			],
+			[
+				"livest",
+				"LiveStyle: Apply Patch"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ctab",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"synhl)",
+				"Set Syntax: HTML (Liquid)"
+			],
+			[
+				"catb",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"up",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"catbs",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"ct",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"synjson",
+				"Set Syntax: JSON"
+			],
+			[
+				"sjson",
+				"Set Syntax: JSON"
+			],
+			[
+				"htmli)",
+				"Set Syntax: HTML (Liquid)"
+			],
+			[
+				"t",
+				"Toggle Comment"
+			],
+			[
+				"upoa",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"convertpck",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"synh5",
+				"Set Syntax: HTML5"
+			],
+			[
+				"auto",
+				"Autoprefix CSS"
+			],
+			[
+				"synjs",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"mini",
+				"Minify::Minify File"
+			],
+			[
+				"instl",
+				"Package Control: Install Package"
+			],
+			[
+				"inatl",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 453.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-au.bcpie.com/site"
+	],
+	"file_history":
+	[
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-au.bcpie.com/site/sftp-config.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-eu.bcpie.com/site/sftp-config.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/ExampleTrick.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/news.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Announcement/detail.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Announcement/list.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template/foot.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/readyScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/exampleTrick-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/index.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/help.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/profile.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/bcpie-profile/profile.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/setup.txt",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/location.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/icons.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/social.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/contact.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/foot.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/settings.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appFoot.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appFoot.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appHead.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appHead.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appFoot-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/oneapps.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/appScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/home.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/account.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/contact.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/signin.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/1Col-No Grid.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/ModuleStyleSheets.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/app.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Responses/subscribe.tpl",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Responses/contact.tpl",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Default/childitem.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Default/group.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/account/affiliate.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/OnlineShop/order_registration-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/account/profile.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/snippets/signinJoin.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/styles/scss/admin.scss",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/styles/admin.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/styles/admin.css.map",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/styles/app.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bc-api-discovery/index.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/htmlBeautifier.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/beautify-html.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/beautify-css.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/beautify.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/styles/app.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/styles/admin.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/1Col-No Title.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/1Col.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/headScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/appFoot.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appFoot.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/includes/foot.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/includes/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/2Col.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/index.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/oneapps.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/jquery.htmlClean.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/appHead.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appHead.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/footScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appHead-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/snippets/globals.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template/footer.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template/header.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/devinabox.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/disqus.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/headScripts.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/newfile.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/footScripts.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/readyScripts.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/_config/menu.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/theme.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/scss/ModuleStyleSheets.scss",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Blog/overall.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Blog/post.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Blog/postlist.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/blog.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/FormConfirmation-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/PasswordReset-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/scss/_settings.scss",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/SecureZoneLogOut-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-layouts/base/_System/Includes/template/foot.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Affiliate/affiliate.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/UpdateDetailsConfirmation-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/Error401-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appFoot.min.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appScripts-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/oneapps-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/min/appHead.min.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Side Nav/childitem.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Top Bar/childitem.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Side Nav/group.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/_config/menu.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/1Col - No Title.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/oneapps-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/devinabox.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appScripts-min.js",
+		"/Users/MacBookPro/Library/Application Support/Sublime Text 3/Packages/LiveStyle/LiveStyle.sublime-settings",
+		"/Users/MacBookPro/Library/Application Support/Sublime Text 3/Packages/User/LiveStyle.sublime-settings",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Top Bar/group.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/theme.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bc-api-discovery/_config/menu.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-layouts/_config/menu.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/css.inc",
+		"/Users/MacBookPro/Downloads/bcpie-dev/scripts/appScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/Clean.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/menu.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/styles/admin.min.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/BookingConfirmation-US.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/snippets/loginCreate.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/apps/bcpie-profile/scripts/min/devinabox.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/dropzone.min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/one-bcpie-profile/profile.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/secure.tpl",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/bcmodules.tpl",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Header.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Head.inc"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 108.0,
+		"where_history":
+		[
+			"",
+			"<project>,-*.js,-_System/Apps",
+			"<project>,-*.js",
+			"<project>",
+			"*.htm,*.html,*.inc,*.tpl",
+			"*.inc",
+			"*.inc,*.htm,*.html",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"CalendarView",
+			": \"ONE Creative\"",
+			"data-profile",
+			"subgroups.filter('[data-object],[data-array]')",
+			"subgroups",
+			" hide",
+			"/_System/Apps/bcpie-profile/includes/",
+			"data-bcpie-utility=\"getCountries:true;",
+			"data-bcpie-utility=\"get:countries;",
+			"data-bcpie-utility",
+			"data-bc-utility",
+			"data-bc-",
+			"data-bc-date",
+			"data-bc-",
+			"{module_siteurl,true}",
+			"indentForm",
+			"data-bc-",
+			" type=\"date\"",
+			"data-bc-",
+			"moment-time",
+			"bcpie",
+			"bcpie.js",
+			"bcpie.min.js",
+			"bcpieSDK",
+			"settings.securezone",
+			"Foundation",
+			"matchMedia",
+			"definition",
+			"bcpie",
+			"bc.",
+			"../",
+			"bc.",
+			"bc",
+			" placeholder=\"link\"",
+			" name=\"class\"",
+			" placeholder=\"handle\"",
+			" name=\"handle\"",
+			" value=\".*?\"",
+			",\n			\"icon\": {\n				\"src\": \"\",\n				\"class\": \"\"\n			}",
+			"\"icon\": {\n								\"src\": \"\",\n								\"class\": \"\"\n							}",
+			"image",
+			"user[0]",
+			"{{user[0]}}",
+			"bcpie",
+			"one-bcpie",
+			"this.",
+			"  ",
+			"bc.",
+			"bc.webapp",
+			"bc.data",
+			"bc.token()",
+			"</td>",
+			"one-us",
+			"one",
+			"one-us",
+			"span",
+			"id=\"scroller\"",
+			" class=\"subheader\"",
+			"    </li>",
+			"<li>\n        <p>",
+			"include-html-classes",
+			"			</li>",
+			"<li>\n				<p>",
+			"sampleCourseCredits",
+			"&nbsp;",
+			"<br />",
+			"</td>",
+			"</tr>",
+			" <tr>",
+			"<td>",
+			"creditCost | plus: 1",
+			"}}\n",
+			" maxlength=\"4000\"",
+			" class=\"cat_dropdown\"",
+			" class=\"cat_dropdown_smaller\"",
+			" autocomplete=\"off\"",
+			" cols=\"10\" rows=\"4\"",
+			" class=\"cat_listbox\"",
+			" maxlength=\"255\"",
+			" maxlength=\"500\"",
+			" class=\"cat_textbox\"",
+			" id=\".*?\"",
+			" id=\"ItemName\"",
+			"&bull;",
+			"<br />",
+			"</td>",
+			"</tr>",
+			"<td>",
+			"<tr>",
+			"plus:bracket.price",
+			"ActiveNav=\"2.2.2\"",
+			"ActiveNav",
+			"activenav",
+			"prices[i]",
+			"data-bc",
+			" maxlength=\"500\"",
+			" class=\"cat_dropdown\"",
+			" class=\"cat_dropdown_smaller\"",
+			" autocomplete=\"off\"",
+			" maxlength=\"4000\"",
+			" maxlength=\"255\"",
+			" class=\"cat_textbox\"",
+			" id=\".*?\"",
+			"<label for=\"FirstName\">First Name</label>",
+			"\n					<span class=\"req\">*</span>\n				",
+			"</tr>",
+			"</td>",
+			"<br>",
+			"<td>",
+			"<tr>",
+			"<table class=\"webform\" cellspacing=\"0\" cellpadding=\"2\"\n					border=\"0\">\n						<tbody>",
+			"settings",
+			"filetype",
+			"snippet",
+			"type",
+			"folder",
+			"tip-left",
+			"small>",
+			"visual",
+			"albums[album]",
+			"folders",
+			"options",
+			"append",
+			"http://",
+			"/group.html",
+			"/a>",
+			"<a",
+			"</div>\n						</li>"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"data-bcpie-utility=\"getList:countries;",
+			"data-bcpie-"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 102.0
+	},
+	"project": "bcpie-au.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 264.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

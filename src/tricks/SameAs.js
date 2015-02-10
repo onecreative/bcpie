@@ -21,9 +21,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			prefix : '',
 			suffix : '',
 			copyType : 'simple', // concat,math,simple
+			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
-			ref : 'value' // or text
+			ref : 'value', // or text
 		}
 	});
 
@@ -31,6 +32,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : body.find(settings.scope),
 		copyField, checkbox = copyGroup.find('['+settings.attributeType+'='+settings.checkbox+']'),
 		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'='+settings.altCheckbox+']'),value;
+
+	if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
 
 	if(settings.copyType=="simple"){
 		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
@@ -109,13 +112,17 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		return str.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
 	}
 	function GetFieldsExpression(init){
-		var strExpression = settings.copy,expr;
+		var strExpression = settings.copy,expr,dec = 1;
 		strExpression = GetfieldVal(strExpression);
-		try
-		{
+		if (typeof settings.decimals == 'number') {
+			for (var i = 0; i<settings.decimals; i++) {
+				dec = dec*10;
+			}
+		}
+		try {
 			if(settings.copyType == "math"){
 				expr = Parser.parse(strExpression);
-				return expr.evaluate();
+				return Math.round(expr.evaluate()*dec)/dec;
 			}
 			else
 				return ConcatExpression(strExpression);

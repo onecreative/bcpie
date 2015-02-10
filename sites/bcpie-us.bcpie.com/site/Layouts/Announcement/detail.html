@@ -1,0 +1,16 @@
+<meta property="og:url" content="http://{{globals.site.host}}{{url}}">
+<meta property="og:title" content="{{subject}}"/>
+<div class="row">
+	<div class="medium-8 columns">
+		<article id="post">
+			<p class="subheader">{{fromDate | date: 'MMM dd, yyyy'}}{% if toDate != fromDate %}–{{toDate | date: 'MMM dd, yyyy'}}{% endif %} | <a href="{module_siteurl}{{url}}">permalink</a></p>
+			{{body}}
+		</article>
+	</div>
+	<div class="medium-4 columns">
+		<aside>
+			<h3>All News</h3>
+			{module_announcement filter="all"}
+		</aside>
+	</div>
+</div>

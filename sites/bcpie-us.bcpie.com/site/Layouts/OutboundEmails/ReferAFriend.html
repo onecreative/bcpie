@@ -1,0 +1,54 @@
+<html>
+    
+    <head>
+        <style type="text/css">
+            body {
+                margin: 30px;
+            }
+            body, table {
+                font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+            }
+            table {
+                border-right: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+            }
+            table td {
+                border-top: 1px solid #eee;
+                border-left: 1px solid #eee;
+            }
+            table span {
+                color: #888;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <p>Hi,</p>
+        <p>{tag_fromname} said:</p>
+        <blockquote>
+            <p>{tag_message}</p>
+        </blockquote>
+        <p>This item on this website might interest you.</p>
+        <table>
+            <tr>
+                <td><span>Site</span>
+                    
+                </td>
+                <td>{tag_siteurl}</td>
+            </tr>
+            <tr>
+                <td><span>Item</span>
+                    
+                </td>
+                <td>{tag_itemname}</td>
+            </tr>
+            <tr>
+                <td><span>Item Link</span>
+                    
+                </td>
+                <td>{tag_itemurl}</td>
+            </tr>
+        </table>
+    </body>
+    
+</html>

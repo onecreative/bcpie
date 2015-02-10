@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"sftp-config.json",
+				"config.codekit"
+			],
+			"folder_exclude_patterns":
+			[
+				".codekit-cache"
+			],
+			"path": "site"
+		}
+	]
+}

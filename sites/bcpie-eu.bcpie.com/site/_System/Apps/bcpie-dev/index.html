@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include '/_System/Apps/bcpie-dev/includes/head.inc' %}
+</head>
+<body>
+	<div id="pagecontainer">
+		<header id="pageheader" role="banner"></header>
+		<main id="pagecontent" role="main">
+			<div class="row">
+				<div class="small-6 end columns">
+					<div id="settings">
+						<label>Markup</label>
+						<select name="Markup">
+							<option value="None" selected="selected">None</option>
+							<option value="Foundation">Foundation</option>
+							<option value="Bootstrap2">Bootstrap 2</option>
+							<option value="Bootstrap3">Bootstrap 3</option>
+						</select>
+						<label>Options</label>
+						<span><input type="checkbox" name="Labels" value="1" checked="checked"/>Labels&nbsp;&nbsp;</span>
+						<span class="inline-labels-group hide"><input type="checkbox" name="InlineLabels" value="1"/>Inline Labels&nbsp;&nbsp;</span>
+						<span><input type="checkbox" name="Placeholders" value="1" checked="checked"/>Placeholders&nbsp;&nbsp;</span>
+						<span><input type="checkbox" name="FormMagic" value="1" checked="checked"/>FormMagic</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="small-12 columns"><hr></div>
+			</div>
+			<div class="row">
+				<div class="small-6 columns">
+					<label>Drop your cleaning off:</label>
+					<textarea name="RawFormElements" rows="25"></textarea>
+				</div>
+				<div class="small-6 columns">
+					<label>Then pick it up here:</label>
+					<textarea name="ProcessedFormElements" rows="25"></textarea>
+				</div>
+			</div>
+		</main>
+		<footer id="pagefooter" role="contentinfo"></footer>
+	</div>
+	{% include '/_System/Apps/bcpie-dev/includes/foot.inc' %}
+</body>
+</html>

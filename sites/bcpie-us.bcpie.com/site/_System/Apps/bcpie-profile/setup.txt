@@ -1,0 +1,10 @@
+This is the very first version of this app. As such, it is quite lean.
+Feel free to add to it, take away from it, spit on it, or ignore it.
+Just don't package it up for sale on the app store. That's my job. :)
+
+To install this app:
+
+1. just place it in the following directory: /_System/apps/
+2. Go to your admin and click on the app called Profile
+3. Authorize the app. The app must be authorized by the partner admin on the site.
+4. Go to the help page and follow instructions in the Developer Setup area.

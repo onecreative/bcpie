@@ -1,0 +1,61 @@
+<html>
+    
+    <head>
+        <style type="text/css">
+            body {
+                margin: 30px;
+            }
+            body, table {
+                font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+            }
+            table {
+                border-right: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+            }
+            table td {
+                border-top: 1px solid #eee;
+                border-left: 1px solid #eee;
+            }
+            table span {
+                color: #888;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <p>Dear {tag_RecipientName},</p>
+        <p>A new topic has been created on a forum you are registered to. Below is the details
+            of the new topic.</p>
+        <table cellspacing="0" cellpadding="6" width="100%">
+            <tbody>
+                <tr>
+                    <td style="width: 20%;"><span>Forum:</span>
+                        
+                    </td>
+                    <td style="width: 80%;">{tag_forumname}</td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><span>Topic:</span>
+                        
+                    </td>
+                    <td style="width: 80%;">{tag_topicname}</td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><span>Topic Date:</span>
+                        
+                    </td>
+                    <td style="width: 80%;">{tag_topicdate}</td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;"><span>Click to View:</span>
+                        
+                    </td>
+                    <td style="width: 80%;">{tag_topicurl}</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Click to unsubscribe from this forum: {tag_unsubscribe}</p>
+        <p>Thank you!</p>
+    </body>
+    
+</html>

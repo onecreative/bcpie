@@ -24,7 +24,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 			hashSupport: true,
 			hashOffset: 30,
 			removeClass: '',
-			paramSupport: false
+			paramSupport: true
 		}
 	});
 

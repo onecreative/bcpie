@@ -1,0 +1,90 @@
+<h3>{tag_name}</h3>
+<ul>
+    <li><strong>{tag_saleprice}</strong> </li>
+    <li>In stock: <strong>{tag_instock}</strong> </li>
+    <li>{tag_addtocartinputfield} {tag_addtocart, <img src="/CatalystImages/shop_addtocart.png"
+        />}</li>
+</ul>
+<h5 class="title">{tag_description}</h5>
+<div class="row">
+    <div class="medium-12 columns"> {tag_largeimage}
+        <h5 class="title">{tag_poplets}</h5>
+    </div>
+</div>
+<h5>Comment</h5>
+<form name="catratingform2343" onSubmit="return checkWholeForm2343(this)" method=post
+action="/RatingProcess.aspx?OID={module_oid}&amp;OTYPE={module_otype}">
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label>Was this helpful?</label>
+        </div>
+        <div class="medium-10 columns">
+            <label> <span>No</span>
+                <input type="radio" name="Rating" value="1" />
+                <input type="radio" name="Rating" value="2" />
+                <input type="radio" name="Rating" checked="checked" value="3" />
+                <input type="radio" name="Rating" value="4" />
+                <input type="radio" name="Rating" value="5" />
+                <span>Very</span> </label>
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label class="inline">Name (optional)</label>
+        </div>
+        <div class="medium-10 columns">
+            <input type="text" name="FullName" />
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label class="inline">Website (optional)</label>
+        </div>
+        <div class="medium-10 columns">
+            <input type="text" name="Website" />
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label class="inline">Email Address (optional)</label>
+        </div>
+        <div class="medium-10 columns">
+            <input type="text" name="EmailAddress" />
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label class="inline">Enter Word Verification in box below</label>
+        </div>
+        <div class="medium-10 columns">{module_captchav2}</div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-2 columns">
+            <label class="inline">Comment (optional)</label>
+        </div>
+        <div class="medium-10 columns">
+            <textarea class="cat_listbox_small" name="Feedback"></textarea>
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="medium-12 columns">
+            <button type="submit" class="radius button">Submit</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="/CatalystScripts/ValidationFunctions.js"></script> 
+<script type="text/javascript">
+    //<![CDATA[
+    function checkWholeForm2343(theForm) {
+        var why = "";
+        if (theForm.EmailAddress) if (theForm.EmailAddress.value.length > 0) why += checkEmail(theForm.EmailAddress.value);
+        if (theForm.CaptchaV2) why += isEmpty(theForm.CaptchaV2.value, "Enter Word Verification in box below");
+        if (why != "") {
+            alert(why);
+            return false;
+        }
+        theForm.submit();
+        return false;
+    }
+    //]]>		   		  		
+</script> 

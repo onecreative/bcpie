@@ -1,0 +1,61 @@
+<html>
+<head>
+<title></title>
+<style type="text/css">
+body {
+	margin: 18px;
+}
+body, table {
+	font: 12px/18px "Lucida Grande", Arial, Verdana, sans-serif;
+}
+table.border {
+	font: 11px/18px "Lucida Grande", Arial, Verdana, sans-serif;
+}
+table.border {
+	border-right: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+table.border td {
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+}
+table span {
+	color: #888;
+}
+</style>
+</head>
+<body>
+
+    <p>Dear <b>{tag_recipientname}</b>,</p>
+    <p>We’d like to inform you that your order has been processed and dispatched to the address listed below:</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="2">{tag_addressshipping}</td>
+        </tr>
+        <tr>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="2"><table>
+              <tbody>
+                <tr>
+                  <td style="width: 10%;"><span>Product Code</span></td>
+                  <td style="width: 20%;"><span>Product</span></td>
+                  <td style="width: 30%;"><span>Description</span></td>
+                  <td style="width: 10%;"><span>Quantity</span></td>
+                </tr>
+                <tr class="text">
+                  <td style="width: 10%;">{tag_productcode}</td>
+                  <td style="width: 20%;">{tag_productname}</td>
+                  <td style="width: 30%;">{tag_productdescription}</td>
+                  <td style="width: 10%;">{tag_productquantity}</td>
+                </tr>
+              </tbody>
+            </table></td>
+        </tr>
+      </tbody>
+    </table>
+
+</body>
+</html>
