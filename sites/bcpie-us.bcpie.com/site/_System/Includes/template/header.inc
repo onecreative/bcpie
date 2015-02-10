@@ -1,4 +1,4 @@
-<nav id="primary" role="navigation" data-bcpie-foundation="feature:topbar" class="top-bar">
+<nav id="primary" role="navigation" data-bcpie-foundation="feature:topbar" class="top-bar" data-topbar="true">
 	<ul class="title-area">
 		<li class="name">
 			<a href="/" class="logo"><img src="/images/general/logo.png" width="250" height="116"></a>

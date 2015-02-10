@@ -23,9 +23,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 225.0,
+		"height": 93.0,
 		"selected_items":
 		[
+			[
+				"datajson",
+				"DataConverter: to JSON"
+			],
 			[
 				"instal",
 				"Package Control: Install Package"
@@ -152,16 +156,12 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template"
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site"
 	],
 	"file_history":
 	[
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-transfer/scripts/codes2.json",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/bcpie.js/package.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appFoot.js",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appHead.js",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appHead.min.js",
@@ -287,13 +287,11 @@
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/bcmodules.tpl",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Header.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Head.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Footer.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Foot.inc"
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Head.inc"
 	],
 	"find":
 	{
-		"height": 37.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -506,7 +504,7 @@
 	{
 		"height": 102.0
 	},
-	"project": "bcpie-us.bcpie.com.sublime-project",
+	"project": "bcpie-us.sublime-project",
 	"replace":
 	{
 		"height": 42.0
