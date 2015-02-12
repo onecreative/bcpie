@@ -19,6 +19,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "site/_System/Includes/template/head.inc",
+			"settings":
+			{
+				"buffer_size": 563,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -156,7 +164,10 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site"
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/_System",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/_System/Includes",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/_System/Includes/template"
 	],
 	"file_history":
 	[
@@ -460,8 +471,40 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "site/_System/Includes/template/head.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 563,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								37,
+								37
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Siteleaf Liquid Syntax/Syntaxes/HTML (Liquid).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

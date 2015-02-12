@@ -156,10 +156,19 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site"
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/template",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates/Menu",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Default"
 	],
 	"file_history":
 	[
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/template/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library/globals.inc",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-transfer/scripts/codes2.json",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/bcpie.js/package.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appFoot.js",
@@ -285,13 +294,11 @@
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/one-bcpie-profile/profile.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/secure.tpl",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/bcmodules.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Header.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Head.inc"
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -313,6 +320,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"/_System/Includes/snippets",
 			"CalendarView",
 			": \"ONE Creative\"",
 			"data-profile",
@@ -439,8 +447,7 @@
 			"http://",
 			"/group.html",
 			"/a>",
-			"<a",
-			"</div>\n						</li>"
+			"<a"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -448,6 +455,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"/_System/Includes/library",
 			"data-bcpie-utility=\"getList:countries;",
 			"data-bcpie-"
 		],

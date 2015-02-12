@@ -19,14 +19,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "site/_System/Includes/template/header.inc",
-			"settings":
-			{
-				"buffer_size": 508,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -171,6 +163,8 @@
 	],
 	"file_history":
 	[
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Includes/template/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Includes/template/header.inc",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-transfer/scripts/codes2.json",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/bcpie.js/package.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appFoot.js",
@@ -296,9 +290,7 @@
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/one-bcpie-profile/profile.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/secure.tpl",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/bcmodules.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Header.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/ContentHolders/TEMPLATE - Head.inc"
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl"
 	],
 	"find":
 	{
@@ -471,41 +463,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "site/_System/Includes/template/header.inc",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 508,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								108,
-								108
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": true,
-							"syntax": "Packages/Siteleaf Liquid Syntax/Syntaxes/HTML (Liquid).tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 97.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
