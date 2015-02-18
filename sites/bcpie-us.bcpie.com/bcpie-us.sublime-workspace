@@ -20,10 +20,10 @@
 	"buffers":
 	[
 		{
-			"file": "site/_System/Includes/template/head.inc",
+			"file": "site/contact.htm",
 			"settings":
 			{
-				"buffer_size": 563,
+				"buffer_size": 937,
 				"line_ending": "Windows"
 			}
 		}
@@ -481,19 +481,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "site/_System/Includes/template/head.inc",
-					"semi_transient": true,
+					"file": "site/contact.htm",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 563,
+						"buffer_size": 937,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								855,
+								855
 							]
 						],
 						"settings":
