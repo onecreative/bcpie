@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>App</title>
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/zurb/foundation-apps-1.0.2.min.css">
-	<link rel="stylesheet" href="styles/app.css">
-	<script src="scripts/min/appHead.min.js"></script>
-</head>
-<body>
 	{module_pageaddress collection="pageaddress" template=""}
 	{% assign pageaddress = pageaddress.pageurl | replace: 'http://','' | replace: 'https://','' | replace: globals.site.host,'' %}
+	<meta charset="UTF-8">
+	<title>App</title>
+	<link rel="stylesheet" href="styles/app.css">
 	<script>
 		var globals = {{globals|json}};
 			globals.pageName = '{module_pagename}';
@@ -17,8 +13,10 @@
 			globals.primaryDomain = 'http://{module_sitehost}';
 			globals.secureDomain = '{module_secureurl}';
 	</script>
-	<script src="//cdn.jsdelivr.net/zurb/foundation-apps-1.0.2.min.js"></script>
-	<script src="scripts/min/appFoot.min.js"></script>
+	<script src="scripts/min/appHead.min.js"></script>
 	<script src="scripts/appScripts.js"></script>
+</head>
+<body>
+
 </body>
 </html>
