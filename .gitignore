@@ -4,3 +4,6 @@ gulpfile.js
 *.codekit
 *.sublime-workspace
 *.sublime-project
+*.codekit*
+*.svg
+iconic*

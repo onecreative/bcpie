@@ -19,14 +19,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "site/contact.htm",
-			"settings":
-			{
-				"buffer_size": 937,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -168,15 +160,17 @@
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/template",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates/Menu",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/ModuleTemplates/Menu/Default"
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/Templates"
 	],
 	"file_history":
 	[
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/template/head.inc",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library/globals.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library/signinJoin.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/Scripts/readyScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library/pageaddress.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library/profile.inc",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/contact.htm",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-transfer/scripts/codes2.json",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/bcpie.js/package.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appFoot.js",
@@ -297,12 +291,7 @@
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/styles/admin.min.css",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/SystemMessages/BookingConfirmation-US.html",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/snippets/loginCreate.inc",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/apps/bcpie-profile/scripts/min/devinabox.min.js",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/dropzone.min.js",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/one-bcpie-profile/profile.json",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/secure.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/globals/bcmodules.tpl",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/includes/loginCreate.tpl"
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/apps/bcpie-profile/scripts/min/devinabox.min.js"
 	],
 	"find":
 	{
@@ -476,40 +465,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "site/contact.htm",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 937,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								855,
-								855
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": true,
-							"syntax": "Packages/Siteleaf Liquid Syntax/Syntaxes/HTML (Liquid).tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],

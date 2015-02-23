@@ -517,7 +517,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				case 'captcha' : errorTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
 				default : errorTarget = required.field;
 			}
-			if (errorTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass)) {
+			if (errorTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) {
 				errorElementExists = true;
 			}else {
 				errorElementExists = false;
@@ -526,7 +526,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			if (required.message !=='') {
 				if (errorElementExists) {
 					// just replace the error message
-					errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass).text(required.message);
+					errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
 				}else {
 					// add the message into new element
 					messageElement = '<'+settings.errorMessageElement+' class="'+settings.errorClass+'">'+required.message+'</'+settings.errorMessageElement+'>';
@@ -536,7 +536,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				}
 			}else if (errorElementExists) {
 				// remove the element
-				errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass).remove();
+				errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
 				errorTarget.removeClass(settings.errorClass).unwrap();
 				if (rdoChkFlag) selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
 			}

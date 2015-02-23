@@ -1,0 +1,10 @@
+{
+	"menu-bcpie-app": {
+		"parent": "menu-modules",
+		"weight": 10000,
+		"title": "App",
+		"attr": {
+			"href": "/Admin/AppLoader.aspx?client_id=bcpie-app"
+		}
+	}
+}
