@@ -47,7 +47,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 	// validationFunctions.js and EN validatelang
 	var jslang = bcpie.globals.site.language;
-	if (typeof jslang == "undefined") var jslang = ("EN");
+	if (typeof jslang == "undefined") jslang = ("EN");
 	else {
 		if (jslang == "JP") jslang = "JA";
 		if (jslang == "CS") jslang = "CZ";
