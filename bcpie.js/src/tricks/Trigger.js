@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.01.29',
+		version: '2015.03.03',
 		defaults: {
 			trigger: '',
 			event: 'click', // or change
@@ -82,7 +82,6 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 					value = "";
 				if(triggerElement.filter("[value='" + settings.triggerValue + "']:checked").size() > 0)
 					value = triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
-				else null;
 			}else value = triggerElement.val();
 		}
 		else {
