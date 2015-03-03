@@ -24,6 +24,7 @@
 	"command_palette":
 	{
 		"height": 93.0,
+		"last_filter": "",
 		"selected_items":
 		[
 			[
@@ -156,10 +157,7 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System/Includes/library",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/Scripts",
 		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/Templates"
 	],
 	"file_history":
@@ -518,6 +516,7 @@
 	"select_file":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
@@ -526,6 +525,7 @@
 	"select_project":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
@@ -534,6 +534,7 @@
 	"select_symbol":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],

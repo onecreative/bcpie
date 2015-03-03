@@ -76,18 +76,19 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		var value;
 		if (settings.triggerAttr === 'value') {
 			if(triggerElement.is('[type=radio]'))
-				return triggerElement.filter(':checked').val();
+				value = triggerElement.filter(':checked').val();
 			else if(triggerElement.is('[type=checkbox]')){
 				if(settings.triggerValue === '' && triggerElement.filter(':checked').size() > 0)
-					return "";
+					value = "";
 				if(triggerElement.filter("[value='" + settings.triggerValue + "']:checked").size() > 0)
-					return triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
+					value = triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
 				else null;
-			}else return triggerElement.val();
+			}else value = triggerElement.val();
 		}
 		else {
-			triggerElement.attr(settings.triggerAttr);
+			value = triggerElement.attr(settings.triggerAttr);
 		}
+		return value.trim();
 	}
 	// execute function helper
 	function executeCallback(callbackName){

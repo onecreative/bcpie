@@ -49,6 +49,14 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 			for (var i=0; i<zoneData.length; i++) {
 				if (selector.is('select')) list += '<option value="'+zoneData[i]+'">'+zoneData[i]+'</option>';
 			}
+		}else if (settings.getList.toLowerCase() === 'states') {
+			if (typeof body.data('bcStates') === 'undefined') body.data('bcStates',settings.states);
+			var stateData = body.data('bcStates');
+			for (var abbrev in stateData) {
+				if (stateData.hasOwnProperty(abbrev)) {
+					if (selector.is('select')) list += '<option value="'+abbrev+'">'+stateData[abbrev]+'</option>';
+				}
+			}
 		}
 		selector.append(list);
 		if (settings.setValue !== '') setValue();
