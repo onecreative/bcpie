@@ -6908,20 +6908,10 @@ win.bcpie = {
 			item: {
 				new: function(webappid,data,success,error) {
 					// still need to provide secure domain if there is an Amount field
-					$.ajax({
-						url: '/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1',
-						type: 'POST',
-						data: data,
-						success: function(response) {
-							if (typeof success !== 'undefined') success(response);
-						},
-						error: function(response) {
-							if (typeof error !== 'undefined') error(response);
-						},
-					});
+					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1','POST',data,success,error);
 				},
 				update: function(webappid,itemid,data,success,error) {
-
+					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35','POST',data,success,error);
 				}
 			},
 			search: function(webappid,formid,responsePageID,data) {
@@ -6936,17 +6926,7 @@ win.bcpie = {
 		},
 		crm: {
 			update: function(data,success,error) {
-				$.ajax({
-					url: '/MemberProcess.aspx',
-					type: 'POST',
-					data: data,
-					success: function(response) {
-						if (typeof success !== 'undefined') success(response);
-					},
-					error: function(response) {
-						if (typeof error !== 'undefined') error(response);
-					},
-				});
+				bcpie.frontend.utils.ajax('/MemberProcess.aspx','POST',data,success,error);
 			}
 		}
 	},
@@ -7007,6 +6987,19 @@ win.bcpie = {
 				if (array[i] === value) return i;
 			}
 			return -1;
+		},
+		ajax: function(url,type,data,success,error) {
+			$.ajax({
+				url: url,
+				type: type,
+				data: data,
+				success: function(response) {
+					if (typeof success !== 'undefined') success(response);
+				},
+				error: function(response) {
+					if (typeof error !== 'undefined') error(response);
+				},
+			});
 		}
 	},
 	extensions: {
@@ -7019,12 +7012,12 @@ win.bcpie = {
 			}
 		},
 		engine: function() {
-			var tricks = bcpie.extensions.tricks,trick,options,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
+			var tricks = bcpie.extensions.tricks,trick,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
 			for (trick in tricks) {
-				arr=[],str="",options={},module = [],functions = {},defaults = {};
+				arr=[];str="";options={};module = [];functions = {};defaults = {};
 				instances = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
 				for (var a = 0; a<instances.length; a++) {
-					options = {},instance = $(instances[a]);
+					options = {};instance = $(instances[a]);
 					str = instance.data('bcpie-'+trick.toLowerCase());
 					if (typeof str === 'string' && str.indexOf(':') > -1) {
 						if (str.indexOf(';') > -1) {
@@ -8784,10 +8777,10 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.01.29',
+		version: '2015.03.03',
 		defaults: {
-			trigger: '',
-			event: 'click', // or change
+			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
+			event: 'click', // specify an event to cause the trigger
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
 			onClass: '', // css class to be applied
@@ -8798,7 +8791,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	});
 
-	var triggerEl = (settings.trigger === '') ? selector : $(settings.trigger);
+	var triggerEl = (settings.trigger === 'self') ? selector : $(settings.trigger);
 	settings.triggerValue = settings.triggerValue.split(',');
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
@@ -8858,7 +8851,6 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 					value = "";
 				if(triggerElement.filter("[value='" + settings.triggerValue + "']:checked").size() > 0)
 					value = triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
-				else null;
 			}else value = triggerElement.val();
 		}
 		else {

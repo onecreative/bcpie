@@ -156,20 +156,10 @@ win.bcpie = {
 			item: {
 				new: function(webappid,data,success,error) {
 					// still need to provide secure domain if there is an Amount field
-					$.ajax({
-						url: '/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1',
-						type: 'POST',
-						data: data,
-						success: function(response) {
-							if (typeof success !== 'undefined') success(response);
-						},
-						error: function(response) {
-							if (typeof error !== 'undefined') error(response);
-						},
-					});
+					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1','POST',data,success,error);
 				},
 				update: function(webappid,itemid,data,success,error) {
-
+					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35','POST',data,success,error);
 				}
 			},
 			search: function(webappid,formid,responsePageID,data) {
@@ -184,17 +174,7 @@ win.bcpie = {
 		},
 		crm: {
 			update: function(data,success,error) {
-				$.ajax({
-					url: '/MemberProcess.aspx',
-					type: 'POST',
-					data: data,
-					success: function(response) {
-						if (typeof success !== 'undefined') success(response);
-					},
-					error: function(response) {
-						if (typeof error !== 'undefined') error(response);
-					},
-				});
+				bcpie.frontend.utils.ajax('/MemberProcess.aspx','POST',data,success,error);
 			}
 		}
 	},
@@ -255,6 +235,19 @@ win.bcpie = {
 				if (array[i] === value) return i;
 			}
 			return -1;
+		},
+		ajax: function(url,type,data,success,error) {
+			$.ajax({
+				url: url,
+				type: type,
+				data: data,
+				success: function(response) {
+					if (typeof success !== 'undefined') success(response);
+				},
+				error: function(response) {
+					if (typeof error !== 'undefined') error(response);
+				},
+			});
 		}
 	},
 	extensions: {
@@ -267,12 +260,12 @@ win.bcpie = {
 			}
 		},
 		engine: function() {
-			var tricks = bcpie.extensions.tricks,trick,options,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
+			var tricks = bcpie.extensions.tricks,trick,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
 			for (trick in tricks) {
-				arr=[],str="",options={},module = [],functions = {},defaults = {};
+				arr=[];str="";options={};module = [];functions = {};defaults = {};
 				instances = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
 				for (var a = 0; a<instances.length; a++) {
-					options = {},instance = $(instances[a]);
+					options = {};instance = $(instances[a]);
 					str = instance.data('bcpie-'+trick.toLowerCase());
 					if (typeof str === 'string' && str.indexOf(':') > -1) {
 						if (str.indexOf(';') > -1) {
