@@ -6908,10 +6908,10 @@ win.bcpie = {
 			item: {
 				new: function(webappid,data,success,error) {
 					// still need to provide secure domain if there is an Amount field
-					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1','POST',data,success,error);
+					bcpie.utils.ajax('/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1','POST',data,success,error);
 				},
 				update: function(webappid,itemid,data,success,error) {
-					bcpie.frontend.utils.ajax('/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35','POST',data,success,error);
+					bcpie.utils.ajax('/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35','POST',data,success,error);
 				}
 			},
 			search: function(webappid,formid,responsePageID,data) {
@@ -6926,7 +6926,7 @@ win.bcpie = {
 		},
 		crm: {
 			update: function(data,success,error) {
-				bcpie.frontend.utils.ajax('/MemberProcess.aspx','POST',data,success,error);
+				bcpie.utils.ajax('/MemberProcess.aspx','POST',data,success,error);
 			}
 		}
 	},
