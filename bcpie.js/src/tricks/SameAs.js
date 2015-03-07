@@ -38,35 +38,23 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if(settings.copyType=="simple"){
 		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
 		copyFields.push(copyGroup.find('['+settings.attributeType+'='+settings.copy+']').not(selector));
-	}
-	else if(settings.copyType == "alternate"){
+	}else{
 		settings.bothWays = false;
-		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
-		settings.altCopy =settings.altCopy.replace(/\[/g,"").replace(/\]/g,"");
-		copyFields.push(copyGroup.find('['+settings.attributeType+'='+settings.copy+']').not(selector));
-		altCopyFields.push(copyGroup.find('['+settings.attributeType+'='+settings.altCopy+']').not(selector));
-	}
-	else{
-		settings.bothWays = false;
-		GetFieldsResult(true);
+		GetFieldsExpression(true);
 	}
 
 	function copyVal(selector,copyFields) {
-		if(settings.copyType == "simple" || settings.copyType == "alternate"){
-			if (settings.ref === 'text') {
-				if (copyFields[0].is('select')) {
-					value = copyFields[0].find('option').filter(':selected').text();
-				}else if (copyFields[0].is('radio')) {
-					value = copyFields[0].find('option').filter(':checked').text();
-				}else {
-					value = copyFields[0].text();
-				}
-			}else {
-				value = copyFields[0].val();
-			}
+		if(settings.copyType == "simple"){
+
+			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
+			else if (copyFields[0].is('radio')) value = copyFields[0].filter(':checked');
+			else value = copyFields[0];
+
+			value = (settings.ref === 'text') ? value.text() : value.val();
+
 			if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
 			else value = settings.prefix + value + settings.suffix;
-		}else value = settings.prefix + GetFieldsResult() + settings.suffix;
+		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
 		if (selector.is('select,textarea,input')) selector.val(value);
 		else selector.text(value);
@@ -105,12 +93,6 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			selector.val('').trigger(settings.event+'.sameAs').trigger(settings.event);
 		}
 	}
-	function GetFieldsResult(init){
-		return GetFieldsExpression(init);
-	}
-	function ConcatExpression(str){
-		return str.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
-	}
 	function GetFieldsExpression(init){
 		var strExpression = settings.copy,expr,dec = 1;
 		strExpression = GetfieldVal(strExpression);
@@ -119,65 +101,28 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				dec = dec*10;
 			}
 		}
-		try {
-			if(settings.copyType == "math"){
+		if(settings.copyType == "math"){
+			try {
 				expr = Parser.parse(strExpression);
 				return Math.round(expr.evaluate()*dec)/dec;
 			}
-			else
-				return ConcatExpression(strExpression);
-		}
-		catch(e){
-			return ConcatExpression(strExpression);
-		}
+			catch(e){
+				return strExpression.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
+			}
+		}else if (settings.copyType == "concat") return strExpression;
 
 		function GetfieldVal(str){
-			var sIndex = -1, eIndex=-1, mode = 0,str2 = str, i;
-			for(i=0;i<str.length;i++){
-				var charCode = str.charCodeAt(i);
-				var field;
-				if(charCode == 91 && sIndex == -1){
-					sIndex = i;
-					mode = 1;
-					continue;
-				}
-				else if(mode == 1 && charCode == 93 && sIndex > -1){
-					eIndex = i;
-					field = $('['+settings.attributeType+'="' + str.substring(sIndex+1,eIndex)  + '"]');
-					str2 = str2.replace(str.substring(sIndex,eIndex+1),field.val());
-					if(init) copyFields.push(field);
-					sIndex = -1;
-					eIndex = -1;
-					mode=0;
-				}
-				else if((charCode>=65 && charCode <=90) || (charCode>=97 && charCode <=122) && mode === 0){
-					if(sIndex == -1)
-					{
-						sIndex = i;
-						continue;
-					}
-				}
-				else if(mode === 0 && sIndex > -1 && (charCode==42 || charCode==43|| charCode==45||charCode==47 || charCode == 41)){
-					eIndex = i-1;
-					field = $('['+settings.attributeType+'="' + str.substring(sIndex,eIndex+1)  + '"]');
-					str2 = str2.replace(str.substring(sIndex,eIndex+1),field.val());
-					if(init) copyFields.push(field);
-					sIndex = -1;
-					eIndex = -1;
-				}
-				else
-				{
-					continue;
-				}
-			}
-			if(sIndex > -1){
-				eIndex = i;
-				var f = $('['+settings.attributeType+'="' + str.substring(sIndex,eIndex+1)  + '"]');
-				str2 = str2.replace(str.substring(sIndex,eIndex+1),f.val());
-				if(init) copyFields.push(f);
-			}
+			var pattern = /\[.*?\]/g,
+				fieldSelector = str.match(pattern)[0].replace('[','['+settings.attributeType+'="').replace(']','"]');
 
-			return str2;
+			if (fieldSelector !== '') {
+				copyFields.push(copyGroup.find(fieldSelector).not(selector));
+				var value = copyGroup.find(fieldSelector).val();
+				str = str.replace(str.match(pattern)[0],value);
+
+				if (str.match(pattern) !== null) return GetfieldVal(str);
+			}
+			return str;
 		}
 	}
 	// Choose which method to use

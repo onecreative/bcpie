@@ -154,27 +154,29 @@ win.bcpie = {
 	frontend: {
 		webapp: {
 			item: {
-				new: function(webappid,data,success,error) {
-					// still need to provide secure domain if there is an Amount field
-					bcpie.utils.ajax('/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1','POST',data,success,error);
+				new: function(webappid,options) {
+					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1';
+					if (body.find('[name=Amount]').length > 0) options.url = bcpie.globals.secureDomain+options.url;
+					return bcpie.utils.ajax(options);
 				},
-				update: function(webappid,itemid,data,success,error) {
-					bcpie.utils.ajax('/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35','POST',data,success,error);
+				update: function(webappid,itemid,options) {
+					if (typeof webappid === 'undefined') return 'Missing webappid';
+					if (typeof itemid === 'undefined') return 'Missing itemid';
+					options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35';
+					return bcpie.utils.ajax(options);
+
 				}
 			},
-			search: function(webappid,formid,responsePageID,data) {
-				var response = $.ajax({
-					url: '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID,
-					type: 'POST',
-					data: data,
-					async: false
-				});
-				return $(response.responseText).find('.webappsearchresults').children();
+			search: function(webappid,formid,responsePageID,options) {
+				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID;
+				options.async = options.async || false;
+				return $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults').children();
 			}
 		},
 		crm: {
-			update: function(data,success,error) {
-				bcpie.utils.ajax('/MemberProcess.aspx','POST',data,success,error);
+			update: function(options) {
+				options.url = '/MemberProcess.aspx';
+				return bcpie.utils.ajax(options);
 			}
 		}
 	},
@@ -236,18 +238,16 @@ win.bcpie = {
 			}
 			return -1;
 		},
-		ajax: function(url,type,data,success,error) {
-			$.ajax({
-				url: url,
-				type: type,
-				data: data,
-				success: function(response) {
-					if (typeof success !== 'undefined') success(response);
-				},
-				error: function(response) {
-					if (typeof error !== 'undefined') error(response);
-				},
-			});
+		ajax: function(options) {
+			var settings = {};
+			settings.url = options.url || '';
+			settings.type = options.type || 'POST';
+			settings.async = (typeof options.async !== 'undefined') ? options.async : true;
+			if (typeof options.data !== 'undefined') settings.data = options.data;
+			if (typeof options.success !== 'undefined') settings.success = function(response) {options.success(response)};
+			if (typeof options.error !== 'undefined') settings.error = function(response) {options.error(response)};
+
+			return $.ajax(settings);
 		}
 	},
 	extensions: {
