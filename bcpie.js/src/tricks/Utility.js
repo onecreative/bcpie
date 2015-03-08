@@ -10,32 +10,36 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 		name: 'Utility',
 		version: '2015.02.05',
 		defaults: {
-			setValue: '',
-			getList: '', // options are countries, timezones.
+			value: '',
+			list: '', // options are countries, states, timezones.
 		}
 	});
+
+	// take care of backwards compatibility first
+	settings.value = settings.setValue.toLowerCase() || settings.value.toLowerCase();
+	settings.list = settings.getList.toLowerCase() || settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {
 			selector.find('option').filter(function(){
-				return $(this).is('[value="'+settings.setValue+'"]');
+				return $(this).is('[value="'+settings.value+'"]');
 			}).attr('selected','selected').prop('selected',true);
 		}else if (selector.is('input[type=text]') || selector.is('textarea')) {
-			selector.val(settings.setValue);
+			selector.val(settings.value);
 		}else if (selector.is('input[type=radio]')) {
 			selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter(function(){
-				return $(this).is('[value="'+settings.setValue+'"]');
+				return $(this).is('[value="'+settings.value+'"]');
 			}).attr('checked','checked').prop('checked',true);
 		}else if (selector.is('input[type=checkbox]')) {
-			settings.setValue = settings.setValue.split(',');
-			for (var i=0; i<settings.setValue.length; i++) {
-				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.setValue[i]+'"]').attr('checked','checked').prop('checked',true);
+			settings.value = settings.value.split(',');
+			for (var i=0; i<settings.value.length; i++) {
+				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.value[i]+'"]').attr('checked','checked').prop('checked',true);
 			}
 		}
 	}
-	if (settings.getList !== '') {
+	if (settings.list !== '') {
 		var list='';
-		if (settings.getList.toLowerCase() === 'countries') {
+		if (settings.list === 'countries') {
 			if (typeof body.data('bcCountries') === 'undefined') body.data('bcCountries',settings.countries);
 			var countryData = body.data('bcCountries');
 			for (var cc in countryData) {
@@ -43,13 +47,13 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 					if (selector.is('select')) list += '<option value="'+cc+'">'+countryData[cc].Country+'</option>';
 				}
 			}
-		}else if (settings.getList.toLowerCase() === 'timezones') {
+		}else if (settings.list === 'timezones') {
 			if (typeof body.data('bcTimezones') === 'undefined') body.data('bcTimezones',moment.tz.names());
 			var zoneData = body.data('bcTimezones');
 			for (var i=0; i<zoneData.length; i++) {
 				if (selector.is('select')) list += '<option value="'+zoneData[i]+'">'+zoneData[i]+'</option>';
 			}
-		}else if (settings.getList.toLowerCase() === 'states') {
+		}else if (settings.list === 'states') {
 			if (typeof body.data('bcStates') === 'undefined') body.data('bcStates',settings.states);
 			var stateData = body.data('bcStates');
 			for (var abbrev in stateData) {
@@ -59,7 +63,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 			}
 		}
 		selector.append(list);
-		if (settings.setValue !== '') setValue();
+		if (settings.value !== '') setValue();
 
-	}else if (settings.setValue !== '') setValue();
+	}else if (settings.value !== '') setValue();
 };
