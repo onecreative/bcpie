@@ -7139,7 +7139,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	function initActiveNav() {
 		shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase();
 		selector.find(settings.activeClass.selector).removeClass(settings.activeClass.names);
-		if (settings.paramSupport === true) settings.pathArray.push(win.location.search);
+		if (settings.paramSupport === true && win.location.search !== '') settings.pathArray.push(win.location.search);
 		if (settings.hash !== '') settings.pathArray.push(settings.hash.toLowerCase());
 
 		// This loop returns all matching links from the first iteration that has a match (within level), then exits the loop;
@@ -7381,7 +7381,7 @@ bcpie.extensions.tricks.Calendar = function(selector,options) {
 bcpie.extensions.tricks.Crumbs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Crumbs',
-		version: '2015.01.31',
+		version: '2015.03.10',
 		defaults: {
 			separator: '/',
 			makespace: '-',
@@ -7401,7 +7401,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 		pageArray = path.replace(reg,' ').split('/');
 		pageArray.shift(); // remove the first item (it's empty)
 		if (settings.showHome !== false) pageArray.unshift(settings.homeTitle);
-		crumbURL = win.location.hostname;
+		thisURL = crumbURL = (win.location.href.indexOf(bcpie.globals.primaryDomain) > -1) ? bcpie.globals.primaryDomain : bcpie.globals.secureDomain;
 	/* end variable definitions */
 
 	/* cleanup messy paths */
@@ -7443,16 +7443,13 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 		}
 		function ajaxCrumbName (crumb,response,bcID,pagenameAttr) {
 			// choolse the information source for crumb
-			crumb = $(response).filter('#'+bcID).data(pagenameAttr);
+			crumb = response.pagename.name;
 			return crumb;
 		}
 		function breadcrumb (i,crumbArray,breadcrumbs,crumbURL,crumb,separator) {
 			// put the current breadcrumb together
-			if (i<crumbArray.length-1) {
-				breadcrumbs = '<a href="'+crumbURL+'">'+crumb+'</a>'+separator;
-			}else {
-				breadcrumbs = '<span class="this_crumb">'+crumb+'</span>';
-			}
+			if (i<crumbArray.length-1) breadcrumbs = '<a href="'+crumbURL+'">'+crumb+'</a>'+separator;
+			else breadcrumbs = '<span class="this_crumb">'+crumb+'</span>';
 			return breadcrumbs;
 		}
 	/* end function definitions */
@@ -7462,18 +7459,16 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 			// build crumbs with Ajax
 			while (i<crumbArray.length) {
 				crumbURL += crumbArray[i];
-				if (path === '/FAQRetrieve.aspx' && i===0) {
-					crumbURL = '/faq';	// workaround for FAQs module
-				}else if (i === crumbArray.length-1) {
-					breadcrumbs += '<span class="this_crumb">'+settings.pageName+'</span>';
-				}else {
+				if (path === '/FAQRetrieve.aspx' && i===0) crumbURL = '/faq';	// workaround for FAQs module
+				else if (i === crumbArray.length-1) breadcrumbs += '<span class="this_crumb">'+settings.pageName+'</span>';
+				else {
 					$.ajax({
-						url: crumbURL,
+						url: crumbURL+'?json=true',
 						type: 'GET',
-						dataType: 'html',
+						dataType: 'json',
 						async: false,
 						success: function(response) {
-							if (settings.pageAddress === $(response).filter('#'+settings.modulesID).data(settings.pageAddressAttr)) return;
+							if (thisURL+settings.pageAddress+'?json=true' === response.pageaddress.pageUrl) return;
 							if (crumbArray[i] === '/' && settings.showHome !== false && settings.homeTitle !== null) {
 								crumb = crumb;
 							}else {
@@ -8834,8 +8829,10 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 	});
 
 	// take care of backwards compatibility first
-	settings.value = settings.setValue.toLowerCase() || settings.value.toLowerCase();
-	settings.list = settings.getList.toLowerCase() || settings.list.toLowerCase();
+	settings.value = settings.setValue || settings.value;
+	settings.list = settings.getList || settings.list;
+	if (settings.value === '') settings.value = settings.value.toLowerCase();
+	if (settings.list === '') settings.list = settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {

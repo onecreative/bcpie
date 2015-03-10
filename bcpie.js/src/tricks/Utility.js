@@ -16,8 +16,10 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 	});
 
 	// take care of backwards compatibility first
-	settings.value = settings.setValue.toLowerCase() || settings.value.toLowerCase();
-	settings.list = settings.getList.toLowerCase() || settings.list.toLowerCase();
+	settings.value = settings.setValue || settings.value;
+	settings.list = settings.getList || settings.list;
+	if (settings.value === '') settings.value = settings.value.toLowerCase();
+	if (settings.list === '') settings.list = settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {

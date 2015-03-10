@@ -87,7 +87,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	function initActiveNav() {
 		shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase();
 		selector.find(settings.activeClass.selector).removeClass(settings.activeClass.names);
-		if (settings.paramSupport === true) settings.pathArray.push(win.location.search);
+		if (settings.paramSupport === true && win.location.search !== '') settings.pathArray.push(win.location.search);
 		if (settings.hash !== '') settings.pathArray.push(settings.hash.toLowerCase());
 
 		// This loop returns all matching links from the first iteration that has a match (within level), then exits the loop;
