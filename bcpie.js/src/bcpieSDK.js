@@ -100,7 +100,7 @@ win.bcpie = {
 				},
 				save: function(selector,webapp,id) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', formData = selector.serializeObject();
+						type = 'POST', formData = bcpie.utils.serializeObject(selector),result;
 
 					// Retrieve the custom fields list from the server
 					$.ajax({
@@ -128,7 +128,7 @@ win.bcpie = {
 							else if (typeof data.fields[key] !== 'undefined') data.fields[key] = formData[key];
 						}
 
-						$.ajax({
+						result = $.ajax({
 							url: url,
 							type: type,
 							connection: 'keep-alive',
@@ -136,8 +136,9 @@ win.bcpie = {
 							headers: {'Authorization': bcpie.api.token()},
 							data: JSON.stringify(data),
 							async: false
-						});
+						}).responseJSON;
 					});
+					return result;
 				},
 				delete: function(webapp,id) {
 					$.ajax({

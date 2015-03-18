@@ -6852,7 +6852,7 @@ win.bcpie = {
 				},
 				save: function(selector,webapp,id) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', formData = selector.serializeObject();
+						type = 'POST', formData = bcpie.utils.serializeObject(selector),result;
 
 					// Retrieve the custom fields list from the server
 					$.ajax({
@@ -6880,7 +6880,7 @@ win.bcpie = {
 							else if (typeof data.fields[key] !== 'undefined') data.fields[key] = formData[key];
 						}
 
-						$.ajax({
+						result = $.ajax({
 							url: url,
 							type: type,
 							connection: 'keep-alive',
@@ -6888,8 +6888,9 @@ win.bcpie = {
 							headers: {'Authorization': bcpie.api.token()},
 							data: JSON.stringify(data),
 							async: false
-						});
+						}).responseJSON;
 					});
+					return result;
 				},
 				delete: function(webapp,id) {
 					$.ajax({
@@ -7060,7 +7061,7 @@ $(function() {
 bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.02.02',
+		version: '2015.03.17',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -7076,7 +7077,8 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 			hashSupport: true,
 			hashOffset: 30,
 			removeClass: '',
-			paramSupport: true
+			paramSupport: true,
+			lastLinkClass: 'last'
 		}
 	});
 
@@ -7091,6 +7093,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 	settings.removeClass = classObject(settings.removeClass);
 	settings.primaryDomain = settings.primaryDomain.replace('http:','');
 	settings.secureDomain = settings.secureDomain.replace('https:','');
+	settings.lastLinkClass = classObject(settings.lastLinkClass);
 
 
 	function classObject(classes) {
@@ -7104,6 +7107,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 			var _this = activeLinks[i];
 			$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
+			if ($(_this).parent().find('li').filter('.active').length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastLinkClass.names);
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {
