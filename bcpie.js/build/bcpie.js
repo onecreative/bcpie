@@ -7080,16 +7080,17 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			levelClass: 'level',
 			lastLevel: 0,
 			lastLevelClass: 'lastlevel',
+			lastActiveClass: 'last',
 			levelTitle: false,
 			levelTitleClass: 'leveltitle',
 			unlinkTitle: false,
+			onlyLevelTitle: false,
 			removeHidden: true,
 			activeHash: false,
 			hashSupport: true,
 			hashOffset: 30,
 			removeClass: '',
-			paramSupport: true,
-			lastLinkClass: 'last'
+			paramSupport: true
 		}
 	});
 
@@ -7104,7 +7105,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings.removeClass = classObject(settings.removeClass);
 	settings.primaryDomain = settings.primaryDomain.replace('http:','');
 	settings.secureDomain = settings.secureDomain.replace('https:','');
-	settings.lastLinkClass = classObject(settings.lastLinkClass);
+	settings.lastActiveClass = classObject(settings.lastActiveClass);
 
 
 	function classObject(classes) {
@@ -7118,7 +7119,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			var _this = activeLinks[i];
 			$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
-			if ($(_this).parent().find('li').filter('.active').length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastLinkClass.names);
+			if ($(_this).parent().find('li').filter('.active').length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {
@@ -7130,6 +7131,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		if (settings.level > 1 && settings.removeHidden === true) {
 			if (settings.levelTitle !== false) {
 				segment = selector.find(settings.levelTitleClass.selector).detach();
+				if (settings.onlyLevelTitle !== false) segment.children('ul').remove();
 				selector.children('ul').html(segment);
 			} else {
 				segment = selector.find(settings.levelClass.selector).detach();
