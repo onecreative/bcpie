@@ -100,16 +100,22 @@ win.bcpie = {
 				},
 				save: function(selector,webapp,id) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', formData = bcpie.utils.serializeObject(selector),result;
+						type = 'POST', formData = bcpie.utils.serializeObject(selector),result,
+						msg;
 
-					// Retrieve the custom fields list from the server
-					$.ajax({
-						url: '/api/v2/admin/sites/current/webapps/'+webapp+'/fields',
-						type: 'get',
-						async: false,
-						contentType: 'application/json',
-						headers: {'Authorization': bcpie.api.token()}
-					}).done(function (msg) {
+					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
+						// Retrieve the custom fields list from the server
+						msg = bcpie.api.webapp.item.save.msg = $.ajax({
+							url: '/api/v2/admin/sites/current/webapps/'+webapp+'/fields',
+							type: 'get',
+							async: false,
+							contentType: 'application/json',
+							headers: {'Authorization': bcpie.api.token()}
+						}).responseJSON;
+						bcpie.api.webapp.item.save.lastwebapp = webapp;
+					}else msg = bcpie.api.webapp.item.save.msg;
+					if (typeof msg !== 'undefined') {
+						// Retrieve the custom fields list from the server
 						data = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}};
 						allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}};
 
@@ -124,8 +130,13 @@ win.bcpie = {
 
 						// Fill the data object with form values
 						for (var key in formData) {
-							if (typeof allFields[key] !== 'undefined') data[key] = formData[key];
-							else if (typeof data.fields[key] !== 'undefined') data.fields[key] = formData[key];
+							if (typeof allFields[key] !== 'undefined') {
+								if (formData[key] !== '') data[key] = formData[key];
+							}
+							else if (typeof data.fields[key] !== 'undefined') {
+								if (formData[key] !== '') data.fields[key] = formData[key];
+								else delete data.fields[key];
+							}
 						}
 
 						result = $.ajax({
@@ -137,8 +148,8 @@ win.bcpie = {
 							data: JSON.stringify(data),
 							async: false
 						}).responseJSON;
-					});
-					return result;
+						return result;
+					}
 				},
 				delete: function(webapp,id) {
 					$.ajax({
@@ -253,7 +264,7 @@ win.bcpie = {
 	},
 	extensions: {
 		settings: function(selector,options,settings) {
-			if (typeof settings.name === 'string' && settings.name.toLowerCase() !== 'run' && settings.name.toLowerCase() !== 'settings') {
+			if (typeof settings.name === 'string' && settings.name.toLowerCase() !== 'engine' && settings.name.toLowerCase() !== 'settings') {
 				if (typeof settings.defaults === 'undefined') settings.defaults = {};
 				selector.data('bcpie-'+settings.name.toLowerCase()+'-settings', $.extend({}, settings.defaults, options, bcpie.globals));
 				bcpie.active.tricks[settings.name] = settings.version;

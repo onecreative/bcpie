@@ -5,10 +5,10 @@
  * Free to use in BC Pie, or as licensed in Dev-in-a-Box from http://www.bcappstore.com/apps/dev-in-a-box
 */
 
-bcpie.extensions.tricks.ActiveNav = function(selector,options) {
-	var settings = bcpie.extensions.settings(selector,options,{
+bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
+	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.03.17',
+		version: '2015.03.18',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -58,14 +58,14 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options) {
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {
-			$(settings.levelClass.selector).parent('li').addClass(settings.levelTitleClass.names);
+			selector.find(settings.levelClass.selector).parent('li').addClass(settings.levelTitleClass.names);
 			if (settings.levelTitle !== false && settings.unlinkTitle !== false) {
-				$(settings.levelTitleClass.selector).children('a').replaceWith('<span>' + $(settings.levelTitleClass.selector).children('a').html() + '</span>');
+				selector.find(settings.levelTitleClass.selector).children('a').replaceWith('<span>' + selector.find(settings.levelTitleClass.selector).children('a').html() + '</span>');
 			}
 		}
 		if (settings.level > 1 && settings.removeHidden === true) {
 			if (settings.levelTitle !== false) {
-				segment = $(settings.levelTitleClass.selector).detach();
+				segment = selector.find(settings.levelTitleClass.selector).detach();
 				selector.children('ul').html(segment);
 			} else {
 				segment = selector.find(settings.levelClass.selector).detach();
