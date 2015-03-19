@@ -6911,6 +6911,29 @@ win.bcpie = {
 						contentType: 'application/json',
 						headers: {'Authorization': bcpie.api.token()}
 					});
+				},
+				categories: {
+					get: function(webapp,id) {
+						var options = {};
+						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
+						options.headers = {'Authorization': bcpie.api.token()};
+						options.type = 'get';
+						options.async = false;
+						options.connection = "keep-alive";
+    					options.contentType = "application/json";
+						return bcpie.utils.ajax(options);
+					},
+					update: function(webapp,id,data) {
+						var options = {};
+						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
+						options.headers = {'Authorization': bcpie.api.token()};
+						options.type = 'put';
+						options.data = (typeof data === 'object') ? JSON.stringify(data) : data;
+						options.connection = "keep-alive";
+    					options.contentType = "application/json";
+						options.processData = false;
+						return bcpie.utils.ajax(options);
+					}
 				}
 			}
 		}
@@ -7003,7 +7026,7 @@ win.bcpie = {
 			return -1;
 		},
 		ajax: function(options) {
-			var settings = {};
+			var settings = options || {};
 			settings.url = options.url || '';
 			settings.type = options.type || 'POST';
 			settings.async = (typeof options.async !== 'undefined') ? options.async : true;
