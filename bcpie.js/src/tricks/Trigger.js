@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.03.03',
+		version: '2015.03.24',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -77,16 +77,19 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		if (settings.triggerAttr === 'value') {
 			if(triggerElement.is('[type=radio]'))
 				value = triggerElement.filter(':checked').val();
-			else if(triggerElement.is('[type=checkbox]')){
-				if(settings.triggerValue === '' && triggerElement.filter(':checked').size() > 0)
-					value = "";
-				if(triggerElement.filter("[value='" + settings.triggerValue + "']:checked").size() > 0)
-					value = triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
+			else if(triggerElement.is('[type=checkbox]')) {
+				for (var i = 0; i < settings.triggerValue.length; i++) {
+					if(settings.triggerValue[i] === '' && triggerElement.filter(':checked').size() > 0)
+						value = '';
+					if(triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").size() > 0)
+						value = triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").val();
+				}
 			}else value = triggerElement.val();
 		}
 		else {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
+		if (typeof value === 'undefined') value = '';
 		return value.trim();
 	}
 	// execute function helper

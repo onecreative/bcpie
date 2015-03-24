@@ -55,7 +55,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			var _this = activeLinks[i];
 			$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
-			if ($(_this).parent().find('li').filter('.active').length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
+			if ($(_this).parent().find('li').filter(settings.activeClass.selector).length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {

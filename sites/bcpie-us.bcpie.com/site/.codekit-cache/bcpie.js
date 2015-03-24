@@ -3043,7 +3043,7 @@
 }).call(this);
 
 //! moment-timezone.js
-//! version : 0.3.0
+//! version : 0.3.1
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -3065,7 +3065,7 @@
 	// Do not load moment-timezone a second time.
 	if (moment.tz !== undefined) { return moment; }
 
-	var VERSION = "0.3.0",
+	var VERSION = "0.3.1",
 		zones = {},
 		links = {},
 
@@ -3457,7 +3457,7 @@
 	}
 
 	loadData({
-		"version": "2014j",
+		"version": "2015a",
 		"zones": [
 			"Africa/Abidjan|GMT|0|0|",
 			"Africa/Addis_Ababa|EAT|-30|0|",
@@ -3485,7 +3485,7 @@
 			"America/Bogota|COT|50|0|",
 			"America/Boise|MST MDT|70 60|01010101010101010101010|1BQV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
 			"America/Campo_Grande|AMST AMT|30 40|01010101010101010101010|1BIr0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10",
-			"America/Cancun|CST CDT|60 50|01010101010101010101010|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
+			"America/Cancun|CST CDT EST|60 50 50|010101010102|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 Dd0",
 			"America/Caracas|VET|4u|0|",
 			"America/Cayenne|GFT|30|0|",
 			"America/Chicago|CST CDT|60 50|01010101010101010101010|1BQU0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
@@ -3503,6 +3503,7 @@
 			"America/Havana|CST CDT|50 40|01010101010101010101010|1BQR0 1wo0 U00 1zc0 U00 1qM0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0",
 			"America/La_Paz|BOT|40|0|",
 			"America/Lima|PET|50|0|",
+			"America/Merida|CST CDT|60 50|01010101010101010101010|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
 			"America/Metlakatla|PST|80|0|",
 			"America/Miquelon|PMST PMDT|30 20|01010101010101010101010|1BQR0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
 			"America/Montevideo|UYST UYT|20 30|01010101010101010101010|1BQQ0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 14n0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10",
@@ -3511,7 +3512,7 @@
 			"America/Paramaribo|SRT|30|0|",
 			"America/Port-au-Prince|EST EDT|50 40|0101010101010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
 			"America/Santa_Isabel|PST PDT|80 70|01010101010101010101010|1C1m0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
-			"America/Santiago|CLST CLT|30 40|01010101010101010101010|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0 Rd0 1wn0 Rd0 1wn0 Rd0 1zb0 Op0 1zb0 Rd0 1wn0 Rd0",
+			"America/Santiago|CLST CLT CLT|30 40 30|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0",
 			"America/Sao_Paulo|BRST BRT|20 30|01010101010101010101010|1BIq0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10",
 			"America/Scoresbysund|EGT EGST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
 			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1BQPv 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
@@ -3599,7 +3600,7 @@
 			"Australia/Eucla|ACWST|-8J|0|",
 			"Australia/LHI|LHDT LHST|-b0 -au|01010101010101010101010|1C130 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu",
 			"Australia/Perth|AWST|-80|0|",
-			"Chile/EasterIsland|EASST EAST|50 60|01010101010101010101010|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0 Rd0 1wn0 Rd0 1wn0 Rd0 1zb0 Op0 1zb0 Rd0 1wn0 Rd0",
+			"Chile/EasterIsland|EASST EAST EAST|50 60 50|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0",
 			"Eire|GMT IST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
 			"Etc/GMT+1|GMT+1|10|0|",
 			"Etc/GMT+10|GMT+10|a0|0|",
@@ -3858,10 +3859,6 @@
 			"America/Boise|Navajo",
 			"America/Boise|US/Mountain",
 			"America/Campo_Grande|America/Cuiaba",
-			"America/Cancun|America/Merida",
-			"America/Cancun|America/Mexico_City",
-			"America/Cancun|America/Monterrey",
-			"America/Cancun|Mexico/General",
 			"America/Chicago|America/Indiana/Knox",
 			"America/Chicago|America/Indiana/Tell_City",
 			"America/Chicago|America/Knox_IN",
@@ -3928,6 +3925,9 @@
 			"America/Glace_Bay|Atlantic/Bermuda",
 			"America/Glace_Bay|Canada/Atlantic",
 			"America/Havana|Cuba",
+			"America/Merida|America/Mexico_City",
+			"America/Merida|America/Monterrey",
+			"America/Merida|Mexico/General",
 			"America/Metlakatla|Pacific/Pitcairn",
 			"America/Noronha|Brazil/DeNoronha",
 			"America/Santiago|Antarctica/Palmer",
@@ -4051,7 +4051,7 @@
 }));
 
 //! moment-timezone-utils.js
-//! version : 0.3.0
+//! version : 0.3.1
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -4530,6 +4530,489 @@
   return parseDateFormat;
 });
 
+/*! Moment Duration Format v1.3.0
+ *  https://github.com/jsmreese/moment-duration-format 
+ *  Date: 2014-07-15
+ *
+ *  Duration format plugin function for the Moment.js library
+ *  http://momentjs.com/
+ *
+ *  Copyright 2014 John Madhavan-Reese
+ *  Released under the MIT license
+ */
+
+(function (root, undefined) {
+
+	// repeatZero(qty)
+	// returns "0" repeated qty times
+	function repeatZero(qty) {
+		var result = "";
+		
+		// exit early
+		// if qty is 0 or a negative number
+		// or doesn't coerce to an integer
+		qty = parseInt(qty, 10);
+		if (!qty || qty < 1) { return result; }
+		
+		while (qty) {
+			result += "0";
+			qty -= 1;
+		}
+		
+		return result;
+	}
+	
+	// padZero(str, len [, isRight])
+	// pads a string with zeros up to a specified length
+	// will not pad a string if its length is aready
+	// greater than or equal to the specified length
+	// default output pads with zeros on the left
+	// set isRight to `true` to pad with zeros on the right
+	function padZero(str, len, isRight) {
+		if (str == null) { str = ""; }
+		str = "" + str;
+		
+		return (isRight ? str : "") + repeatZero(len - str.length) + (isRight ? "" : str);
+	}
+	
+	// isArray
+	function isArray(array) {
+		return Object.prototype.toString.call(array) === "[object Array]";
+	}
+	
+	// isObject
+	function isObject(obj) {
+		return Object.prototype.toString.call(obj) === "[object Object]";
+	}
+	
+	// findLast
+	function findLast(array, callback) {
+		var index = array.length;
+
+		while (index -= 1) {
+			if (callback(array[index])) { return array[index]; }
+		}
+	}
+
+	// find
+	function find(array, callback) {
+		var index = 0,
+			max = array.length,
+			match;
+			
+		if (typeof callback !== "function") {
+			match = callback;
+			callback = function (item) {
+				return item === match;
+			};
+		}
+
+		while (index < max) {
+			if (callback(array[index])) { return array[index]; }
+			index += 1;
+		}
+	}
+	
+	// each
+	function each(array, callback) {
+		var index = 0,
+			max = array.length;
+			
+		if (!array || !max) { return; }
+
+		while (index < max) {
+			if (callback(array[index], index) === false) { return; }
+			index += 1;
+		}
+	}
+	
+	// map
+	function map(array, callback) {
+		var index = 0,
+			max = array.length,
+			ret = [];
+
+		if (!array || !max) { return ret; }
+				
+		while (index < max) {
+			ret[index] = callback(array[index], index);
+			index += 1;
+		}
+		
+		return ret;
+	}
+	
+	// pluck
+	function pluck(array, prop) {
+		return map(array, function (item) {
+			return item[prop];
+		});
+	}
+	
+	// compact
+	function compact(array) {
+		var ret = [];
+		
+		each(array, function (item) {
+			if (item) { ret.push(item); }
+		});
+		
+		return ret;
+	}
+	
+	// unique
+	function unique(array) {
+		var ret = [];
+		
+		each(array, function (_a) {
+			if (!find(ret, _a)) { ret.push(_a); }
+		});
+		
+		return ret;
+	}
+	
+	// intersection
+	function intersection(a, b) {
+		var ret = [];
+		
+		each(a, function (_a) {
+			each(b, function (_b) {
+				if (_a === _b) { ret.push(_a); }
+			});
+		});
+		
+		return unique(ret);
+	}
+	
+	// rest
+	function rest(array, callback) {
+		var ret = [];
+		
+		each(array, function (item, index) {
+			if (!callback(item)) {
+				ret = array.slice(index);
+				return false;
+			}
+		});
+		
+		return ret;
+	}
+
+	// initial
+	function initial(array, callback) {
+		var reversed = array.slice().reverse();
+		
+		return rest(reversed, callback).reverse();
+	}
+	
+	// extend
+	function extend(a, b) {
+		for (var key in b) {
+			if (b.hasOwnProperty(key)) { a[key] = b[key]; }
+		}
+		
+		return a;
+	}
+			
+	// define internal moment reference
+	var moment;
+
+	if (typeof require === "function") {
+		try { moment = require('moment'); } 
+		catch (e) {}
+	} 
+	
+	if (!moment && root.moment) {
+		moment = root.moment;
+	}
+	
+	if (!moment) {
+		throw "Moment Duration Format cannot find Moment.js";
+	}
+	
+	// moment.duration.format([template] [, precision] [, settings])
+	moment.duration.fn.format = function () {
+
+		var tokenizer, tokens, types, typeMap, momentTypes, foundFirst, trimIndex,
+			args = [].slice.call(arguments),
+			settings = extend({}, this.format.defaults),
+			// keep a shadow copy of this moment for calculating remainders
+			remainder = moment.duration(this);
+
+		// add a reference to this duration object to the settings for use
+		// in a template function
+		settings.duration = this;
+
+		// parse arguments
+		each(args, function (arg) {
+			if (typeof arg === "string" || typeof arg === "function") {
+				settings.template = arg;
+				return;
+			}
+
+			if (typeof arg === "number") {
+				settings.precision = arg;
+				return;
+			}
+
+			if (isObject(arg)) {
+				extend(settings, arg);
+			}
+		});
+
+		// types
+		types = settings.types = (isArray(settings.types) ? settings.types : settings.types.split(" "));
+
+		// template
+		if (typeof settings.template === "function") {
+			settings.template = settings.template.apply(settings);
+		}
+
+		// tokenizer regexp
+		tokenizer = new RegExp(map(types, function (type) {
+			return settings[type].source;
+		}).join("|"), "g");
+
+		// token type map function
+		typeMap = function (token) {
+			return find(types, function (type) {
+				return settings[type].test(token);
+			});
+		};
+
+		// tokens array
+		tokens = map(settings.template.match(tokenizer), function (token, index) {
+			var type = typeMap(token),
+				length = token.length;
+
+			return {
+				index: index,
+				length: length,
+
+				// replace escaped tokens with the non-escaped token text
+				token: (type === "escape" ? token.replace(settings.escape, "$1") : token),
+
+				// ignore type on non-moment tokens
+				type: ((type === "escape" || type === "general") ? null : type)
+
+				// calculate base value for all moment tokens
+				//baseValue: ((type === "escape" || type === "general") ? null : this.as(type))
+			};
+		}, this);
+
+		// unique moment token types in the template (in order of descending magnitude)
+		momentTypes = intersection(types, unique(compact(pluck(tokens, "type"))));
+
+		// exit early if there are no momentTypes
+		if (!momentTypes.length) {
+			return pluck(tokens, "token").join("");
+		}
+
+		// calculate values for each token type in the template
+		each(momentTypes, function (momentType, index) {
+			var value, wholeValue, decimalValue, isLeast, isMost;
+
+			// calculate integer and decimal value portions
+			value = remainder.as(momentType);
+			wholeValue = (value > 0 ? Math.floor(value) : Math.ceil(value));
+			decimalValue = value - wholeValue;
+
+			// is this the least-significant moment token found?
+			isLeast = ((index + 1) === momentTypes.length);
+
+			// is this the most-significant moment token found?
+			isMost = (!index);
+
+			// update tokens array
+			// using this algorithm to not assume anything about
+			// the order or frequency of any tokens
+			each(tokens, function (token) {
+				if (token.type === momentType) {
+					extend(token, {
+						value: value,
+						wholeValue: wholeValue,
+						decimalValue: decimalValue,
+						isLeast: isLeast,
+						isMost: isMost
+					});
+
+					if (isMost) {
+						// note the length of the most-significant moment token:
+						// if it is greater than one and forceLength is not set, default forceLength to `true`
+						if (settings.forceLength == null && token.length > 1) {
+							settings.forceLength = true;
+						}
+
+						// rationale is this:
+						// if the template is "h:mm:ss" and the moment value is 5 minutes, the user-friendly output is "5:00", not "05:00"
+						// shouldn't pad the `minutes` token even though it has length of two
+						// if the template is "hh:mm:ss", the user clearly wanted everything padded so we should output "05:00"
+						// if the user wanted the full padded output, they can set `{ trim: false }` to get "00:05:00"
+					}
+				}
+			});
+
+			// update remainder
+			remainder.subtract(wholeValue, momentType);
+		});
+	
+		// trim tokens array
+		if (settings.trim) {
+			tokens = (settings.trim === "left" ? rest : initial)(tokens, function (token) {
+				// return `true` if:
+				// the token is not the least moment token (don't trim the least moment token)
+				// the token is a moment token that does not have a value (don't trim moment tokens that have a whole value)
+				return !(token.isLeast || (token.type != null && token.wholeValue));
+			});
+		}
+		
+		
+		// build output
+
+		// the first moment token can have special handling
+		foundFirst = false;
+
+		// run the map in reverse order if trimming from the right
+		if (settings.trim === "right") {
+			tokens.reverse();
+		}
+
+		tokens = map(tokens, function (token) {
+			var val,
+				decVal;
+
+			if (!token.type) {
+				// if it is not a moment token, use the token as its own value
+				return token.token;
+			}
+
+			// apply negative precision formatting to the least-significant moment token
+			if (token.isLeast && (settings.precision < 0)) {
+				val = (Math.floor(token.wholeValue * Math.pow(10, settings.precision)) * Math.pow(10, -settings.precision)).toString();
+			} else {
+				val = token.wholeValue.toString();
+			}
+			
+			// remove negative sign from the beginning
+			val = val.replace(/^\-/, "");
+
+			// apply token length formatting
+			// special handling for the first moment token that is not the most significant in a trimmed template
+			if (token.length > 1 && (foundFirst || token.isMost || settings.forceLength)) {
+				val = padZero(val, token.length);
+			}
+
+			// add decimal value if precision > 0
+			if (token.isLeast && (settings.precision > 0)) {
+				decVal = token.decimalValue.toString().replace(/^\-/, "").split(/\.|e\-/);
+				switch (decVal.length) {
+					case 1:
+						val += "." + padZero(decVal[0], settings.precision, true).slice(0, settings.precision);
+						break;
+						
+					case 2:
+						val += "." + padZero(decVal[1], settings.precision, true).slice(0, settings.precision);		
+						break;
+						
+					case 3:
+						val += "." + padZero(repeatZero((+decVal[2]) - 1) + (decVal[0] || "0") + decVal[1], settings.precision, true).slice(0, settings.precision);		
+						break;
+					
+					default:
+						throw "Moment Duration Format: unable to parse token decimal value.";
+				}
+			}
+			
+			// add a negative sign if the value is negative and token is most significant
+			if (token.isMost && token.value < 0) {
+				val = "-" + val;
+			}
+
+			foundFirst = true;
+
+			return val;
+		});
+
+		// undo the reverse if trimming from the right
+		if (settings.trim === "right") {
+			tokens.reverse();
+		}
+
+		return tokens.join("");
+	};
+
+	moment.duration.fn.format.defaults = {
+		// token definitions
+		escape: /\[(.+?)\]/,
+		years: /[Yy]+/,
+		months: /M+/,
+		weeks: /[Ww]+/,
+		days: /[Dd]+/,
+		hours: /[Hh]+/,
+		minutes: /m+/,
+		seconds: /s+/,
+		milliseconds: /S+/,
+		general: /.+?/,
+
+		// token type names
+		// in order of descending magnitude
+		// can be a space-separated token name list or an array of token names
+		types: "escape years months weeks days hours minutes seconds milliseconds general",
+
+		// format options
+
+		// trim
+		// "left" - template tokens are trimmed from the left until the first moment token that has a value >= 1
+		// "right" - template tokens are trimmed from the right until the first moment token that has a value >= 1
+		// (the final moment token is not trimmed, regardless of value)
+		// `false` - template tokens are not trimmed
+		trim: "left",
+
+		// precision
+		// number of decimal digits to include after (to the right of) the decimal point (positive integer)
+		// or the number of digits to truncate to 0 before (to the left of) the decimal point (negative integer)
+		precision: 0,
+
+		// force first moment token with a value to render at full length even when template is trimmed and first moment token has length of 1
+		forceLength: null,
+
+		// template used to format duration
+		// may be a function or a string
+		// template functions are executed with the `this` binding of the settings object
+		// so that template strings may be dynamically generated based on the duration object
+		// (accessible via `this.duration`)
+		// or any of the other settings
+		template: function () {
+			var types = this.types,
+				dur = this.duration,
+				lastType = findLast(types, function (type) {
+					return dur._data[type];
+				});
+
+			// default template strings for each duration dimension type
+			switch (lastType) {
+				case "seconds":
+					return "h:mm:ss";
+				case "minutes":
+					return "d[d] h:mm";
+				case "hours":
+					return "d[d] h[h]";
+				case "days":
+					return "M[m] d[d]";
+				case "weeks":
+					return "y[y] w[w]";
+				case "months":
+					return "y[y] M[m]";
+				case "years":
+					return "y[y]";
+				default:
+					return "y[y] M[m] d[d] h:mm:ss";
+			}
+		}
+	};
+
+})(this);
+
 (function($) {
   $.fn.caret = function(pos) {
     var target = this[0];
@@ -4606,12 +5089,16 @@
 
 // Generated by CoffeeScript 1.7.1
 (function() {
-  var $, checkForCountryChange_, formatBack_, formatForPhone_, formatUp_, format_, formats, formattedPhoneNumber_, formattedPhone_, isEventAllowedChar_, isEventAllowed_, mobilePhoneNumber, prefixesAreSubsets_, restrictEventAndFormat_, supportSelectionEnd,
+  var $, checkForCountryChange_, formatBack_, formatForPhone_, formatUp_, format_, formats, formattedPhoneNumber_, formattedPhone_, isEventAllowedChar_, isEventAllowed_, mobilePhoneNumber, prefixesAreSubsets_, restrictEventAndFormat_, supportSelectionEnd, withTimeout,
     __slice = [].slice;
 
   $ = jQuery;
 
   supportSelectionEnd = 'selectionEnd' in document.createElement('input');
+
+  withTimeout = function(fn) {
+    return setTimeout(fn, 50);
+  };
 
   formatForPhone_ = function(phone, defaultPrefix) {
     var bestFormat, format, k, precision, prefix, v;
@@ -4720,7 +5207,7 @@
   };
 
   restrictEventAndFormat_ = function(e) {
-    var caretEnd, selection, selectionAtEnd, value;
+    var caretEnd, value;
     if (!isEventAllowed_(e)) {
       return e.preventDefault();
     }
@@ -4730,12 +5217,12 @@
     value = this.val();
     caretEnd = supportSelectionEnd ? this.get(0).selectionEnd : this.caret();
     value = value.substring(0, this.caret()) + String.fromCharCode(e.which) + value.substring(caretEnd, value.length);
-    selection = this.caret();
-    selectionAtEnd = selection === this.val().length;
     format_.call(this, value, e);
-    if (!selectionAtEnd) {
-      return this.caret(this.val().length);
-    }
+    return withTimeout((function(_this) {
+      return function() {
+        return _this.caret(_this.val().length);
+      };
+    })(this));
   };
 
   formatUp_ = function(e) {
@@ -4783,7 +5270,11 @@
       e.preventDefault();
       this.val(phone);
       if (!selectionAtEnd) {
-        return this.caret(selection);
+        return withTimeout((function(_this) {
+          return function() {
+            return _this.caret(selection);
+          };
+        })(this));
       }
     }
   };
@@ -7142,7 +7633,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			var _this = activeLinks[i];
 			$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
-			if ($(_this).parent().find('li').filter('.active').length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
+			if ($(_this).parent().find('li').filter(settings.activeClass.selector).length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {
@@ -8757,7 +9248,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.03.03',
+		version: '2015.03.24',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -8826,16 +9317,19 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		if (settings.triggerAttr === 'value') {
 			if(triggerElement.is('[type=radio]'))
 				value = triggerElement.filter(':checked').val();
-			else if(triggerElement.is('[type=checkbox]')){
-				if(settings.triggerValue === '' && triggerElement.filter(':checked').size() > 0)
-					value = "";
-				if(triggerElement.filter("[value='" + settings.triggerValue + "']:checked").size() > 0)
-					value = triggerElement.filter("[value='" + settings.triggerValue + "']:checked").val();
+			else if(triggerElement.is('[type=checkbox]')) {
+				for (var i = 0; i < settings.triggerValue.length; i++) {
+					if(settings.triggerValue[i] === '' && triggerElement.filter(':checked').size() > 0)
+						value = '';
+					if(triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").size() > 0)
+						value = triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").val();
+				}
 			}else value = triggerElement.val();
 		}
 		else {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
+		if (typeof value === 'undefined') value = '';
 		return value.trim();
 	}
 	// execute function helper
