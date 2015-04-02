@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.03.18',
+		version: '2015.03.31',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -26,7 +26,8 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			hashSupport: true,
 			hashOffset: 30,
 			removeClass: '',
-			paramSupport: true
+			paramSupport: true,
+			bubble: true
 		}
 	});
 
@@ -53,7 +54,11 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	function makeActive(activeLinks, first, last) {
 		for(var i=0, len = $(activeLinks).size(); i<len;i++){
 			var _this = activeLinks[i];
-			$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
+			if (settings.bubble === false) {
+				$(_this).parent('li').addClass(settings.activeClass.names);
+			}else {
+				$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
+			}
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
 			if ($(_this).parent().find('li').filter(settings.activeClass.selector).length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
 		}
@@ -109,7 +114,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 					return true;
 				}
 			});
-			if (gotIt === 1) {
+			if (gotIt === 1 || settings.bubble === false) {
 				break;
 			} else {
 				// shorten shortPath and go through the loop again.
