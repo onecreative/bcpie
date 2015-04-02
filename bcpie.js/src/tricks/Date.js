@@ -8,14 +8,15 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.01.29',
+		version: '2015.04.02',
 		defaults: {
 			format: 'YYYY',
 			add: '',
 			subtract: '',
 			moment: 'auto',
 			utc: false,
-			timezone: '',
+			fromZone: 'local', // specify a valid timezone string (like America/Denver) or use 'local' to automatically detect it. Default is 'local'.
+			toZone: '', // specify a valid timezone string (like America/Denver) or use 'local' to automatically detect it
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
 			event: 'load' // specify the window event that triggers Date's behavior
@@ -32,7 +33,14 @@ bcpie.extensions.tricks.Date = function(selector,options){
 		if (settings.ref === 'text' && selector.is('input')) settings.ref = 'value';
 		ref = (settings.ref === 'text') ? selector.text() : selector.prop(settings.ref);
 
-		if(settings.ref === 'now') value = moment();
+		if (settings.ref === 'now') {
+			if (settings.fromZone !== 'local' && settings.fromZone !== '') {
+				value = moment.tz(settings.fromZone);
+			}else {
+				value = moment();
+			}
+		}
+
 		else if (ref !== '') {
 			if (settings.moment === 'auto' && $.isNumeric(ref) && ref.length === 10) {
 				if (settings.utc === true) value = moment.utc(moment.unix(ref)).local();
@@ -44,14 +52,23 @@ bcpie.extensions.tricks.Date = function(selector,options){
 					default: order = 'DMY';
 				}
 				parseFormat = (settings.moment === 'auto') ? moment.parseFormat(ref,{preferredOrder: order}) : settings.moment;
-				value = moment(ref,parseFormat);
+				if (settings.fromZone !== 'local') {
+					value = moment.tz(ref,parseFormat,settings.fromZone);
+				}else {
+					value = moment(ref,parseFormat);
+				}
 			}
 
 			if (value.isAfter(moment()) && ref.match(/(?:\/|-)([0-9]{2})$/)) value = value.subtract('year',100);
 		}
-		if (settings.timezone !== '') value.tz(settings.timezone);
+
 		if (typeof value !== 'undefined' && value._isAMomentObject === true) {
-			value = value.add(settings.add).subtract(settings.subtract).format(settings.format);
+			value = value.add(settings.add).subtract(settings.subtract);
+
+			if (settings.toZone !== '') {
+				if (settings.toZone === 'local' || settings.toZone === '') value = value.utc().local().format(settings.format);
+				else value = value.utc().tz(settings.toZone).format(settings.format);
+			}else value = value.format(settings.format);
 
 			targets = settings.target.split(',');
 			for (var i=0; i<targets.length; i++) {
