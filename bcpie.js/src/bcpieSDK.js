@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.01.31',
+		bcpieSDK: '2015.04.02',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -161,7 +161,7 @@ win.bcpie = {
 					});
 				},
 				categories: {
-					get: function(webapp,id) {
+					get: function(webapp,id,options) {
 						var options = {};
 						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
 						options.headers = {'Authorization': bcpie.api.token()};
@@ -171,7 +171,7 @@ win.bcpie = {
     					options.contentType = "application/json";
 						return bcpie.utils.ajax(options);
 					},
-					update: function(webapp,id,data) {
+					update: function(webapp,id,data,options) {
 						var options = {};
 						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
 						options.headers = {'Authorization': bcpie.api.token()};
@@ -189,27 +189,35 @@ win.bcpie = {
 	frontend: {
 		webapp: {
 			item: {
-				new: function(webappid,options) {
+				new: function(webappid,data,options) {
+					if (typeof options !== 'object') options = {};
+					options.data = data;
 					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1';
 					if (body.find('[name=Amount]').length > 0) options.url = bcpie.globals.secureDomain+options.url;
 					return bcpie.utils.ajax(options);
 				},
-				update: function(webappid,itemid,options) {
+				update: function(webappid,itemid,data,options) {
+					if (typeof options !== 'object') options = {};
 					if (typeof webappid === 'undefined') return 'Missing webappid';
 					if (typeof itemid === 'undefined') return 'Missing itemid';
+					options.data = data;
 					options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35';
 					return bcpie.utils.ajax(options);
 
 				}
 			},
-			search: function(webappid,formid,responsePageID,options) {
+			search: function(webappid,formid,responsePageID,data,options) {
+				if (typeof options !== 'object') options = {};
+				options.data = data;
 				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID;
-				options.async = options.async || false;
+				options.async = false;
 				return $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults').children();
 			}
 		},
 		crm: {
-			update: function(options) {
+			update: function(data,options) {
+				if (typeof options !== 'object') options = {};
+				options.data = data;
 				options.url = '/MemberProcess.aspx';
 				return bcpie.utils.ajax(options);
 			}
@@ -277,11 +285,8 @@ win.bcpie = {
 			var settings = options || {};
 			settings.url = options.url || '';
 			settings.type = options.type || 'POST';
-			settings.async = (typeof options.async !== 'undefined') ? options.async : true;
-			if (typeof options.data !== 'undefined') settings.data = options.data;
 			if (typeof options.success !== 'undefined') settings.success = function(response) {options.success(response)};
 			if (typeof options.error !== 'undefined') settings.error = function(response) {options.error(response)};
-
 			return $.ajax(settings);
 		}
 	},
