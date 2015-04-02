@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.01.31',
+		version: '2015.04.02',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -34,8 +34,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
-			'multistep' : false,  // True if this is a multistep form or validations are to be done in steps
-			'containers' : '', // multistep container selectors, separated by comma
+			'steps' : '', // multistep container selectors, separated by comma
 			'continueButton' : '', // Continue button selector for multi step form
 			'backButton' : '', // back button selector for multi step form
 			'buttonOnSubmit' : 'disable', // none,disable,hide
@@ -56,39 +55,15 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 	if (validatelang === undefined && jslang === 'EN') {
 		var validatelang = {
-			Currency: {
-				MustNumber: " must be a number and cannot be empty\n",
-				NoSymbol: " amount you entered must be a number without currency symbol\n"
-			},
-			Number: {
-				MustNumber: " must be a number and cannot be empty\n",
-				NoDecimal: " must be a number (no decimal points) and cannot be empty\n"
-			},
-			Float: {
-				MustNumber: " must be a number and may contain a decimal point.\n"
-			},
-			Enter: {
-				PleaseEnter: "- Please enter "
-			},
-			Select: {
-				PleaseSelect: "- Please select ",
-				MustSelect: " must be selected\n"
-			},
-			Email: {
-				ValidEmail: "- Please enter a valid email address\n",
-				Illegal: "- The email address contains illegal characters\n"
-			},
-			CheckDate: {
-				ValidDate: " as a valid date.\n"
-			},
-			Others: {
-				CannotContain: " cannot contain ",
-				WhiteSpace: "white spaces\n",
-				Character: "character.\n"
-			},
-			IP: {
-				Illegal: "- Please enter a valid IP Address"
-			}
+			Currency: { MustNumber: " must be a number and cannot be empty\n", NoSymbol: " amount you entered must be a number without currency symbol\n" },
+			Number: { MustNumber: " must be a number and cannot be empty\n", NoDecimal: " must be a number (no decimal points) and cannot be empty\n" },
+			Float: { MustNumber: " must be a number and may contain a decimal point.\n" },
+			Enter: { PleaseEnter: "- Please enter " },
+			Select: { PleaseSelect: "- Please select ", MustSelect: " must be selected\n" },
+			Email: { ValidEmail: "- Please enter a valid email address\n", Illegal: "- The email address contains illegal characters\n" },
+			CheckDate: { ValidDate: " as a valid date.\n" },
+			Others: { CannotContain: " cannot contain ", WhiteSpace: "white spaces\n", Character: "character.\n" },
+			IP: { Illegal: "- Please enter a valid IP Address" }
 		};
 	}
 	function LoadLangV(b) {
@@ -308,20 +283,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (c.status === 200) return c.responseText;
 	}
 	var XMLHttpFactories = [
-		function() {
-			return new XMLHttpRequest();
-		},
-		function() {
-			return new ActiveXObject("Msxml2.XMLHTTP");
-		},
-		function() {
-			return new ActiveXObject("Msxml3.XMLHTTP");
-		},
-		function() {
-			return new ActiveXObject("Microsoft.XMLHTTP");
-		}
+		function() { return new XMLHttpRequest(); },
+		function() { return new ActiveXObject("Msxml2.XMLHTTP"); },
+		function() { return new ActiveXObject("Msxml3.XMLHTTP"); },
+		function() { return new ActiveXObject("Microsoft.XMLHTTP"); }
 	];
-
 	function createXMLHTTPObject() {
 		var d = false;
 		for (var c = 0; c < XMLHttpFactories.length; c++) {
@@ -422,16 +388,56 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		return validatelang.IP.Illegal;
 	}
 
+	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
+
 	// setup some local variables
 	var action = selector.attr('action'),requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
 		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
-		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false, multistepContainers = [],requiredMultistep=[],
-		containerIndex=0, lockSubmit = false, messageBox = (settings.messageBoxID === null) ? $('<div id="ajaxresponse" />') : $('#'+settings.messageBoxID),
-		 messageBoxContents = $('#'+settings.messageBoxID).html(), customFlag = false,msg,
+		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
+		multistep = {containers: selector.find(settings.steps), step: 0},
+		lockSubmit = false, messageBox = (settings.messageBoxID === null) ? $('<div id="ajaxresponse" />') : $('#'+settings.messageBoxID),
+		messageBoxContents = $('#'+settings.messageBoxID).html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha'};
 
 	if (settings.customErrorFields !== '') settings.customErrorFields = settings.customErrorFields.split(',');
+
+	var fieldCheck = {
+		types: {
+			EmailAddress:		'email',
+			Friend01:			'email',
+			Friend02:			'email',
+			Friend03:			'email',
+			Friend04:			'email',
+			Friend05:			'email',
+			DOB:				'date',
+			Anniversary1:		'date',
+			Anniversary2:		'date',
+			Anniversary3:		'date',
+			Anniversary4:		'date',
+			Anniversary5:		'date',
+			CaptchaV2:			'captcha',
+			CardNumber:			'number',
+			CardCCV:			'number',
+			Amount:				'currency',
+			Password:			'password',
+			PasswordConfirm:	'passwordconfirm',
+			Days:				'days'
+		},
+		validation: {
+			select:				function (required) {return checkDropdown(required.value, required.label)},
+			radio:				function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
+			checkbox:			function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
+			email:				function (required) {return checkEmail(required.value)},
+			date:				function (required) {return checkDate(required.value,required.label)},
+			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label)},
+			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : ''},
+			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image")},
+			currency:			function (required) {return isCurrency(required.value, required.label)},
+			number:				function (required) {return isNumeric(required.value, required.label)},
+			days:				function (required) {return isNumericIfVisible(required.field, required.label)}
+		}
+	};
 
 	function runValidation (required,counter,total) {
 		var rdoChkFlag = false;
@@ -442,31 +448,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 		// verify field types and make adjustments to them as needed.
 		if (required.type === 'text' || required.type === 'hidden' || required.type === 'password') {
-			switch (required.name) {
-				case 'EmailAddress' : required.type = 'email';      break;
-				case 'Friend01'     : required.type = 'email';      break;
-				case 'Friend02'     : required.type = 'email';      break;
-				case 'Friend03'     : required.type = 'email';      break;
-				case 'Friend04'     : required.type = 'email';      break;
-				case 'Friend05'     : required.type = 'email';      break;
-				case 'DOB'          : required.type = 'date';       break;
-				case 'Anniversary1' : required.type = 'date';       break;
-				case 'Anniversary2' : required.type = 'date';       break;
-				case 'Anniversary3' : required.type = 'date';       break;
-				case 'Anniversary4' : required.type = 'date';       break;
-				case 'Anniversary5' : required.type = 'date';       break;
-				case 'Anniversary5' : required.type = 'date';       break;
-				case 'CaptchaV2'    : required.type = 'captcha';    break;
-				case 'CardNumber'   : required.type = 'number';     break;
-				case 'CardCCV'      : required.type = 'number';     break;
-				case 'Amount'       : required.type = 'currency';   break;
-				case 'Password'     : required.type = 'password';   break;
-				case 'PasswordConfirm'  : required.type = 'passwordconfirm';break;
-				case 'Days'         : required.type = 'days';       break;
-				default             : required.type = 'text';
-			}
+			required.type = fieldCheck.types[required.name] || 'text';
 		}
-
 
 		for (var i=0; i<settings.customErrorFields.length; i++) {
 			if (required.field.is(settings.customErrorFields[i])) {
@@ -480,20 +463,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			});
 		}else {
 			// Run the appropriate validator for the field type
-			switch (required.type) {
-				case 'select'     : required.message = checkDropdown(required.value, required.label); break;
-				case 'radio'      : required.message = checkSelected(selector.find('[name="'+required.name+'"]'), required.label); break;
-				case 'checkbox'     : required.message = checkSelected(selector.find('[name="'+required.name+'"]'), required.label); break;
-				case 'email'      : required.message = checkEmail(required.value); break;
-				case 'date'       : required.message = checkDate(required.value,required.label); break;
-				case 'password'     : required.message = (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label);pass.value = required.value;pass.label = required.label; break;
-				case 'passwordconfirm'  : required.message = (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : ''; break;
-				case 'captcha'      : required.message = captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image"); break;
-				case 'currency'     : required.message = isCurrency(required.value, required.label); break;
-				case 'number'     : required.message = isNumeric(required.value, required.label); break;
-				case 'days'       : required.message = isNumericIfVisible(required.field, required.label); break;
-				default         : required.message = isEmpty(required.value,required.label);
-			}
+			required.message = (typeof fieldCheck.validation[required.type] !== 'undefined') ? fieldCheck.validation[required.type](required) : isEmpty(required.value,required.label);
 		}
 
 		required.message = required.message.replace('- ','').replace('\n','');
@@ -545,26 +515,15 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
 		switch(behavior){
-			case 'show':
-				submitButton.show();
-				break;
-			case 'hide':
-				submitButton.hide();
-				break;
-			case 'disable':
-				submitButton.attr('disabled','disabled');
-				break;
-			case 'enable':
-				submitButton.removeAttr('disabled');
-				break;
-			default:
-				submitButton.show();
-				submitButton.removeAttr('disabled');
+			case 'show': submitButton.show(); break;
+			case 'hide': submitButton.hide(); break;
+			case 'disable': submitButton.attr('disabled','disabled'); break;
+			case 'enable': submitButton.removeAttr('disabled'); break;
+			default: submitButton.removeAttr('disabled').show();
 		}
 	}
 	function submitForm(submitCount) {
 		if (submitCount===0) {
-
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
 			if (settings.useAjax) {
 				$.ajax({
@@ -594,9 +553,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
-			}else {
-				selector.off('submit').submit();
-			}
+			}else selector.off('submit').submit();
 			return submitCount++;
 		}else{
 			alert("This form has already been submitted. Please refresh the page if you need to submit again.");
@@ -633,32 +590,21 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		};
 		if (required[i].label === undefined) required[i].label = labelFallback[required[i].name];
 	}
-	function buildMultistepRequiredObject(rField,i) {
-		requiredMultistep[i] = {
-			name : rField.attr('name'),
-			field : rField,
-			type : (rField.is('input')) ? rField.attr('type') : rField.get(0).tagName.toLowerCase(),
-			value : (rField.val() === undefined) ? '' : rField.val(),
-			label : (selector.find('label[for="'+rField.attr('name')+'"]').length > 0) ? selector.find('label[for="'+rField.attr('name')+'"]').text() : rField.attr('placeholder')
-		};
-		if (requiredMultistep[i].label === undefined) requiredMultistep[i].label = labelFallback[requiredMultistep[i].name];
+	function autoRequirePaymentFields(scope) {
+		if (paymentMethods.size() == 1 && $(paymentMethods[0]).val() == '1') onlyCCMethod = true;
+		if (paymentMethods.filter(':checked').val() == '1' || onlyCCMethod) {
+			scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').addClass(settings.requiredClass);
+		}else scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').removeClass(settings.requiredClass);
 	}
-	function autoRequirePaymentFields(){
-		if (paymentMethods.filter(':checked').val() == '1' || onlyCCMethod)
-			selector.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').addClass(settings.requiredClass);
-		else
-			selector.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').removeClass(settings.requiredClass);
-		BuildRequiredObjectArray();
-	}
-	function BuildRequiredObjectArray(){
+	function BuildRequiredObjectArray(scope) {
 		var i = 0,_this = null;
 		required=[];
 		// Build required array
-		requiredFields = selector.find('input, select, button, textarea').filter('.'+settings.requiredClass);
+		requiredFields = scope.find('input, select, button, textarea').filter('.'+settings.requiredClass);
 
 		for(var cnt=0,len = requiredFields.size(); cnt < len; cnt++){
 			_this = requiredFields[cnt];
-			newRequired = selector.find('[name="'+$(_this).attr("name")+'"]').not('.'+settings.requiredClass);
+			newRequired = scope.find('[name="'+$(_this).attr("name")+'"]').not('.'+settings.requiredClass);
 			if (newRequired.length > 0) {
 				for(var cnt2=0, len2 = $(newRequired).size(); cnt2<len2; cnt2++){
 					var newRequiredItem = $(newRequired[cnt2]);
@@ -671,44 +617,92 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			i++;
 		}
 	}
-	function showHideNavButtons(index){
-		if (multistepContainers.length === 0){
-			selector.find(settings.continueButton + ',' + settings.backButton).hide();
-			selector.find(settings.submitField).show();
+	function resetRequiredField(required) {
+		if (required.field.is('.'+settings.errorClass)) {
+			required.field.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
+			required.field.removeClass(settings.errorClass).unwrap();
+			if (required.type === 'checkbox' || required.type === 'radio') selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
+			--errorCount;
 		}
-		else if (index === 0){
-			selector.find(settings.submitField+', ' + settings.backButton).hide();
+	}
+	function activeValidation(scope) {
+		// Set onChangeBinding to true in order to prevent these bindings from occuring multiple times.
+		onChangeBinding = true;
+		for (var i = 0; i<required.length; i++) {
+			scope.on('change','[name="' + required[i].name + '"]', function() {
+				for (var i = 0;i<required.length;i++) {
+					if ($(this).attr('name') === required[i].name) runValidation(required[i],0,1);
+				}
+			});
+		}
+	}
+	function moveToContainer(index){
+		// show/hide buttons
+		if (index === 0) {
+			selector.find(settings.submitField +','+ settings.backButton).hide();
 			selector.find(settings.continueButton).show();
-		}
-		else if (index == multistepContainers.length -1){
+		}else if (index === multistep.containers.length - 1) {
 			selector.find(settings.continueButton).hide();
-			selector.find(settings.submitField+', ' + settings.backButton).show();
-		}
-		else{
-			selector.find(settings.continueButton + ',' + settings.backButton).show();
+			selector.find(settings.submitField +','+ settings.backButton).show();
+		}else{
+			selector.find(settings.continueButton +','+ settings.backButton).show();
 			selector.find(settings.submitField).hide();
 		}
+
+		// show next step
+		selector.find(multistep.containers).removeClass('activeContainer').hide();
+		selector.find(multistep.containers[multistep.step]).addClass('activeContainer').show();
+		selector.get(0).scrollIntoView();
+
 	}
 
 	// Auto Require certain fields
 	autoRequire = ['FirstName','LastName','FullName','EmailAddress','CaptchaV2','ItemName'];
+	ccFields = ['CardName','CardNumber','CardExpiryMonth','CardExpiryYear','CardType','CardCCV'];
+
 	for (var i = 0; i< autoRequire.length; i++) {
 		autoRequire.field = selector.find('[name="'+autoRequire[i]+'"]');
 		if (autoRequire.field.length > 0 && autoRequire.field.not('.'+settings.requiredClass)) autoRequire.field.addClass(settings.requiredClass);
 	}
 
 	// Auto require credit card fields depending upon payment method
-	if (paymentMethods.size() == 1)
-			if ($(paymentMethods[0]).val() == '1') onlyCCMethod = true;
-	//autoRequirePaymentFields();
-	selector.on('click',paymentMethods,autoRequirePaymentFields);
-	// BuildRequiredObjectArray();
-
+	autoRequirePaymentFields(selector);
+	selector.on('change',paymentMethods,function() {
+		autoRequirePaymentFields(selector);
+		if (multistep.containers.length > 0) BuildRequiredObjectArray(selector.find(multistep.containers[multistep.step]));
+		else BuildRequiredObjectArray(selector);
+	});
 
 
 	// If multistep true configure validations on containers
-	if (settings.multistep){
-		var cont = settings.containers.split(',');
+	if (multistep.containers.length > 0) {
+
+		// start on the first container
+		moveToContainer(multistep.step);
+
+		selector.on('click',settings.continueButton,function(event){
+			event.preventDefault();
+			BuildRequiredObjectArray(selector.find(multistep.containers[multistep.step]));
+
+			for (var i = 0; i<required.length; i++) {
+				runValidation(required[i],i,required.length);
+			}
+			if (errorCount === 0) moveToContainer(++multistep.step);
+			else if (settings.validateMode === 'inline') {
+				// Now that submission has been attempted, allow active field validation.
+				activeValidation(selector.find(multistep.containers[multistep.step]));
+			}
+		});
+
+		selector.on('click',settings.backButton,function(event){
+			event.preventDefault();
+			for (var i = 0; i<required.length; i++) {
+				resetRequiredField(required[i]);
+			}
+			moveToContainer(--multistep.step);
+		});
+
+		// prevent the enter key from submitting the form until the last step
 		selector.on('keypress',function(e) {
 			if (e.keyCode == 13) {
 				e.preventDefault();
@@ -716,86 +710,14 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				else selector.find('[type="submit"]:visible').trigger('click');
 			}
 		});
-		for (var i = 0, len = $(cont).size(); i < len; i++) {
-			var _this = $(cont[i]);
-			multistepContainers.push(_this);
-		}
-		selector.on('click',settings.continueButton,function(){
-			buildMultiRequiredObjects(containerIndex);
-			for (var i = 0;i<requiredMultistep.length;i++) {
-				runValidation(requiredMultistep[i],i,requiredMultistep.length);
-			}
-			if (errorCount===0) moveToContainer(++containerIndex);
 
-			// Now that submission has been attempted, allow active field validation.
-			if (settings.validateMode === 'inline') {
-				// Set onChangeBinding to true in order to prevent these bindings from occuring multiple times.
-				if (requiredMultistep.length>0) {
-					for (var i = 0;i<requiredMultistep.length;i++) {
-						selector.off('change.multistep',requiredMultistep[i].field);
-						selector.on('change.multistep',requiredMultistep[i].field,function() {
-							currentName = $(this).attr('name');
-							for (var i = 0;i<requiredMultistep.length;i++) {
-								if (currentName === requiredMultistep[i].name) runValidation(requiredMultistep[i],0,1);
-							}
-						});
-					}
-				}
-			}
-		});
-		selector.on('click',settings.backButton,function(){
-			moveToContainer(--containerIndex);
-		});
-		moveToContainer(containerIndex);
-	}
-	// Move to container specified by index, (default 0)
-	function moveToContainer(index){
-		showHideNavButtons(index);
-		if (index > multistepContainers.length -1){
-			index = multistepContainers.length - 1;
-			return;
-		}
-
-		var currContainer = multistepContainers[index];
-		requiredMultistep = [];
-
-		for (var count=0,len=$(multistepContainers).size(); count < len; count++){
-			$(multistepContainers[count]).removeClass('activeContainer').hide();
-		}
-
-
-		currContainer.addClass('activeContainer').show();
-		if (index > 0) selector.get(0).scrollIntoView();
-	}
-	function buildMultiRequiredObjects (index) {
-		var currContainer = multistepContainers[index];
-		requiredMultistep = [];
-
-		// Build required array
-		requiredFields = currContainer.find('input, select, button, textarea').filter('.'+settings.requiredClass);
-		var i = 0;
-		for (var cnt = 0, len = $(requiredFields).size(); cnt < len; cnt++){
-			_this = requiredFields[cnt];
-			newRequired = currContainer.find('[name="'+$(_this).attr("name")+'"]').not('.'+settings.requiredClass);
-			if (newRequired.length > 0) {
-				for(var cnt2=0, len2 = $(newRequired).size(); cnt2<len2; cnt2++){
-					var newRequiredItem = $(newRequired[cnt2]);
-					newRequiredItem.addClass(settings.requiredClass);
-					buildMultistepRequiredObject(newRequiredItem,i);
-					i++;
-				}
-			}
-			buildMultistepRequiredObject($(_this),i);
-			i++;
-		}
 	}
 
 	// bind to the submit event of our form
 	selector.on('submit',function(event) {
 		event.preventDefault();
 
-		autoRequirePaymentFields();
-		BuildRequiredObjectArray();
+		BuildRequiredObjectArray(selector);
 
 		if (lockSubmit) return false;
 		else lockSubmit = true;
@@ -816,18 +738,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			if (settings.validationError !== null) executeCallback(window[settings.validationError]);
 		// Now that submission has been attempted, allow active field validation.
 		if (settings.validateMode === 'inline' && onChangeBinding !== true) {
-			// Set onChangeBinding to true in order to prevent these bindings from occuring multiple times.
-			onChangeBinding = true;
-			if (required.length>0) {
-				for (var i = 0;i<required.length;i++) {
-					selector.on('change','[name="' + required[i].name + '"]', function() {
-						currentName = $(this).attr('name');
-						for (var i = 0;i<required.length;i++) {
-							if (currentName === required[i].name) runValidation(required[i],0,1);
-						}
-					});
-				}
-			}
+			activeValidation(selector);
 		}
 		lockSubmit = false;
 	});
