@@ -8938,7 +8938,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
-			ref : 'value', // or text
+			ref : 'value', // html attribute or 'text'. Default is 'value'.
 		}
 	});
 
@@ -8961,10 +8961,12 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if(settings.copyType == "simple"){
 
 			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
-			else if (copyFields[0].is('radio')) value = copyFields[0].filter(':checked');
+			else if (copyFields[0].is('radio') || copyFields[0].is('checkbox')) value = copyFields[0].filter(':checked');
 			else value = copyFields[0];
 
-			value = (settings.ref === 'text') ? value.text() : value.val();
+			if (settings.ref === 'text') value = value.text();
+			else if (settings.ref === 'value') value = value.val();
+			else value = value.attr(settings.ref);
 
 			if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
 			else value = settings.prefix + value + settings.suffix;
@@ -9015,7 +9017,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				dec = dec*10;
 			}
 		}
-		if(settings.copyType == "math"){
+		if (settings.copyType == "math") {
 			try {
 				expr = Parser.parse(strExpression);
 				return Math.round(expr.evaluate()*dec)/dec;
@@ -9027,15 +9029,22 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		function GetfieldVal(str){
 			var pattern = /\[.*?\]/g,
-				fieldSelector = str.match(pattern)[0].replace('[','['+settings.attributeType+'="').replace(']','"]');
+				fieldSelectors = str.match(pattern);
 
-			if (fieldSelector !== '') {
-				copyFields.push(copyGroup.find(fieldSelector).not(selector));
-				var value = copyGroup.find(fieldSelector).val();
-				str = str.replace(str.match(pattern)[0],value);
+			for (var i = 0; i < fieldSelectors.length; i++) {
+				copyFields.push(copyGroup.find(fieldSelectors[i].replace('[','['+settings.attributeType+'="').replace(']','"]')));
 
-				if (str.match(pattern) !== null) return GetfieldVal(str);
+				if (copyFields[i].is('select')) value = copyFields[i].find('option').filter(':selected');
+				else if (copyFields[i].is('radio') || copyFields[i].is('checkbox')) value = copyFields[i].filter(':checked');
+				else value = copyFields[i];
+
+				if (settings.ref === 'text') value = value.text();
+				else if (settings.ref === 'value') value = value.val();
+				else value = value.attr(settings.ref);
+
+				str = str.replace(fieldSelectors[i],value);
 			}
+
 			return str;
 		}
 	}
