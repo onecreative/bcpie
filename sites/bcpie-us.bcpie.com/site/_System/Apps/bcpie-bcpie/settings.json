@@ -1,0 +1,10 @@
+{
+	"app": {
+		"autoUpdate": false,
+		"version": "2015.04.04"
+	},
+	"site": {
+		"dc": "US",
+		"structure"
+	}
+}

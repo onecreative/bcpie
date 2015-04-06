@@ -542,7 +542,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						else successMessage = $(response).filter('.'+messageClass);
 						showSuccess(selector,successMessage);
 
-						if (settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response);
+						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response);
+						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],response);
 					},
 					error: function(xhr,status) {
 						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],status);
