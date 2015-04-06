@@ -1,10 +1,23 @@
 {
-	"app": {
-		"autoUpdate": false,
-		"version": "2015.04.04"
+	"version": "2015.04.04.09.14",
+	"apps": {
+		"bcpie-bcpie": {
+			"autoUpdate": false,
+			"last": "2015.03.02.07.10",
+			"current": "2015.04.04.09.14"
+		},
+		"bcpie-dev": {
+			"autoUpdate": false,
+			"last": "2015.03.02.07.10",
+			"current": "2015.04.04.09.14"
+		}
 	},
 	"site": {
 		"dc": "US",
-		"structure"
+		"structure": {
+			"_System": {
+
+			}
+		}
 	}
 }
