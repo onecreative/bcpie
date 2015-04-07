@@ -334,6 +334,7 @@ win.bcpie = {
 	}
 };
 bcpie.globals = $.extend({},bcpie.globals,globals);
+bcpie.globals.currentDomain = (win.location.href.indexOf(bcpie.globals.primaryDomain) > -1) ? bcpie.globals.primaryDomain : bcpie.globals.secureDomain;
 // Initialize tricks
 $(function() {
 	bcpie.extensions.engine();
