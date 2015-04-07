@@ -28,7 +28,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 		pageArray = path.replace(reg,' ').split('/');
 		pageArray.shift(); // remove the first item (it's empty)
 		if (settings.showHome !== false) pageArray.unshift(settings.homeTitle);
-		thisURL = crumbURL = (win.location.href.indexOf(bcpie.globals.primaryDomain) > -1) ? bcpie.globals.primaryDomain : bcpie.globals.secureDomain;
+		crumbURL = bcpie.globals.currentDomain;
 	/* end variable definitions */
 
 	/* cleanup messy paths */
@@ -95,7 +95,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 						dataType: 'json',
 						async: false,
 						success: function(response) {
-							if (thisURL+settings.pageAddress+'?json=true' === response.pageaddress.pageUrl) return;
+							if (bcpie.globals.currentDomain+settings.pageAddress+'?json=true' === response.pageaddress.pageUrl) return;
 							if (crumbArray[i] === '/' && settings.showHome !== false && settings.homeTitle !== null) {
 								crumb = crumb;
 							}else {
