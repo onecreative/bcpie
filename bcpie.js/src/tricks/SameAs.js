@@ -30,14 +30,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	// Setup our variables
 	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : body.find(settings.scope),
-		copyField, checkbox = copyGroup.find('['+settings.attributeType+'='+settings.checkbox+']'),
-		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'='+settings.altCheckbox+']'),value;
+		copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
+		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
 
 	if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
 
 	if(settings.copyType=="simple"){
 		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
-		copyFields.push(copyGroup.find('['+settings.attributeType+'='+settings.copy+']').not(selector));
+		copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
 	}else{
 		settings.bothWays = false;
 		GetFieldsExpression(true);
