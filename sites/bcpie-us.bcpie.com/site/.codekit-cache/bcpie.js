@@ -7949,7 +7949,7 @@ bcpie.extensions.tricks.Calendar = function(selector,options) {
 			day: settings.day,
 			empty: settings.empty
 		},
-		events: win[settings.events](),
+		events: win[settings.events](selector),
 		adjacentDaysChangeMonth: settings.adjacentDaysChangeMonth,
 		forceSixRows: settings.forceSixRows
 	});

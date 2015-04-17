@@ -1,18 +1,36 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
- 
+<!DOCTYPE html>
+<html>
 <head>
-<title>Hello world</title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
-    <script type="text/javascript" src="//cdn.worldsecuresystems.com/bcapi/bcapi-0.1.0.min.js"></script>
+	<title>Updates &amp; Extensions</title>
+	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/admin.css">
+	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/app.css">
+	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/ui.dynatree.vista.css">
+	<script src="/_system/apps/bcpie-bcpie/scripts/min/appHead.min.js"></script>
 </head>
- 
 <body>
-<p class="message">Success!</p>
-<p class="message">This is your application landing page.</p>
-<p class="message">For more information about the available APIs, developer resources and support, visit our <a href="http://developers.businesscatalyst.com" target="_blank">Developers Program</a> website.</p>
+	<div id="pagecontainer" class="hide">
+		<div class="row hide" id="divUpdate">
+			<div class="small-4 columns">
+				App update available
+			</div>
+			<div class="small-8 columns">
+				<input type="button" class="button" name="btnUpdateApp" value="Update App"/>
+			</div>
+		</div>
+		<div id="updateTree" class="tree hide"></div>
+	</div>
+	<script>
+		{module_pageaddress collection="pageaddress" template=""}{% assign pageaddress = pageaddress.pageurl | replace: 'http://','' | replace: 'https://','' | replace: globals.site.host,'' %}
+		var globals = {{globals|json}};
+			globals.pageName = '{module_pagename}';
+			globals.pageAddress = '{{pageaddress}}';
+			globals.primaryDomain = 'http://{module_sitehost}';
+			globals.secureDomain = '{module_secureurl}';
+	</script>
+	<script src="/_system/apps/bcpie-bcpie/scripts/min/appFoot.min.js"></script>
+	<script src="/_system/apps/bcpie-bcpie/scripts/github-files.js"></script>
+	<script src="/_system/apps/bcpie-bcpie/scripts/jquery-ui.custom.js"></script>
+	<script src="/_system/apps/bcpie-bcpie/scripts/jquery.dynatree.js"></script>
+	<script src="/_system/apps/bcpie-bcpie/scripts/appScripts.js"></script>
 </body>
 </html>
