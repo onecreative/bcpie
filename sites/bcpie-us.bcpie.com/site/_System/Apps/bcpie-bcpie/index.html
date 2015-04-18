@@ -2,22 +2,15 @@
 <html>
 <head>
 	<title>Updates &amp; Extensions</title>
-	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/admin.css">
-	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/app.css">
-	<link rel="stylesheet" href="/_system/apps/bcpie-bcpie/styles/ui.dynatree.vista.css">
+	<link href="/_system/apps/bcpie-bcpie/styles/admin.css" rel="stylesheet">
+	<link href="/_system/apps/bcpie-bcpie/styles/app.css" rel="stylesheet">
+	<link href="/_system/apps/bcpie-bcpie/styles/ui.dynatree.vista.css" rel="stylesheet">
 	<script src="/_system/apps/bcpie-bcpie/scripts/min/appHead.min.js"></script>
 </head>
 <body>
-	<div id="pagecontainer" class="hide">
-		<div class="row hide" id="divUpdate">
-			<div class="small-4 columns">
-				App update available
-			</div>
-			<div class="small-8 columns">
-				<input type="button" class="button" name="btnUpdateApp" value="Update App"/>
-			</div>
-		</div>
-		<div id="updateTree" class="tree hide"></div>
+	<div id="pagecontainer">
+		<input type="button" class="button" name="btnUpdateApp" value="Update App"/>
+		<div id="updateTree" class="tree"></div>
 	</div>
 	<script>
 		{module_pageaddress collection="pageaddress" template=""}{% assign pageaddress = pageaddress.pageurl | replace: 'http://','' | replace: 'https://','' | replace: globals.site.host,'' %}
