@@ -1,0 +1,37 @@
+{
+	"menu-first-bcpie-bcpie": {
+		"weight": 210000,
+		"title": "BC Pie",
+		"icon": "/_System/Apps/bcpie-bcpie/images/slice.png",
+		"visible": true,
+        "applyIf": {
+            "userHasRoles": ["Developer"]
+        }
+	},
+	"menu-bcpie-updates": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 10000,
+		"title": "Updates & Extensions",
+		"attr": {
+			"href": "/Admin/AppLoader.aspx?client_id=bcpie-bcpie"
+		}
+	},
+	"menu-bcpie-reference-guides": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 30000,
+		"title": "Reference Guides",
+		"attr": {
+			"href": "http://docs.businesscatalyst.com/dev-assets/reference#!/api-endpoints/index.html",
+			"target": "_blank"
+		}
+	},
+	"menu-bcpie-best-practices": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 40000,
+		"title": "Best Practices",
+		"attr": {
+			"href": "http://bcpie.com/training/best-practices",
+			"target": "_blank"
+		}
+	}
+}

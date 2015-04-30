@@ -1,8 +1,7 @@
 /*
  * "Trick". An awesome trick for BC Pie.
  * http://bcpie.com
- * Copyright 2015, ONE Creative
- * Free to use in BC Pie, or as licensed in Dev-in-a-Box from http://www.bcappstore.com/apps/dev-in-a-box
+ * Copyright 2015, Company Name
 */
 
 bcpie.extensions.tricks.Trick = function(selector,options) {

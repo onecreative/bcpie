@@ -8,6 +8,6 @@
 		</li>
 	</ul>
 	<section data-bcpie-activenav="true" class="top-bar-section">
-		{module_menu, version="2", menuID="1639909", moduleTemplateGroup="Top Bar"}
+		{module_menu, version="2", menuID="1480504", moduleTemplateGroup="Top Bar"}
 	</section>
 </nav>

@@ -11,7 +11,7 @@
  */
 
 $(function() {
-	var doc = document, body = $(doc.body), win = window, bcmodules = body.find('#bcmodules').data(),
+	var doc = document, body = $(doc.body), win = window,
 	readyScripts = {
 		utils: {
 			functionName: function() {

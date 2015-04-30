@@ -1,0 +1,10 @@
+{
+	"menu-bc-api-discovery": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 30000,
+		"title": "BC API Discovery",
+		"attr" : {
+			"href" : "index.html"
+		}
+	}
+}

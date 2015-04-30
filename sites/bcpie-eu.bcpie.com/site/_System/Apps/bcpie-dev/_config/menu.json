@@ -1,33 +1,10 @@
 {
-	"menu-bcpie-dev-tools": {
-		"weight": 210000,
-		"title": "Dev Tools",
-		"icon": "/_System/Apps/bcpie-dev/images/dev-tools.png"
-	},
 	"menu-bcpie-dev": {
-		"parent": "menu-bcpie-dev-tools",
-		"weight": 10000,
-		"title": "Form Cleaner",
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 11000,
+		"title": "Dev Tools",
 		"attr": {
 			"href": "/Admin/AppLoader.aspx?client_id=bcpie-dev"
-		}
-	},
-	"menu-bcpie-reference-guides": {
-		"parent": "menu-bcpie-dev-tools",
-		"weight": 30000,
-		"title": "Reference Guides",
-		"attr": {
-			"href": "http://docs.businesscatalyst.com/dev-assets/reference#!/api-endpoints/index.html",
-			"target": "_blank"
-		}
-	},
-	"menu-bcpie-best-practices": {
-		"parent": "menu-bcpie-dev-tools",
-		"weight": 40000,
-		"title": "Best Practices",
-		"attr": {
-			"href": "http://bcpie.com/training/best-practices",
-			"target": "_blank"
 		}
 	}
 }

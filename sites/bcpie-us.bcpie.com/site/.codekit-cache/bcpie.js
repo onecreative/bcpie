@@ -7596,11 +7596,11 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
-			level: 1,
+			level: 1, // specify a number
 			levelClass: 'level',
-			lastLevel: 0,
+			lastLevel: 0, // specify a number. 0 will turn off limiting.
 			lastLevelClass: 'lastlevel',
-			lastActiveClass: 'last',
+			currentActiveClass: 'current',
 			levelTitle: false,
 			levelTitleClass: 'leveltitle',
 			unlinkTitle: false,
@@ -7616,7 +7616,8 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	});
 
 	// vars
-	var shortPath, activeLinks, currentLink, gotIt = 0, first, segment, last, currentHash;
+	var shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase(),
+		activeLinks, currentLink, gotIt = 0, first, segment, last, currentHash;
 
 	settings.navClass = classObject(settings.navClass);
 	settings.activeClass = classObject(settings.activeClass);
@@ -7626,7 +7627,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings.removeClass = classObject(settings.removeClass);
 	settings.primaryDomain = settings.primaryDomain.replace('http:','');
 	settings.secureDomain = settings.secureDomain.replace('https:','');
-	settings.lastActiveClass = classObject(settings.lastActiveClass);
+	settings.currentActiveClass = classObject(settings.currentActiveClass);
 
 
 	function classObject(classes) {
@@ -7635,7 +7636,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			selector: '.'+classes.replace(/ /g,'.')
 		};
 	}
-	function makeActive(activeLinks, first, last) {
+	function makeActive(activeLinks, first) {
 		for(var i=0, len = $(activeLinks).size(); i<len;i++){
 			var _this = activeLinks[i];
 			if (settings.bubble === false) {
@@ -7644,7 +7645,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 				$(_this).parentsUntil(first, 'li').addClass(settings.activeClass.names);
 			}
 			$(_this).closest(first).children('ul').addClass(settings.levelClass.names);
-			if ($(_this).parent().find('li').filter(settings.activeClass.selector).length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.lastActiveClass.names);
+			if ($(_this).parent().find('li').filter(settings.activeClass.selector).length === 0 && $(_this).parent().is(settings.activeClass.selector)) $(_this).parent().addClass(settings.currentActiveClass.names);
 		}
 
 		if (settings.level > 1 && settings.levelTitle !== false) {
@@ -7678,26 +7679,31 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		initActiveNav();
 	}
 
+	function findActiveMatches(first, shortPath) {
+		return first.find('a').filter(function() {
+			if (settings.paramSupport === true) currentLink = $(this).attr('href');
+			else currentLink = $(this).attr('href').split('?')[0];
+			currentLink = currentLink.toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
+			if (currentLink.indexOf('/') !== 0) currentLink = '/'+currentLink;
+
+			if (currentLink === shortPath) {
+				gotIt = 1;
+				return true;
+			}
+		});
+	}
+
 	function initActiveNav() {
 		shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase();
 		selector.find(settings.activeClass.selector).removeClass(settings.activeClass.names);
 		if (settings.paramSupport === true && win.location.search !== '') settings.pathArray.push(win.location.search);
 		if (settings.hash !== '') settings.pathArray.push(settings.hash.toLowerCase());
+		gotIt = 0;
 
 		// This loop returns all matching links from the first iteration that has a match (within level), then exits the loop;
 		for (var i = settings.pathArray.length - 1; i >= 0; i--) {
 			// Go through each link
-			activeLinks = first.find('a').filter(function(index) {
-				if (settings.paramSupport === true) currentLink = $(this).attr('href');
-				else currentLink = $(this).attr('href').split('?')[0];
-				currentLink = currentLink.toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
-				if (currentLink.indexOf('/') !== 0) currentLink = '/'+currentLink;
-
-				if (currentLink === shortPath) {
-					gotIt = 1;
-					return true;
-				}
-			});
+			activeLinks = findActiveMatches(first, shortPath);
 			if (gotIt === 1 || settings.bubble === false) {
 				break;
 			} else {
@@ -7707,11 +7713,9 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		}
 		if (activeLinks.length > 1) {
 			// Filter remaining activeLinks
-			activeLinks = activeLinks.filter(function(index) {
-
+			activeLinks = activeLinks.filter(function() {
 				// shortPath needs to be reset for each link we go through
 				shortPath = settings.path.toLowerCase();
-
 				if (settings.path === '/') {
 					return true;
 				} else {
@@ -7728,7 +7732,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			});
 		}
 		if (activeLinks.length > 0) {
-			makeActive(activeLinks, first, last);
+			makeActive(activeLinks, first);
 			if ($.trim(settings.removeClass.names).length > 0) {
 				selector.find(settings.removeClass.selector).addBack().removeClass(settings.removeClass.names);
 			}
@@ -7801,13 +7805,14 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			first = bcpie.utils.closestChildren(first,'li', true);
 		}
 	}
+
 	// find lastLevel
 	if (settings.lastLevel > 0) {
 		last = $(selector);
 		for (var i = settings.lastLevel; i > 0; i--) {
 			last = bcpie.utils.closestChildren(last,'li', true);
 		}
-	} else last = 0;
+	}else last = 0;
 
 	$(last).parent('ul').addClass(settings.lastLevelClass.names);
 	if (last !== 0 && settings.removeHidden === true) {
