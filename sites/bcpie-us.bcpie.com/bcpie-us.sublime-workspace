@@ -31,14 +31,10 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 159.0,
-		"last_filter": "upo",
+		"height": 375.0,
+		"last_filter": "cta",
 		"selected_items":
 		[
-			[
-				"upo",
-				"Package Control: Upgrade/Overwrite All Packages"
-			],
 			[
 				"cta",
 				"Indentation: Convert to Tabs"
@@ -173,38 +169,11 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site"
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site",
+		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-us.bcpie.com/site/_System"
 	],
 	"file_history":
 	[
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/account.htm",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/signin.htm",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-eu.bcpie.com/site/news.htm",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/Scripts/ExampleTrick.js",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/Scripts/footScripts.js",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/Scripts/headScripts.js",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/Scripts/readyScripts.js",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Includes/template/footer.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/contact.htm",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bc-api-discovery/_config/menu.json",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-bcpie/_config/menu.json",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Includes/library/pageaddress.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bc-api-discovery/index.html",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/globals.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/pages/help.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/pages/home.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/index.html",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/template/head.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/pages/help.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/template/foot.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/icons.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/social.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/library/location.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-bcpie/index.html",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-profile/includes/contact.inc",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-bcpie/styles/app.css",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-bcpie/styles/admin.css",
-		"/Users/MacBookPro/Documents/Cubby/Frameworks/bcpie/sites/bcpie-au.bcpie.com/site/_System/Apps/bcpie-dev/_config/menu.json",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-evan/includes/library/pages/calendars/calendar/course/class/attendee.inc",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-evan/includes/library/logic/calendars/calendar/course/class/attendee.inc",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie.com/site/_System/Apps/bcpie-evan/includes/library/pages/calendars/calendar/course/class/session.inc",
@@ -304,7 +273,35 @@
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appFoot.min.js",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Includes/template/foot.inc",
 		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/ExampleTrick.js",
-		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/news.htm"
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/news.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Announcement/detail.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Layouts/Announcement/list.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/readyScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Scripts/min/exampleTrick-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/index.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/help.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/appScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/profile.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Shared/bcpie-profile/profile.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/setup.txt",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/location.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/icons.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/social.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/contact.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/foot.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/includes/head.inc",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/settings.json",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/min/appFoot-min.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-profile/scripts/oneapps.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/_System/Apps/bcpie-dev/scripts/appScripts.js",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/home.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/account.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/contact.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/signin.htm",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Templates/1Col-No Grid.html",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/ModuleStyleSheets.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/StyleSheets/app.css",
+		"/Users/MacBookPro/Documents/Cubby/Projects/bcpie-us.bcpie.com/site/Responses/subscribe.tpl"
 	],
 	"find":
 	{
@@ -332,7 +329,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"/responses",
 			" | append: '/' | append: page ",
 			"subtotalCourses",
 			"totalCourses",
@@ -459,7 +455,8 @@
 			"bcpie.min.js",
 			"bcpieSDK",
 			"settings.securezone",
-			"Foundation"
+			"Foundation",
+			"matchMedia"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -467,7 +464,6 @@
 		"regex": false,
 		"replace_history":
 		[
-			"/_system/responses",
 			" fromZone:America/Denver;",
 			" toZone:{{timezone}};",
 			" toTimezone:{{timezone}};",
