@@ -16,6 +16,14 @@
 			"href": "/Admin/AppLoader.aspx?client_id=bcpie-bcpie"
 		}
 	},
+	"menu-bc-api-discovery": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 20000,
+		"title": "BC API Discovery",
+		"attr" : {
+			"href" : "/Admin/AppLoader.aspx?client_id=bc-api-discovery"
+		}
+	},
 	"menu-bcpie-reference-guides": {
 		"parent": "menu-first-bcpie-bcpie",
 		"weight": 30000,
