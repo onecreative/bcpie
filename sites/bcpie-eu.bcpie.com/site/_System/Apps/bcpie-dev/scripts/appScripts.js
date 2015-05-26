@@ -59,7 +59,7 @@ $(function() {
 					form.find('[name*="Phone"],[name*="Fax"]').prop('type','tel');
 					form.find('[name*="DOB"],[name*="Anniversary"]').prop('type','date');
 					form.find('script').removeAttr('type');
-					form.attr('action',form.attr('action').replace(/https:\/\/.*\//g, '{module_secureurl}/').replace(/http:\/\/.*\//g, "/"));
+					form.attr('action',form.attr('action').replace(/https:\/\/.*?\//g, '{module_secureurl}/').replace(/http:\/\/.*?\//g, "/"));
 					if (form.find('[name="PaymentMethodType"]').length === 1) form.find('[name="PaymentMethodType"]').attr('type','hidden').removeAttr('style');
 					form.find('label').filter(function() {
 						return $(this).text().indexOf('Payment Method') > -1;

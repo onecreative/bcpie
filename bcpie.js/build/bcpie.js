@@ -7341,10 +7341,10 @@ win.bcpie = {
 					bcpie.api.data.place(scope,data.fields);
 					if(typeof callback !== 'undefined') callback(data);
 				},
-				save: function(selector,webapp,id) {
+				save: function(selector,webapp,id,options) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', formData = bcpie.utils.serializeObject(selector),result,
-						msg;
+						type = 'POST', result, msg,
+						formData = (selector instanceof jQuery) ? bcpie.utils.serializeObject(selector) : selector;
 
 					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
 						// Retrieve the custom fields list from the server
@@ -7374,24 +7374,24 @@ win.bcpie = {
 						// Fill the data object with form values
 						for (var key in formData) {
 							if (typeof allFields[key] !== 'undefined') {
-								if (formData[key] !== '') data[key] = formData[key];
+								if (formData[key] !== 'undefined') data[key] = formData[key];
 							}
 							else if (typeof data.fields[key] !== 'undefined') {
-								if (formData[key] !== '') data.fields[key] = formData[key];
+								if (formData[key] !== 'undefined') data.fields[key] = formData[key];
 								else delete data.fields[key];
 							}
 						}
 
-						result = $.ajax({
-							url: url,
-							type: type,
-							connection: 'keep-alive',
-							contentType: 'application/json',
-							headers: {'Authorization': bcpie.api.token()},
-							data: JSON.stringify(data),
-							async: false
-						}).responseJSON;
-						return result;
+						if (typeof options !== 'object') options = {};
+						options.url = url;
+						options.headers = {'Authorization': bcpie.api.token()};
+						options.type = type;
+						options.async = options.async || true;
+						options.connection = "keep-alive";
+						options.contentType = "application/json";
+						options.data = JSON.stringify(data);
+
+						return bcpie.utils.ajax(options);
 					}
 				},
 				delete: function(webapp,id) {
@@ -7405,23 +7405,23 @@ win.bcpie = {
 				},
 				categories: {
 					get: function(webapp,id,options) {
-						var options = {};
+						if (typeof options !== 'object') options = {};
 						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
 						options.headers = {'Authorization': bcpie.api.token()};
 						options.type = 'get';
 						options.async = false;
 						options.connection = "keep-alive";
-    					options.contentType = "application/json";
+						options.contentType = "application/json";
 						return bcpie.utils.ajax(options);
 					},
 					update: function(webapp,id,data,options) {
-						var options = {};
+						if (typeof options !== 'object') options = {};
 						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
 						options.headers = {'Authorization': bcpie.api.token()};
 						options.type = 'put';
 						options.data = (typeof data === 'object') ? JSON.stringify(data) : data;
 						options.connection = "keep-alive";
-    					options.contentType = "application/json";
+						options.contentType = "application/json";
 						options.processData = false;
 						return bcpie.utils.ajax(options);
 					}
@@ -7523,6 +7523,47 @@ win.bcpie = {
 				if (array[i] === value) return i;
 			}
 			return -1;
+		},
+		classObject: function(classes) {
+			return {
+				names: classes,
+				selector: '.'+classes.replace(/ /g,'.')
+			}
+		},
+		xml2json: function(xml) {
+			var obj = {};
+
+			if (xml.nodeType == 1) { // element
+				// do attributes
+				if (xml.attributes.length > 0) {
+				obj['@attributes'] = {};
+					for (var j = 0; j < xml.attributes.length; j++) {
+						var attribute = xml.attributes.item(j);
+						obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+					}
+				}
+			} else if (xml.nodeType == 3) { // text
+				obj = xml.nodeValue;
+			}
+
+			// do children
+			if (xml.hasChildNodes()) {
+				for(var i = 0; i < xml.childNodes.length; i++) {
+					var item = xml.childNodes.item(i);
+					var nodeName = item.nodeName;
+					if (typeof(obj[nodeName]) == 'undefined') {
+						obj[nodeName] = bcpie.utils.xml2json(item);
+					} else {
+						if (typeof(obj[nodeName].push) == 'undefined') {
+							var old = obj[nodeName];
+							obj[nodeName] = [];
+							obj[nodeName].push(old);
+						}
+						obj[nodeName].push(bcpie.utils.xml2json(item));
+					}
+				}
+			}
+			return obj;
 		},
 		ajax: function(options) {
 			var settings = options || {};
