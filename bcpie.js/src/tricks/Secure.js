@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.01.29',
+		version: '2015.06.02',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '',
@@ -49,7 +49,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			url: '/',
 			type: 'GET',
 			success: function(response) {
-				if ($(response).filter('#bcmodules').data('bc-loginstatus') === false) {
+				if ($(response).filter('[data-isloggedin]').data('isloggedin') === 0) {
 					if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
 					if (settings.onSessionEnd !== '') executeCallback(window[settings.onSessionEnd]);
 					clearInterval(interval);

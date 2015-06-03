@@ -7244,7 +7244,7 @@ var Parser = (function (scope) {
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.04.02',
+		bcpieSDK: '2015.06.02',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -7389,19 +7389,20 @@ win.bcpie = {
 						options.async = options.async || true;
 						options.connection = "keep-alive";
 						options.contentType = "application/json";
+						options.processData = false;
 						options.data = JSON.stringify(data);
 
 						return bcpie.utils.ajax(options);
 					}
 				},
-				delete: function(webapp,id) {
-					$.ajax({
-						url: '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id,
-						type: 'DELETE',
-						connection: 'keep-alive',
-						contentType: 'application/json',
-						headers: {'Authorization': bcpie.api.token()}
-					});
+				delete: function(webapp,id,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id;
+					options.type = 'DELETE';
+					options.connection = "keep-alive";
+					options.contentType = "application/json";
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
 				},
 				categories: {
 					get: function(webapp,id,options) {
@@ -7564,6 +7565,17 @@ win.bcpie = {
 				}
 			}
 			return obj;
+		},
+		executeCallback: function(selector, callback, data, textStatus, xhr){
+			if (typeof callback === 'function') {
+				function parameter(selector, callback, data, textStatus, xhr){
+					var deferred = $.Deferred();
+					deferred.resolve(callback(selector, data, textStatus, xhr));
+					return deferred.promise();
+				}
+
+				$.when(parameter(selector, callback, data, textStatus, xhr));
+			}
 		},
 		ajax: function(options) {
 			var settings = options || {};
@@ -9011,7 +9023,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.01.31',
+		version: '2015.05.30',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -9028,6 +9040,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
+			trim: false
 		}
 	});
 
@@ -9055,7 +9068,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 			if (settings.ref === 'text') value = value.text();
 			else if (settings.ref === 'value') value = value.val();
+			else if (settings.ref === 'html') value = value.html();
 			else value = value.attr(settings.ref);
+
+			if (settings.trim === true) value = value.trim();
 
 			if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
 			else value = settings.prefix + value + settings.suffix;
@@ -9065,6 +9081,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		else selector.text(value);
 
 		selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+		if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -9096,6 +9113,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 			selector.off(settings.event+'.sameAs');
 			selector.val('').trigger(settings.event+'.sameAs').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 		}
 	}
 	function GetFieldsExpression(init){
@@ -9129,7 +9147,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 				if (settings.ref === 'text') value = value.text();
 				else if (settings.ref === 'value') value = value.val();
+				else if (settings.ref === 'html') value = value.html();
 				else value = value.attr(settings.ref);
+
+				if (settings.trim === true) value = value.trim();
 
 				str = str.replace(fieldSelectors[i],value);
 			}
@@ -9192,7 +9213,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.01.29',
+		version: '2015.06.02',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '',
@@ -9233,7 +9254,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			url: '/',
 			type: 'GET',
 			success: function(response) {
-				if ($(response).filter('#bcmodules').data('bc-loginstatus') === false) {
+				if ($(response).filter('[data-isloggedin]').data('isloggedin') === 0) {
 					if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
 					if (settings.onSessionEnd !== '') executeCallback(window[settings.onSessionEnd]);
 					clearInterval(interval);

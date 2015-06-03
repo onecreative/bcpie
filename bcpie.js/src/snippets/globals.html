@@ -1,4 +1,4 @@
-<script>
+<script data-isloggedin="{module_isloggedin}">
 	{module_pageaddress collection="pageaddress" template=""}{% assign pageaddress = pageaddress.pageurl | replace: 'http://','' | replace: 'https://','' | replace: globals.site.host,'' %}
 	var globals = {{globals|json}};
 		globals.pageName = '{module_pagename}';

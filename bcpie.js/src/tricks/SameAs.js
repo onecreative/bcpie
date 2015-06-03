@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.01.31',
+		version: '2015.05.30',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -25,6 +25,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
+			trim: false
 		}
 	});
 
@@ -52,7 +53,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 			if (settings.ref === 'text') value = value.text();
 			else if (settings.ref === 'value') value = value.val();
+			else if (settings.ref === 'html') value = value.html();
 			else value = value.attr(settings.ref);
+
+			if (settings.trim === true) value = value.trim();
 
 			if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
 			else value = settings.prefix + value + settings.suffix;
@@ -62,6 +66,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		else selector.text(value);
 
 		selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+		if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -93,6 +98,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 			selector.off(settings.event+'.sameAs');
 			selector.val('').trigger(settings.event+'.sameAs').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 		}
 	}
 	function GetFieldsExpression(init){
@@ -126,7 +132,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 				if (settings.ref === 'text') value = value.text();
 				else if (settings.ref === 'value') value = value.val();
+				else if (settings.ref === 'html') value = value.html();
 				else value = value.attr(settings.ref);
+
+				if (settings.trim === true) value = value.trim();
 
 				str = str.replace(fieldSelectors[i],value);
 			}

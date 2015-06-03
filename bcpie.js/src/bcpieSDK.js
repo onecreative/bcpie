@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.04.02',
+		bcpieSDK: '2015.06.02',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -146,19 +146,20 @@ win.bcpie = {
 						options.async = options.async || true;
 						options.connection = "keep-alive";
 						options.contentType = "application/json";
+						options.processData = false;
 						options.data = JSON.stringify(data);
 
 						return bcpie.utils.ajax(options);
 					}
 				},
-				delete: function(webapp,id) {
-					$.ajax({
-						url: '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id,
-						type: 'DELETE',
-						connection: 'keep-alive',
-						contentType: 'application/json',
-						headers: {'Authorization': bcpie.api.token()}
-					});
+				delete: function(webapp,id,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id;
+					options.type = 'DELETE';
+					options.connection = "keep-alive";
+					options.contentType = "application/json";
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
 				},
 				categories: {
 					get: function(webapp,id,options) {
@@ -321,6 +322,17 @@ win.bcpie = {
 				}
 			}
 			return obj;
+		},
+		executeCallback: function(selector, callback, data, textStatus, xhr){
+			if (typeof callback === 'function') {
+				function parameter(selector, callback, data, textStatus, xhr){
+					var deferred = $.Deferred();
+					deferred.resolve(callback(selector, data, textStatus, xhr));
+					return deferred.promise();
+				}
+
+				$.when(parameter(selector, callback, data, textStatus, xhr));
+			}
 		},
 		ajax: function(options) {
 			var settings = options || {};
