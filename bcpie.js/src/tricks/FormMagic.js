@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.04.02',
+		version: '2015.06.25',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -16,18 +16,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
 			'messageBoxID' : null,
-			'messageMode' : 'prepend', // 'append', 'box'
+			'messageMode' : 'prepend', // 'append', 'box', 'off'
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false,
-			'validateMode' : 'alert', // 'inline'
+			'validateMode' : 'alert', // 'inline', 'off'
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
 			'successClass' : 'success',
 			'submitEvent' : null,
 			'submitField' : '[type="submit"]',
-			'beforeSubmit' : null, // deprecated. Replaced with validationSuccess.
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
@@ -444,7 +443,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (counter===0) {errorCount=0;}
 
 		// Check the field for a value change
-		required.value = (required.field.val() === undefined) ? '' : required.field.val();
+		required.value = (typeof required.field.val() === 'undefined' || required.field.val() === null) ? '' : required.field.val();
 
 		// verify field types and make adjustments to them as needed.
 		if (required.type === 'text' || required.type === 'hidden' || required.type === 'password') {
@@ -572,8 +571,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 	function showSuccess(selector,successMessage) {
 		if (settings.afterAjax!=='show') {selector.fadeOut(0);}
-		if (settings.messageMode === 'append') selector.after(messageBox);
-		else if (settings.messageMode === 'prepend') selector.before(messageBox);
+		if (settings.messageMode !== 'off') {
+			if (settings.messageMode === 'append') selector.after(messageBox);
+			else if (settings.messageMode === 'prepend') selector.before(messageBox);
+		}
 
 		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
@@ -722,13 +723,12 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 		if (lockSubmit) return false;
 		else lockSubmit = true;
-		for (var i = 0;i<required.length;i++) {
-			runValidation(required[i],i,required.length);
+		if (settings.validateMode !== 'off') {
+			for (var i = 0;i<required.length;i++) {
+				runValidation(required[i],i,required.length);
+			}
 		}
-		if (errorCount===0) {
-			// providing backwards compatibility with beforeSubmit
-			if (settings.beforeSubmit !== null && settings.validationSuccess === null) settings.validationSuccess = settings.beforeSubmit;
-
+		if (errorCount === 0) {
 			if (settings.validationSuccess !== null) {
 				$.when(executeCallback(win[settings.validationSuccess])).then(function(value) {
 					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
@@ -743,10 +743,16 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}
 		lockSubmit = false;
 	});
+
+	// Autosubmit
+	if (settings.submitEvent === 'ready') {
+		selector.submit();
+	}
+
 	// Activate submitEvent
-	if (settings.submitField !== '[type="submit"]') {
+	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
 		submitField = selector.find(settings.submitField);
-		if (submitField.length > 0 && settings.submitEvent !== null && settings.submitEvent === 'keyup' || settings.submitEvent === 'blur' || settings.submitEvent === 'change' || settings.submitEvent === 'dblclick') {
+		if (submitField.length > 0) {
 			selector.on(settings.submitEvent,settings.submitField,function(){
 				selector.submit();
 			});

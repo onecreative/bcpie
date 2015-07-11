@@ -7344,7 +7344,7 @@ win.bcpie = {
 				save: function(selector,webapp,id,options) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
 						type = 'POST', result, msg,
-						formData = (selector instanceof jQuery) ? bcpie.utils.serializeObject(selector) : selector;
+						formData = bcpie.utils.serializeObject(selector);
 
 					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
 						// Retrieve the custom fields list from the server
@@ -7448,6 +7448,13 @@ win.bcpie = {
 					options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35';
 					return bcpie.utils.ajax(options);
 
+				},
+				delete: function(webappid,itemid,options) {
+					if (typeof options !== 'object') options = {};
+					if (typeof webappid === 'undefined') return 'Missing webappid';
+					if (typeof itemid === 'undefined') return 'Missing itemid';
+					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OID='+itemid+'&A=Delete'
+					return bcpie.utils.ajax(options);
 				}
 			},
 			search: function(webappid,formid,responsePageID,data,options) {
@@ -7495,7 +7502,7 @@ win.bcpie = {
 		},
 		serializeObject: function(object) {
 			var o = {};
-			var a = object.serializeArray();
+			var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
 			for (var i=0; i<a.length; i++) {
 				if (o[a[i].name] !== undefined) {
 					if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
@@ -8242,7 +8249,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.04.02',
+		version: '2015.06.25',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -8250,18 +8257,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
 			'messageBoxID' : null,
-			'messageMode' : 'prepend', // 'append', 'box'
+			'messageMode' : 'prepend', // 'append', 'box', 'off'
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false,
-			'validateMode' : 'alert', // 'inline'
+			'validateMode' : 'alert', // 'inline', 'off'
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
 			'successClass' : 'success',
 			'submitEvent' : null,
 			'submitField' : '[type="submit"]',
-			'beforeSubmit' : null, // deprecated. Replaced with validationSuccess.
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
@@ -8678,7 +8684,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (counter===0) {errorCount=0;}
 
 		// Check the field for a value change
-		required.value = (required.field.val() === undefined) ? '' : required.field.val();
+		required.value = (typeof required.field.val() === 'undefined' || required.field.val() === null) ? '' : required.field.val();
 
 		// verify field types and make adjustments to them as needed.
 		if (required.type === 'text' || required.type === 'hidden' || required.type === 'password') {
@@ -8806,8 +8812,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 	function showSuccess(selector,successMessage) {
 		if (settings.afterAjax!=='show') {selector.fadeOut(0);}
-		if (settings.messageMode === 'append') selector.after(messageBox);
-		else if (settings.messageMode === 'prepend') selector.before(messageBox);
+		if (settings.messageMode !== 'off') {
+			if (settings.messageMode === 'append') selector.after(messageBox);
+			else if (settings.messageMode === 'prepend') selector.before(messageBox);
+		}
 
 		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
@@ -8956,13 +8964,12 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 		if (lockSubmit) return false;
 		else lockSubmit = true;
-		for (var i = 0;i<required.length;i++) {
-			runValidation(required[i],i,required.length);
+		if (settings.validateMode !== 'off') {
+			for (var i = 0;i<required.length;i++) {
+				runValidation(required[i],i,required.length);
+			}
 		}
-		if (errorCount===0) {
-			// providing backwards compatibility with beforeSubmit
-			if (settings.beforeSubmit !== null && settings.validationSuccess === null) settings.validationSuccess = settings.beforeSubmit;
-
+		if (errorCount === 0) {
 			if (settings.validationSuccess !== null) {
 				$.when(executeCallback(win[settings.validationSuccess])).then(function(value) {
 					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
@@ -8977,10 +8984,16 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}
 		lockSubmit = false;
 	});
+
+	// Autosubmit
+	if (settings.submitEvent === 'ready') {
+		selector.submit();
+	}
+
 	// Activate submitEvent
-	if (settings.submitField !== '[type="submit"]') {
+	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
 		submitField = selector.find(settings.submitField);
-		if (submitField.length > 0 && settings.submitEvent !== null && settings.submitEvent === 'keyup' || settings.submitEvent === 'blur' || settings.submitEvent === 'change' || settings.submitEvent === 'dblclick') {
+		if (submitField.length > 0) {
 			selector.on(settings.submitEvent,settings.submitField,function(){
 				selector.submit();
 			});
@@ -9080,8 +9093,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (selector.is('select,textarea,input')) selector.val(value);
 		else selector.text(value);
 
-		selector.trigger(settings.event+'.sameAs').trigger(settings.event);
-		if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+		if (selector.data('sameAsLastVal') !== selector.val()) {
+			selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.data('sameAsLastVal',selector.val());
+		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -9112,8 +9128,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				copyFields[i].off(settings.event+'.sameAs');
 			}
 			selector.off(settings.event+'.sameAs');
-			selector.val('').trigger(settings.event+'.sameAs').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.val('');
+
+			if (selector.data('sameAsLastVal') !== selector.val()) {
+				selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+				selector.data('sameAsLastVal',selector.val());
+			}
 		}
 	}
 	function GetFieldsExpression(init){
@@ -9158,6 +9179,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			return str;
 		}
 	}
+
+	selector.data('sameAsLastVal',selector.val());
+
 	// Choose which method to use
 	if (checkbox.length || altCheckbox.length) {
 		if(checkbox.length){

@@ -65,8 +65,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (selector.is('select,textarea,input')) selector.val(value);
 		else selector.text(value);
 
-		selector.trigger(settings.event+'.sameAs').trigger(settings.event);
-		if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+		if (selector.data('sameAsLastVal') !== selector.val()) {
+			selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.data('sameAsLastVal',selector.val());
+		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -97,8 +100,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				copyFields[i].off(settings.event+'.sameAs');
 			}
 			selector.off(settings.event+'.sameAs');
-			selector.val('').trigger(settings.event+'.sameAs').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.val('');
+
+			if (selector.data('sameAsLastVal') !== selector.val()) {
+				selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+				selector.data('sameAsLastVal',selector.val());
+			}
 		}
 	}
 	function GetFieldsExpression(init){
@@ -143,6 +151,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			return str;
 		}
 	}
+
+	selector.data('sameAsLastVal',selector.val());
+
 	// Choose which method to use
 	if (checkbox.length || altCheckbox.length) {
 		if(checkbox.length){

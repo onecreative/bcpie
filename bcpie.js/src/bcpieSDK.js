@@ -101,7 +101,7 @@ win.bcpie = {
 				save: function(selector,webapp,id,options) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
 						type = 'POST', result, msg,
-						formData = (selector instanceof jQuery) ? bcpie.utils.serializeObject(selector) : selector;
+						formData = bcpie.utils.serializeObject(selector);
 
 					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
 						// Retrieve the custom fields list from the server
@@ -205,6 +205,13 @@ win.bcpie = {
 					options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35';
 					return bcpie.utils.ajax(options);
 
+				},
+				delete: function(webappid,itemid,options) {
+					if (typeof options !== 'object') options = {};
+					if (typeof webappid === 'undefined') return 'Missing webappid';
+					if (typeof itemid === 'undefined') return 'Missing itemid';
+					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OID='+itemid+'&A=Delete'
+					return bcpie.utils.ajax(options);
 				}
 			},
 			search: function(webappid,formid,responsePageID,data,options) {
@@ -252,7 +259,7 @@ win.bcpie = {
 		},
 		serializeObject: function(object) {
 			var o = {};
-			var a = object.serializeArray();
+			var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
 			for (var i=0; i<a.length; i++) {
 				if (o[a[i].name] !== undefined) {
 					if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
