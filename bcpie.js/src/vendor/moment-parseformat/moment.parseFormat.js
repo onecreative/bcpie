@@ -20,6 +20,8 @@
   var abbreviatedMonthNames =  [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var amDesignator =  'AM';
   var pmDesignator =  'PM';
+  var lowerAMDesignator = 'am';
+  var lowerPMDesignator = 'pm';
 
   var regexDayNames = new RegExp( dayNames.join('|'), 'i' );
   var regexAbbreviatedDayNames = new RegExp( abbreviatedDayNames.join('|'), 'i' );
@@ -30,8 +32,11 @@
   var regexFirstSecondThirdFourth = /(\d+)(st|nd|rd|th)\b/i;
   var regexEndian = /(\d{1,4})([\/\.\-])(\d{1,2})[\/\.\-](\d{1,4})/;
 
-  var regexTimezone = /\+\d\d:\d\d$/
+  var regexTimezone = /((\+|\-)\d\d:\d\d)$/;
   var amOrPm = '('+[amDesignator,pmDesignator].join('|')+')';
+  var lowerAmOrPm = '('+[lowerAMDesignator,lowerPMDesignator].join('|')+')';
+  var regexLowerAmOrPm = new RegExp(lowerAmOrPm);
+  var regexUpperAmOrPm = new RegExp(amOrPm);
   var regexHoursWithLeadingZeroDigitMinutesSecondsAmPm = new RegExp( '0\\d\\:\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
   var regexHoursWithLeadingZeroDigitMinutesAmPm = new RegExp( '0\\d\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
   var regexHoursWithLeadingZeroDigitAmPm = new RegExp( '0\\d(\\s*)' + amOrPm,  'i' );
@@ -39,6 +44,7 @@
   var regexHoursMinutesAmPm = new RegExp( '\\d{1,2}\\:\\d{1,2}(\\s*)' + amOrPm,  'i' );
   var regexHoursAmPm = new RegExp( '\\d{1,2}(\\s*)' + amOrPm,  'i' );
 
+  var regexISO8601HoursWithLeadingZeroMinutesSecondsMilliseconds = /\d{2}:\d{2}:\d{2}\.\d{3}/;
   var regexHoursWithLeadingZeroMinutesSeconds = /0\d:\d{2}:\d{2}/;
   var regexHoursWithLeadingZeroMinutes = /0\d:\d{2}/;
   var regexHoursMinutesSeconds = /\d{1,2}:\d{2}:\d{2}/;
@@ -93,19 +99,20 @@
 
     // timezone +02:00 ☛ Z
     format = format.replace(regexTimezone, 'Z');
-
+    // 23:39:43.331 ☛ 'HH:mm:ss.SS'
+    format = format.replace(regexISO8601HoursWithLeadingZeroMinutesSecondsMilliseconds, 'HH:mm:ss.SSS');
     // 05:30:20pm ☛ hh:mm:ssa
-    format = format.replace(regexHoursWithLeadingZeroDigitMinutesSecondsAmPm, 'hh:mm:ss$1a');
+    format = format.replace(regexHoursWithLeadingZeroDigitMinutesSecondsAmPm, 'hh:mm:ss$1');
     // 10:30:20pm ☛ h:mm:ssa
-    format = format.replace(regexHoursMinutesSecondsAmPm, 'h:mm:ss$1a');
+    format = format.replace(regexHoursMinutesSecondsAmPm, 'h:mm:ss$1');
     // 05:30pm ☛ hh:mma
-    format = format.replace(regexHoursWithLeadingZeroDigitMinutesAmPm, 'hh:mm$1a');
+    format = format.replace(regexHoursWithLeadingZeroDigitMinutesAmPm, 'hh:mm$1');
     // 10:30pm ☛ h:mma
-    format = format.replace(regexHoursMinutesAmPm, 'h:mm$1a');
+    format = format.replace(regexHoursMinutesAmPm, 'h:mm$1');
     // 05pm ☛ hha
-    format = format.replace(regexHoursWithLeadingZeroDigitAmPm, 'hh$1a');
+    format = format.replace(regexHoursWithLeadingZeroDigitAmPm, 'hh$1');
     // 10pm ☛ ha
-    format = format.replace(regexHoursAmPm, 'h$1a');
+    format = format.replace(regexHoursAmPm, 'h$1');
     // 05:30:20 ☛ HH:mm:ss
     format = format.replace(regexHoursWithLeadingZeroMinutesSeconds, 'HH:mm:ss');
     // 10:30:20 ☛ H:mm:ss
@@ -114,6 +121,13 @@
     format = format.replace(regexHoursWithLeadingZeroMinutes, 'HH:mm');
     // 10:30 ☛ HH:mm
     format = format.replace(regexHoursMinutes, 'H:mm');
+
+    // Check if AM and determine the case of 'a' we need
+    if(regexUpperAmOrPm.test(dateString)) {
+      format += 'A';
+    } else if(regexLowerAmOrPm.test(dateString)) {
+      format += 'a';
+    }
 
     // do we still have numbers left?
 
@@ -169,12 +183,24 @@
 
       // ... try to find day in first and second.
       // If found, the remaining part is the month.
-      index = first > 12 ? 0 : second > 12 ? 1 : -1;
-      if (index !== -1) {
-        parts[index] = hasSingleDigit ? 'D' : 'DD';
-        index = index === 0 ? 1 : 0;
-        parts[index] = hasSingleDigit ? 'M' : 'MM';
-        return parts.join(separator);
+      switch (true) {
+        case first > 12:
+          parts[0] = hasSingleDigit ? 'D' : 'DD';
+          parts[1] = hasSingleDigit ? 'M' : 'MM';
+          return parts.join(separator);
+        case second > 12:
+          parts[0] = hasSingleDigit ? 'M' : 'MM';
+          parts[1] = hasSingleDigit ? 'D' : 'DD';
+          return parts.join(separator);
+        default: // sorry
+          if (preferredOrder[0] === 'M') {
+            parts[0] = hasSingleDigit ? 'M' : 'MM';
+            parts[1] = hasSingleDigit ? 'D' : 'DD';
+            return parts.join(separator);
+          }
+          parts[0] = hasSingleDigit ? 'D' : 'DD';
+          parts[1] = hasSingleDigit ? 'M' : 'MM';
+          return parts.join(separator);
       }
     }
 

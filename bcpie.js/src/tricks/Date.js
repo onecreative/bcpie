@@ -59,7 +59,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 				}
 			}
 
-			if (value.isAfter(moment()) && ref.match(/(?:\/|-)([0-9]{2})$/)) value = value.subtract('year',100);
+			if (value.isAfter(moment()) && ref.match(/(?:\/|-)([0-9]{2})$/)) value = value.subtract(100,'year');
 		}
 
 		if (typeof value !== 'undefined' && value._isAMomentObject === true) {

@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.06.02',
+		bcpieSDK: '2015.07.13',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -44,7 +44,7 @@ win.bcpie = {
 				}
 			}
 		},
-		file : {
+		file: {
 			get: function(path) {
 				if (typeof path !== 'undefined' && path.length > 1) {
 					if (path.charAt(0) === '/') path.slice(1, path.length - 1);
@@ -54,7 +54,7 @@ win.bcpie = {
 						type: 'GET',
 						connection: 'keep-alive',
 						contentType: 'application/json',
-						headers: {Authorization: bcpie.api.token()},
+						headers: {'Authorization': bcpie.api.token()},
 						async: false
 					}).responseText;
 				}else return 'no filename provided';
@@ -65,7 +65,7 @@ win.bcpie = {
 				return $.ajax({
 					url: '/api/v2/admin/sites/current/storage/'+path+'?version=draft-publish',
 					type: 'PUT',
-					headers: {Authorization: bcpie.api.token()},
+					headers: {'Authorization': bcpie.api.token()},
 					contentType: 'application/octet-stream',
 					async: false,
 					data: data,
@@ -78,11 +78,11 @@ win.bcpie = {
 				return $.ajax({
 					url: '/api/v2/admin/sites/current/storage/'+path,
 					type: "DELETE",
-					headers: {Authorization: bcpie.api.token()}
+					headers: {'Authorization': bcpie.api.token()}
 				});
 			}
 		},
-		webapp : {
+		webapp: {
 			item: {
 				get: function(webapp,item) {
 					return $.ajax({
@@ -100,7 +100,7 @@ win.bcpie = {
 				},
 				save: function(selector,webapp,id,options) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', result, msg,
+						type = 'POST', result, msg, fieldTypes = {name:'String', weight:'Number', releaseDate:'dateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
 						formData = bcpie.utils.serializeObject(selector);
 
 					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
@@ -126,16 +126,34 @@ win.bcpie = {
 						}
 
 						// Add custom fields to data object
-						for (var i=0; i<msg.items.length; i++) if (typeof formData[msg.items[i].name] !== 'undefined') data.fields[msg.items[i].name] = '';
+						for (var i=0; i<msg.items.length; i++) {
+							if (typeof formData[msg.items[i].name] !== 'undefined') {
+								data.fields[msg.items[i].name] = '';
+								fieldTypes.fields[msg.items[i].name] = msg.items[i].type;
+							}
+						}
 
 						// Fill the data object with form values
 						for (var key in formData) {
 							if (typeof allFields[key] !== 'undefined') {
-								if (formData[key] !== 'undefined') data[key] = formData[key];
+								if (formData[key] !== 'undefined') {
+									data[key] = formData[key];
+									if (key === 'country' && data[key] === ' ' ) data[key] = '';
+									if (key === 'state' && data[key] === ' ' ) data[key] = '';
+									if (fieldTypes[key] === 'Number') {
+										data[key] = bcpie.utils.validation.number(key,data[key]);
+										if (data[key] === NaN) delete data[key];
+									}
+								}
 							}
 							else if (typeof data.fields[key] !== 'undefined') {
-								if (formData[key] !== 'undefined') data.fields[key] = formData[key];
-								else delete data.fields[key];
+								if (formData[key] !== 'undefined') {
+									data.fields[key] = formData[key];
+									if (fieldTypes.fields[key] === 'Number') {
+										data.fields[key] = bcpie.utils.validation.number(key,data.fields[key]);
+										if (data.fields[key] === NaN) delete data.fields[key];
+									}
+								}else delete data.fields[key];
 							}
 						}
 
@@ -144,8 +162,6 @@ win.bcpie = {
 						options.headers = {'Authorization': bcpie.api.token()};
 						options.type = type;
 						options.async = options.async || true;
-						options.connection = "keep-alive";
-						options.contentType = "application/json";
 						options.processData = false;
 						options.data = JSON.stringify(data);
 
@@ -345,9 +361,21 @@ win.bcpie = {
 			var settings = options || {};
 			settings.url = options.url || '';
 			settings.type = options.type || 'POST';
+			settings.connection = options.connection || 'keep-alive';
+			settings.contentType = options.contentType || 'application/json';
 			if (typeof options.success !== 'undefined') settings.success = function(response) {options.success(response)};
 			if (typeof options.error !== 'undefined') settings.error = function(response) {options.error(response)};
 			return $.ajax(settings);
+		},
+		validation: {
+			number: function(fieldName,value) {
+				if (value === '') {
+					return null;
+				}else if (Number(value) === NaN) {
+					console.log('The value of "'+fieldName+'" is not a number.');
+					return NaN;
+				}else return Number(value);
+			}
 		}
 	},
 	extensions: {

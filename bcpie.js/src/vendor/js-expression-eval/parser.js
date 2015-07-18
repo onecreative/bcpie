@@ -319,14 +319,39 @@ var Parser = (function (scope) {
 	function concat(a, b) {
 		return "" + a + b;
 	}
-
+	function sinh(a) {
+		return Math.sinh ? Math.sinh(a) : ((Math.exp(a) - Math.exp(-a)) / 2);
+	}
+	function cosh(a) {
+		return Math.cosh ? Math.cosh(a) : ((Math.exp(a) + Math.exp(-a)) / 2);
+	}
+	function tanh(a) {
+		if (Math.tanh) return Math.tanh(a);
+		if(a === Infinity) return 1;
+		if(a === -Infinity) return -1;
+		return (Math.exp(a) - Math.exp(-a)) / (Math.exp(a) + Math.exp(-a));
+	}
+	function asinh(a) {
+		if (Math.asinh) return Math.asinh(a);
+		if(a === -Infinity) return a;
+		return Math.log(a + Math.sqrt(a * a + 1));
+	}
+	function acosh(a) {
+		return Math.acosh ? Math.acosh(a) : Math.log(a + Math.sqrt(a * a - 1));
+	}
+	function atanh(a) {
+		return Math.atanh ? Math.atanh(a) : (Math.log((1+a)/(1-a)) / 2);
+	}
 	function log10(a) {
 	      return Math.log(a) * Math.LOG10E;
 	}
 	function neg(a) {
 		return -a;
 	}
-
+	function trunc(a) {
+		if(Math.trunc) return Math.trunc(a);
+		else return x < 0 ? Math.ceil(x) : Math.floor(x);
+	}
 	function random(a) {
 		return Math.random() * (a || 1);
 	}
@@ -340,8 +365,17 @@ var Parser = (function (scope) {
 	}
 
 	// TODO: use hypot that doesn't overflow
-	function pyt(a, b) {
-		return Math.sqrt(a * a + b * b);
+	function hypot() {
+		if(Math.hypot) return Math.hypot.apply(this, arguments);
+		var y = 0;
+		var length = arguments.length;
+		for (var i = 0; i < length; i++) {
+			if (arguments[i] === Infinity || arguments[i] === -Infinity) {
+				return Infinity;
+			}
+			y += arguments[i] * arguments[i];
+		}
+		return Math.sqrt(y);
 	}
 
 	function append(a, b) {
@@ -372,6 +406,12 @@ var Parser = (function (scope) {
 			"asin": Math.asin,
 			"acos": Math.acos,
 			"atan": Math.atan,
+			"sinh": sinh,
+			"cosh": cosh,
+			"tanh": tanh,
+			"asinh": asinh,
+			"acosh": acosh,
+			"atanh": atanh,
 			"sqrt": Math.sqrt,
 			"log": Math.log,
 			"lg" : log10,
@@ -380,6 +420,7 @@ var Parser = (function (scope) {
 			"ceil": Math.ceil,
 			"floor": Math.floor,
 			"round": Math.round,
+			"trunc": trunc,
 			"-": neg,
 			"exp": Math.exp
 		};
@@ -400,7 +441,8 @@ var Parser = (function (scope) {
 			"fac": fac,
 			"min": Math.min,
 			"max": Math.max,
-			"pyt": pyt,
+			"hypot": hypot,
+			"pyt": hypot, // backward compat
 			"pow": Math.pow,
 			"atan2": Math.atan2
 		};
@@ -428,6 +470,12 @@ var Parser = (function (scope) {
 		asin: Math.asin,
 		acos: Math.acos,
 		atan: Math.atan,
+		sinh: sinh,
+		cosh: cosh,
+		tanh: tanh,
+		asinh: asinh,
+		acosh: acosh,
+		atanh: atanh,
 		sqrt: Math.sqrt,
 		log: Math.log,
 		lg: log10,
@@ -436,12 +484,14 @@ var Parser = (function (scope) {
 		ceil: Math.ceil,
 		floor: Math.floor,
 		round: Math.round,
+		trunc: trunc,
 		random: random,
 		fac: fac,
 		exp: Math.exp,
 		min: Math.min,
 		max: Math.max,
-		pyt: pyt,
+		hypot: hypot,
+		pyt: hypot, // backward compat
 		pow: Math.pow,
 		atan2: Math.atan2,
 		E: Math.E,
@@ -611,6 +661,7 @@ var Parser = (function (scope) {
 		error_parsing: function (column, msg) {
 			this.success = false;
 			this.errormsg = "parse error [column " + (column) + "]: " + msg;
+			this.column = column;
 			throw new Error(this.errormsg);
 		},
 
