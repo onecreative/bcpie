@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.07.13',
+		bcpieSDK: '2015.07.17',
 		tricks: {} // populated automatically
 	},
 	globals: {

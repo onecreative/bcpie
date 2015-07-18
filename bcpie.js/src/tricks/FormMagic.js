@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.06.25',
+		version: '2015.07.11',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',

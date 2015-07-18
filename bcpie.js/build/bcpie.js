@@ -7402,7 +7402,7 @@ var Parser = (function (scope) {
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.07.13',
+		bcpieSDK: '2015.07.17',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -7838,7 +7838,7 @@ $(function() {
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.03.31',
+		version: '2015.04.30',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -8349,7 +8349,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.04.02',
+		version: '2015.07.17',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -8435,7 +8435,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.06.25',
+		version: '2015.07.11',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -9222,7 +9222,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.05.30',
+		version: '2015.07.11',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',

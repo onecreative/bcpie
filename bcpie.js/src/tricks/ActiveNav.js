@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.03.31',
+		version: '2015.04.30',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
