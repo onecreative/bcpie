@@ -45,52 +45,66 @@ win.bcpie = {
 			}
 		},
 		file: {
-			get: function(path) {
+			get: function(path,options) {
 				if (typeof path !== 'undefined' && path.length > 1) {
 					if (path.charAt(0) === '/') path.slice(1, path.length - 1);
 					if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
-					return $.ajax({
-						url: '/api/v2/admin/sites/current/storage/'+path,
-						type: 'GET',
-						connection: 'keep-alive',
-						contentType: 'application/json',
-						headers: {'Authorization': bcpie.api.token()},
-						async: false
-					}).responseText;
+
+					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/storage/'+path;
+					options.type = 'GET';
+					options.async = options.async || false;
+					options.headers = {Authorization: bcpie.api.token()};
+					return bcpie.utils.ajax(options);
 				}else return 'no filename provided';
 			},
-			save: function(path,data) {
+			save: function(path,data,options) {
 				if (path.charAt(0) === '/') path.slice(1, path.length - 1);
 				if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
-				return $.ajax({
-					url: '/api/v2/admin/sites/current/storage/'+path+'?version=draft-publish',
-					type: 'PUT',
-					headers: {'Authorization': bcpie.api.token()},
-					contentType: 'application/octet-stream',
-					async: false,
-					data: data,
-					processData: false
-				});
+
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/storage/'+path+'?version=draft-publish';
+				options.type = 'PUT';
+				options.contentType = 'application/octet-stream';
+				options.processData = false;
+				options.async = options.async || false;
+				options.headers = {Authorization: bcpie.api.token()};
+				options.data = data;
+				return bcpie.utils.ajax(options);
 			},
 			delete: function(path){
 				if (path.charAt(0) === '/') path.slice(1, path.length - 1);
 				if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
-				return $.ajax({
-					url: '/api/v2/admin/sites/current/storage/'+path,
-					type: "DELETE",
-					headers: {'Authorization': bcpie.api.token()}
-				});
+
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/storage/'+path;
+				options.type = 'DELETE';
+				options.headers = {Authorization: bcpie.api.token()};
+				return bcpie.utils.ajax(options);
+			}
+		},
+		folder: {
+			get: function(path,options) {
+				if (typeof path !== 'undefined' && path.length > 1) {
+					if (path.charAt(0) === '/') path.slice(1, path.length - 1);
+					if (path.charAt(path.length - 1) !== '/') path = path+'/';
+
+					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/storage/'+path+'?meta';
+					options.type = 'GET';
+					options.headers = {Authorization: bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				}else return 'no folder name provided';
 			}
 		},
 		webapp: {
 			item: {
-				get: function(webapp,item) {
-					return $.ajax({
-							url: '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+item,
-							headers: {'Authorization': bcpie.api.token()},
-							contentType: 'application/json',
-							async: false
-						}).responseJSON;
+				get: function(webapp,item,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+item;
+					options.headers = {Authorization: bcpie.api.token()};
+					options.async = options.async || false;
+					return bcpie.utils.ajax(options);
 				},
 				place: function(scope,webapp,item,callback) {
 					var data = bcpie.api.webapp.item.get(webapp,item),field,element;
