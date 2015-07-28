@@ -8414,7 +8414,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 				}
 			}
 
-			if (value.isAfter(moment()) && ref.match(/(?:\/|-)([0-9]{2})$/)) value = value.subtract(100,'year');
+			if (!ref.match(/[0-9]{4}/) && value.isAfter(moment().add(5,'year')) && ref.match(/(?:\/|-)([0-9]{2})$/)) {
+				value = value.subtract(100,'year');
+			}
 		}
 
 		if (typeof value !== 'undefined' && value._isAMomentObject === true) {
