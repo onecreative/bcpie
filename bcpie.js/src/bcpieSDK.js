@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.07.17',
+		bcpieSDK: '2015.08.04',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -14,6 +14,16 @@ win.bcpie = {
 		states: {"AL": "Alabama", "AK": "Alaska", "AS": "American Samoa", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "District Of Columbia", "FM": "Federated States Of Micronesia", "FL": "Florida", "GA": "Georgia", "GU": "Guam", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MH": "Marshall Islands", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "MP": "Northern Mariana Islands", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PW": "Palau", "PA": "Pennsylvania", "PR": "Puerto Rico", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VI": "Virgin Islands", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}
 	},
 	api: {
+		filters: function(filters) {
+			var response = '?limit=';
+			response += filters.limit || 500;
+			response += '&skip=';
+			response += filters.skip || 0;
+			if (typeof filters.order !== 'undefined') response += '&order='+filters.order;
+			if (typeof filters.fields === 'array') response += '&fields='+filters.fields.toString();
+			if (typeof filters.where === 'array') response += '&where='+bcpie.utils.jsonify(filters.where);
+			return response;
+		},
 		token: function() {
 			if (typeof $.cookie('access_token') !== 'undefined') return $.cookie('access_token');
 			else return $.cookie('access_token',window.location.hash.replace('#access_token=',''));
@@ -163,7 +173,7 @@ win.bcpie = {
 							else if (typeof data.fields[key] !== 'undefined') {
 								if (formData[key] !== 'undefined') {
 									data.fields[key] = formData[key];
-									if (fieldTypes.fields[key] === 'Number') {
+									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
 										data.fields[key] = bcpie.utils.validation.number(key,data.fields[key]);
 										if (data.fields[key] === NaN) delete data.fields[key];
 									}
@@ -215,6 +225,87 @@ win.bcpie = {
 					}
 				}
 			}
+		},
+		crm: {
+			customers: {
+				get: function(customerID,filters,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers';
+					if (typeof filters === 'object') {
+						if (customerID !== 'all' && customerID !== '' && customerID !== null) options.url += '/'+customerID;
+						options.url += bcpie.api.filters(filters);
+					}
+					options.type = 'GET';
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				},
+				create: function(data,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers/';
+					options.type = 'POST';
+					options.data = JSON.stringify(data);
+					options.processData = false;
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				},
+				update: function(customerID,data,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers/'+customerID;
+					options.type = 'PUT';
+					options.data = JSON.stringify(data);
+					options.processData = false;
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				},
+				delete: function(customerID,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers/'+customerID;
+					options.type = 'DELETE';
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				},
+				secureZones: {
+					get: function(customerID,options) {
+						if (typeof options !== 'object') options = {};
+						options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/securezones';
+						options.type = 'GET';
+						options.headers = {'Authorization': bcpie.api.token()};
+						return bcpie.utils.ajax(options);
+					},
+					subscribe: function(zones,options) {
+						if (typeof options !== 'object') options = {};
+						options.url = '/webresources/api/v3/sites/current/customers/'+zones.customerID+'/securezones';
+						options.type = 'POST';
+						options.data = JSON.stringify(data);
+						options.processData = false;
+						options.headers = {'Authorization': bcpie.api.token()};
+						return bcpie.utils.ajax(options);
+					},
+					unsubscribe: function(zones,options) {
+						if (typeof options !== 'object') options = {};
+						options.url = '/webresources/api/v3/sites/current/customers/'+zones.customerID+'/securezones&items='+bcpie.utils.jsonify(zones);
+						options.type = 'DELETE';
+						options.headers = {'Authorization': bcpie.api.token()};
+						return bcpie.utils.ajax(options);
+					}
+				},
+				orders: function(customerID,filters,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/orders';
+					options.url += bcpie.api.filters(filters);
+					options.type = 'GET';
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				},
+				addresses: function(customerID,filters,options) {
+					if (typeof options !== 'object') options = {};
+					options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/addresses';
+					options.url += bcpie.api.filters(filters);
+					options.type = 'GET';
+					options.headers = {'Authorization': bcpie.api.token()};
+					return bcpie.utils.ajax(options);
+				}
+			}
 		}
 	},
 	frontend: {
@@ -249,7 +340,8 @@ win.bcpie = {
 				options.data = data;
 				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID;
 				options.async = false;
-				return $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults').children();
+				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
+				return (response.children().length > 0) ? response.children() : response.html();
 			}
 		},
 		crm: {
@@ -364,11 +456,15 @@ win.bcpie = {
 			if (typeof callback === 'function') {
 				function parameter(selector, callback, data, textStatus, xhr){
 					var deferred = $.Deferred();
-					deferred.resolve(callback(selector, data, textStatus, xhr));
+					if (typeof data === 'undefined') deferred.resolve(callback(selector));
+					else if (typeof textStatus === 'undefined') deferred.resolve(callback(selector, data));
+					else if (typeof xhr === 'undefined') deferred.resolve(callback(selector, data, textStatus));
+					else deferred.resolve(callback(selector, data, textStatus, xhr));
+
 					return deferred.promise();
 				}
 
-				$.when(parameter(selector, callback, data, textStatus, xhr));
+				return $.when(parameter(selector, callback, data, textStatus, xhr));
 			}
 		},
 		ajax: function(options) {

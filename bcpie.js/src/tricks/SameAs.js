@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.07.11',
+		version: '2015.07.28',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -25,12 +25,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
+			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false
 		}
 	});
 
 	// Setup our variables
-	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : body.find(settings.scope),
+	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope),
 		copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
 		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
 
@@ -62,8 +63,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			else value = settings.prefix + value + settings.suffix;
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
-		if (selector.is('select,textarea,input')) selector.val(value);
-		else selector.text(value);
+		if (settings.ref === 'text' || settings.ref === 'value') {
+			if (selector.is('select,textarea,input')) selector.val(value);
+			else selector.text(value);
+		}else {
+			selector.attr(settings.ref,value);
+		}
+
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
 			selector.trigger(settings.event+'.sameAs').trigger(settings.event);

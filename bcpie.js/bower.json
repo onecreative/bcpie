@@ -1,6 +1,6 @@
 {
 	"name": "bcpie",
-	"version": "2015.03.21",
+	"version": "2015.08.02",
 	"homepage": "https://github.com/onecreative/bcpie",
 	"authors": [
 		"Adam Cook <adam@onecreative.pro>"
@@ -22,8 +22,7 @@
 		"moment-parseformat": "latest",
 		"moment-duration-format": "latest",
 		"jquery.mobilephonenumber": "latest",
-		"js-expression-eval": "latest",
-		"clndr": "latest"
+		"js-expression-eval": "latest"
 	},
 	"install": {
 		"path": {
@@ -41,8 +40,7 @@
 				"bower_components/jquery.mobilephonenumber/vendor/jquery.caret.js",
 				"bower_components/jquery.mobilephonenumber/lib/jquery.mobilePhoneNumber.js"
 			],
-			"js-expression-eval": "bower_components/js-expression-eval/parser.js",
-			"clndr": "bower_components/clndr/src/clndr.js"
+			"js-expression-eval": "bower_components/js-expression-eval/parser.js"
 		},
 		"ignore": [
 			"jquery",
