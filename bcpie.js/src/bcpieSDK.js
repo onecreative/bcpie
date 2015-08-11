@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.08.04',
+		bcpieSDK: '2015.08.10',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -111,6 +111,7 @@ win.bcpie = {
 			item: {
 				get: function(webapp,item,options) {
 					if (typeof options !== 'object') options = {};
+					options.method = 'GET';
 					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+item;
 					options.headers = {Authorization: bcpie.api.token()};
 					options.async = options.async || false;
@@ -167,6 +168,9 @@ win.bcpie = {
 									if (fieldTypes[key] === 'Number') {
 										data[key] = bcpie.utils.validation.number(key,data[key]);
 										if (data[key] === NaN) delete data[key];
+									}else if (fieldTypes[key] === 'Boolean') {
+										data[key] = bcpie.utils.validation.boolean(key,data[key]);
+										if (data[key] === null) delete data[key];
 									}
 								}
 							}
@@ -176,6 +180,9 @@ win.bcpie = {
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
 										data.fields[key] = bcpie.utils.validation.number(key,data.fields[key]);
 										if (data.fields[key] === NaN) delete data.fields[key];
+									}else if (fieldTypes.fields[key] === 'Boolean') {
+										data.fields[key] = bcpie.utils.validation.boolean(key,data.fields[key]);
+										if (data.fields[key] === null) delete data.fields[key];
 									}
 								}else delete data.fields[key];
 							}
@@ -381,7 +388,16 @@ win.bcpie = {
 		},
 		serializeObject: function(object) {
 			var o = {};
-			var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
+			if (object instanceof jQuery) {
+				var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
+			}else if ($.isArray(object) && typeof object[0].name !== 'undefined' && typeof object[0].value !== 'undefined') {
+				var a = object;
+			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
+				var a = [object];
+			}else {
+				console.log('Malformed object passed to bcpie.utils.serializeObject method.');
+				var a = [];
+			}
 			for (var i=0; i<a.length; i++) {
 				if (o[a[i].name] !== undefined) {
 					if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
@@ -485,6 +501,11 @@ win.bcpie = {
 					console.log('The value of "'+fieldName+'" is not a number.');
 					return NaN;
 				}else return Number(value);
+			},
+			boolean: function(fieldName,value) {
+				if (value.toLowerCase() === 'true' || value === '1') return true;
+				else if (value.toLowerCase() === 'false' || value === '0') return false;
+				else return null;
 			}
 		}
 	},
