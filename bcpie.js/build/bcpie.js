@@ -8514,7 +8514,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.07.11',
+		version: '2015.08.11',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -8556,9 +8556,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (jslang == "JP") jslang = "JA";
 		if (jslang == "CS") jslang = "CZ";
 		if (jslang == "SI") jslang = "SL";
-		LoadLangV(jslang);
 	}
-	if (validatelang === undefined && jslang === 'EN') {
+
+	if (typeof validatelang === 'undefined' && jslang === 'EN') {
 		var validatelang = {
 			Currency: { MustNumber: " must be a number and cannot be empty\n", NoSymbol: " amount you entered must be a number without currency symbol\n" },
 			Number: { MustNumber: " must be a number and cannot be empty\n", NoDecimal: " must be a number (no decimal points) and cannot be empty\n" },
@@ -8570,15 +8570,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			Others: { CannotContain: " cannot contain ", WhiteSpace: "white spaces\n", Character: "character.\n" },
 			IP: { Illegal: "- Please enter a valid IP Address" }
 		};
-	}
-	function LoadLangV(b) {
-		if (document.getElementById("RADEDITORSTYLESHEET0")) return;
-		else {
-			var c = document.createElement("script");
-			c.setAttribute("src", "/BcJsLang/ValidationFunctions.aspx?lang=" + b);
-			document.getElementsByTagName("head")[0].appendChild(c);
-		}
-	}
+	}else if (typeof validatelang === 'undefined') eval($.ajax({url:'/BcJsLang/ValidationFunctions.aspx?lang='+jslang,method:'get',async:false}).responseText);
+
 	function formfield(j, d) {
 		switch (d) {
 			case "firstupper":
