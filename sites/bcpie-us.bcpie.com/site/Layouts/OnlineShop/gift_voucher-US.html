@@ -1,32 +1,11 @@
 <form action="post">
-    <div class="row collapse">
-        <div class="medium-2 columns">
+    <div class="row">
+        <div class="medium-6 columns">
             <p>You are buying a gift voucher. Please enter the recipients details below.</p>
+            <input type="text" name="Username" placeholder="Recipient Name"/>
+            <input type="email" name="RecipientEmail" placeholder="Recipient Email Address"/>
+            <textarea name="Message" placeholder="Personal Message to Recipient"></textarea>
+            {tag_continue}
         </div>
     </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Recipient Name</label>
-        </div>
-        <div class="medium-10 columns">
-            <input type="text" name="Username" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Recipient Email Address</label>
-        </div>
-        <div class="medium-10 columns">
-            <input type="text" name="RecipientEmail" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Personal Message to Recipient</label>
-        </div>
-        <div class="medium-10 columns">
-            <textarea name="Message"></textarea>
-        </div>
-    </div>
-    <div class="row collapse"> {tag_continue} </div>
 </form>

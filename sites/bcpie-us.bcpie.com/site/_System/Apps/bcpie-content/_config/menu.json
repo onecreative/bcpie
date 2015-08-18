@@ -1,0 +1,10 @@
+{
+	"menu-first-bcpie-content": {
+  		"parent": "menu-modules",
+		"weight": 1000,
+		"title": "Content",
+		"attr": {
+			"href": "/Admin/AppLoader.aspx?client_id=bcpie-content"
+		}
+	}
+}

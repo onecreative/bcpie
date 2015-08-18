@@ -1,9 +1,9 @@
-<table>
-    <tbody>
-        <tr>
-            <td>{tag_subject}</td>
-            <td>{tag_category}</td>
-            <td>{tag_status}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="panel">
+	<h4>{tag_subject}</h4>
+	<p>
+		<b>Case number</b>: {{caseNumber}}<br>
+		<b>Created at</b>: <span class="date">{{createdate | date: 'MMMM dd, yyyy HH:mm'}}</span><br>
+		<b>Last updated</b>: <span class="date">{{lastUpdateDate | date: 'MMMM dd, yyyy HH:mm'}}</span><br>
+		<b>Status</b>: {{status}}
+	</p>
+</div>

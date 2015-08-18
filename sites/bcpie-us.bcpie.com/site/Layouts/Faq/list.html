@@ -1,1 +1,10 @@
-<h5 class="title">{tag_question}</h5>
+{% if params.effect == "ajax" %}
+	<ul class="accordion" data-accordion="faqs">
+		<li class="accordion-navigation">
+			<a href="#panel-{{id}}">{{question}}</a>
+			<div id="panel-{{id}}" class="content">{{answer}}</div>
+		</li>
+	</ul>
+{% else %}
+	<h5>{tag_question}</h5>
+{% endif %}

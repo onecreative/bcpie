@@ -1,119 +1,72 @@
 <html>
-    
     <head>
         <style type="text/css">
-            body {
-                margin: 18px;
-            }
-            body, table {
-                font: 12px/18px"Lucida Grande", Arial, Verdana, sans-serif;
-            }
-            table.border {
-                font: 11px/18px"Lucida Grande", Arial, Verdana, sans-serif;
-            }
-            table.border {
-                border-right: 1px solid #eee;
-                border-bottom: 1px solid #eee;
-            }
-            table.border td {
-                border-top: 1px solid #eee;
-                border-left: 1px solid #eee;
-            }
-            table span {
-                color: #888;
-            }
+            body {margin: 30px;}
+            body, table {font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;}
+            table {border-right: 1px solid #eee;border-bottom: 1px solid #eee;}
+            table td {border-top: 1px solid #eee;border-left: 1px solid #eee;}
+            table span {color: #888;}
         </style>
     </head>
-    
     <body>
         <table>
             <tr>
-                <td><strong>Invoice Date</strong> 
-                    <br />{tag_invoicedate}</td>
-                <td align="right"><strong>Invoice Number</strong> 
-                    <br />{tag_invoicenumber}</td>
+                <td><strong>Invoice Date</strong><br>{tag_invoicedate}</td>
+                <td align="right"><strong>Invoice Number</strong><br>{tag_invoicenumber}</td>
             </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
-                <td colspan="2">&nbsp;</td>
+                <td>{tag_recipientname}<br>{tag_addressdefault}</td>
             </tr>
-            <tr>
-                <td>{tag_recipientname}
-                    <br />{tag_addressdefault}</td>
-            </tr>
-            <tr>
-                <td colspan="2">&nbsp;</td>
-            </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
                 <td colspan="2">
                     <table>
-                        <tr>
-                            <td width="10%"><span>Product Code</span>
-                                
-                            </td>
-                            <td width="20%"><span>Product</span>
-                                
-                            </td>
-                            <td width="30%"><span>Description</span>
-                                
-                            </td>
-                            <td width="10%"><span>Unit Price</span>
-                                
-                            </td>
-                            <td width="10%"><span>Tax</span>
-                                
-                            </td>
-                            <td width="10%"><span>Quantity</span>
-                                
-                            </td>
-                            <td width="10%"><span>Total</span>
-                                
-                            </td>
-                        </tr>
-                        <tr class="text">
-                            <td width="10%">{tag_productcode}</td>
-                            <td width="20%">{tag_productname}</td>
-                            <td width="30%">{tag_productdescription}</td>
-                            <td width="10%">{tag_productextaxamount}</td>
-                            <td width="10%">{tag_producttaxamount}</td>
-                            <td width="10%">{tag_productquantity}</td>
-                            <td width="10%">{tag_producttotal}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th width="10%"><span>Product Code</span></th>
+                                <th width="20%"><span>Product</span></th>
+                                <th width="30%"><span>Description</span></th>
+                                <th width="10%"><span>Unit Price</span></th>
+                                <th width="10%"><span>Tax</span></th>
+                                <th width="10%"><span>Quantity</span></th>
+                                <th width="10%"><span>Total</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text">
+                                <td width="10%">{tag_productcode}</td>
+                                <td width="20%">{tag_productname}</td>
+                                <td width="30%">{tag_productdescription}</td>
+                                <td width="10%">{tag_productextaxamount}</td>
+                                <td width="10%">{tag_producttaxamount}</td>
+                                <td width="10%">{tag_productquantity}</td>
+                                <td width="10%">{tag_producttotal}</td>
+                            </tr>
+                        </tbody>
                     </table>
                     <table>
                         <tr>
-                            <td colspan="2">
-                                <br />
-                                <hr />
-                            </td>
+                            <td colspan="2"><br><hr></td>
                         </tr>
                         <tr>
-                            <td align="right" width="90%"><strong>Shipping Cost:</strong>
-                                
-                            </td>
+                            <td align="right" width="90%"><strong>Shipping Cost:</strong></td>
                             <td class="text">{tag_shippingextaxamount}</td>
                         </tr>
                         <tr>
-                            <td align="right" width="90%"><strong>Shipping Tax:</strong>
-                                
-                            </td>
+                            <td align="right" width="90%"><strong>Shipping Tax:</strong></td>
                             <td class="text">{tag_shippingtaxamount}</td>
                         </tr>
                         <tr>
-                            <td align="right" width="90%"><strong>Grand Total:</strong>
-                                
-                            </td>
+                            <td align="right" width="90%"><strong>Grand Total:</strong></td>
                             <td>{tag_invoicetotal}</td>
                         </tr>
                         <tr>
-                            <td align="right" width="90%"><strong>Paid Already:</strong>
-                                
-                            </td>
+                            <td align="right" width="90%"><strong>Paid Already:</strong></td>
                             <td>{tag_amountpaid}</td>
                         </tr>
                         <tr>
-                            <td align="right" width="90%"><strong>Outstanding:</strong>
-                                
-                            </td>
+                            <td align="right" width="90%"><strong>Outstanding:</strong></td>
                             <td>{tag_amountoutstanding}</td>
                         </tr>
                     </table>
@@ -121,5 +74,4 @@
             </tr>
         </table>
     </body>
-    
 </html>

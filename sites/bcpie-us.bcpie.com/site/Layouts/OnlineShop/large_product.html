@@ -1,77 +1,35 @@
-<h3>{tag_name}</h3>
-<ul>
-    <li><strong>{tag_saleprice}</strong> </li>
-    <li>In stock: <strong>{tag_instock}</strong> </li>
-    <li>{tag_addtocartinputfield} {tag_addtocart, <img src="/CatalystImages/shop_addtocart.png"
-        />}</li>
-</ul>
-<h5 class="title">{tag_description}</h5>
-<div class="row">
-    <div class="medium-12 columns"> {tag_largeimage}
-        <h5 class="title">{tag_poplets}</h5>
-    </div>
-</div>
+<p>
+    Price: <strong>{tag_saleprice}</strong><br>
+    In stock: <strong>{tag_instock}</strong><br>
+    Qty: <strong>{tag_addtocartinputfield}</strong> {tag_addtocart}
+</p>
+
+<h5>{tag_description}</h5>
+{tag_largeimage}
+{tag_poplets}
+
 <h5>Comment</h5>
 <form name="catratingform2343" onSubmit="return checkWholeForm2343(this)" method=post
 action="/RatingProcess.aspx?OID={module_oid}&amp;OTYPE={module_otype}">
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label>Was this helpful?</label>
-        </div>
-        <div class="medium-10 columns">
-            <label> <span>No</span>
-                <input type="radio" name="Rating" value="1" />
-                <input type="radio" name="Rating" value="2" />
-                <input type="radio" name="Rating" checked="checked" value="3" />
-                <input type="radio" name="Rating" value="4" />
-                <input type="radio" name="Rating" value="5" />
-                <span>Very</span> </label>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Name (optional)</label>
-        </div>
-        <div class="medium-10 columns">
-            <input type="text" name="FullName" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Website (optional)</label>
-        </div>
-        <div class="medium-10 columns">
-            <input type="text" name="Website" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Email Address (optional)</label>
-        </div>
-        <div class="medium-10 columns">
-            <input type="text" name="EmailAddress" />
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Enter Word Verification in box below</label>
-        </div>
-        <div class="medium-10 columns">{module_captchav2}</div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-2 columns">
-            <label class="inline">Comment (optional)</label>
-        </div>
-        <div class="medium-10 columns">
-            <textarea class="cat_listbox_small" name="Feedback"></textarea>
-        </div>
-    </div>
-    <div class="row collapse">
-        <div class="medium-12 columns">
-            <button type="submit" class="radius button">Submit</button>
-        </div>
-    </div>
+    <label>Was this helpful?</label>
+    <label>
+        <span>No</span>
+        <input type="radio" name="Rating" value="1" />
+        <input type="radio" name="Rating" value="2" />
+        <input type="radio" name="Rating" checked="checked" value="3" />
+        <input type="radio" name="Rating" value="4" />
+        <input type="radio" name="Rating" value="5" />
+        <span>Very</span>
+    </label>
+    <input type="text" name="FullName" placeholder="Name (optional)"/>
+    <input type="text" name="Website" placeholder="Website (optional)"/>
+    <input type="email" name="EmailAddress" placeholder="Email Address (optional)"/>
+    <label class="inline">Enter Word Verification in box below</label>
+    {module_captchav2}
+    <textarea name="Feedback" placeholder="Comment (optional)"></textarea>
+    <button type="submit" class="radius button">Submit</button>
 </form>
+
 <script type="text/javascript" src="/CatalystScripts/ValidationFunctions.js"></script> 
 <script type="text/javascript">
     //<![CDATA[

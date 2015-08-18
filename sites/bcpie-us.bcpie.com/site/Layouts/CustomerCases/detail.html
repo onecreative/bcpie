@@ -1,10 +1,5 @@
-<h3>Case Details</h3> 
 <table>
     <tbody>
-        <tr>
-            <td>Subject</td>
-            <td>{tag_subject}</td>
-        </tr>
         <tr>
             <td>Description</td>
             <td>{tag_description}</td>
@@ -23,14 +18,14 @@
         </tr>
         <tr>
             <td>Create Date</td>
-            <td>{tag_createdate}</td>
+            <td>{{createdate | date: 'MMMM dd, yyyy HH:mm'}}</td>
         </tr>
         <tr>
             <td>Last Update Date</td>
-            <td>{tag_lastupdatedate}</td>
+            <td>{{lastUpdateDate | date: 'MMMM dd, yyyy HH:mm'}}</td>
         </tr>
         <tr>
-            <td>Thread</td>
+            <td valign="top">Thread</td>
             <td>{tag_thread}</td>
         </tr>
     </tbody>

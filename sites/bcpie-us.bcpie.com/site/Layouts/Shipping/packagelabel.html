@@ -1,25 +1,34 @@
 <html>
 <head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link rel="stylesheet" href="/stylesheets/modulestylesheets.css" />
+	<link rel="stylesheet" href="/stylesheets/theme.css" />
+	<link rel="stylesheet" href="/stylesheets/app.css" />
 </head>
 <body>
-    <table>
-      <tbody>
-        <tr>
-          <td><strong>SHIP FROM:</strong><br />
-            <blockquote>[Company Name]<br />
-              [Address 1]<br />
-              [Address 2]<br />
-              <strong>[City], [State] [ZIP Code]</strong> </blockquote></td>
-        </tr>
-        <tr>
-          <td><hr></td>
-        </tr>
-        <tr>
-          <td colspan="1"><strong>SHIP TO:</strong>
-            <blockquote> <span>{tag_recipientname}</span><br />
-              <span>{tag_addressshipping}</span></blockquote></td>
-        </tr>
-      </tbody>
-    </table>
+
+<table width="100%">
+	<tr>
+		<td width="50%" valign="top">
+			<h3>SHIP FROM</h3>
+			<blockquote>
+				[Company Name]<br>
+				[Address 1]<br>
+				[Address 2]<br>
+				<strong>[City], [State] [ZIP Code]</strong>
+			</blockquote>
+		</td>
+		<td width="50%" valign="top">
+			<h3>SHIP TO:</h3>
+			<blockquote>
+				<strong>{tag_recipientname}</strong><br>
+				{tag_addressshipping}
+			</blockquote>
+		</td>
+	</tr>
+</table>
+
 </body>
 </html>

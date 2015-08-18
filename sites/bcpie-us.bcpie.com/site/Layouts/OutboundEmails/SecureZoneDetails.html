@@ -1,41 +1,22 @@
 <html>
-    
     <head>
         <style type="text/css">
-            body {
-                margin: 30px;
-            }
-            body, table {
-                font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-            }
-            table {
-                border-right: 1px solid #eee;
-                border-bottom: 1px solid #eee;
-            }
-            table td {
-                border-top: 1px solid #eee;
-                border-left: 1px solid #eee;
-            }
-            table span {
-                color: #888;
-            }
+            body {margin: 30px;}
+            body, table {font: 12px/18px"Lucida Grande", Helvetica, Arial, Verdana, sans-serif;}
+            table {border-right: 1px solid #eee;border-bottom: 1px solid #eee;}
+            table td {border-top: 1px solid #eee;border-left: 1px solid #eee;}
+            table span {color: #888;}
         </style>
     </head>
-    
     <body>
         <p>Dear {tag_recipientName},</p>
         <p>Below are your details to access the "Member Only" secure areas within our website.</p>
         <p>Your username is <strong>{tag_userName}</strong>.
-            <br/>For security reasons your password has not been included in this email. If you
-            want to reset it please click on the link below or paste it in your browser:
-            <br/>
-            <a href="{tag_passwordResetLink}">{tag_passwordResetLink}</a>
-        </p>
-        <p>Currently you have access to the following "Member Only" areas:</p> <strong>{tag_secureZoneList}</strong>
-        
-        <p>Please visit our website at: <strong>{tag_siteUrl}</strong> 
-        </p>
+        <p>For security reasons your password has not been included in this email. If you want to reset it please click on the link below or paste it in your browser:</p>
+        <p><a href="{tag_passwordResetLink}">{tag_passwordResetLink}</a></p>
+        <p>Currently you have access to the following "Member Only" areas:</p> 
+        <strong>{tag_secureZoneList}</strong>
+        <p>Please visit our website at: <strong>{tag_siteUrl}</strong> </p>
         <p>Thank you!</p>
     </body>
-    
 </html>

@@ -1,40 +1,32 @@
-<ul class="pricing-table">
-	<li class="title">Link: <a href="{{affiliateLink}}">{{affiliateLink}}</a></li>
-	<li class="description">Place the above link on your website or forward to friends. Whenever someone clicks on the link to visit this website they will be tagged, and when they purchase you will earn commissions.</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Total Unique Click-Thrus:</div>
-			<div class="small-6 columns">{{clickthrustotal}}</div>
-		</div>
-	</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Referrals to Date:</div>
-			<div class="small-6 columns">{{referralstotal}}</div>
-		</div>
-	</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Referrals Today:</div>
-			<div class="small-6 columns">{{referralsToday}}</div>
-		</div>
-	</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Referrals This Week:</div>
-			<div class="small-6 columns">{{referralslastweek}}</div>
-		</div>
-	</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Referrals This Month:</div>
-			<div class="small-6 columns">{{referralslastmonth}}</div>
-		</div>
-	</li>
-	<li class="bullet-item">
-		<div class="row">
-			<div class="small-6 columns">Uncollected Commissions:</div>
-			<div class="small-6 columns">${% if commissionOwing contains 'There is no commission owing.' %}0{% else %}{{commissionOwing}}{% endif %}</div>
-		</div>
-	</li>
-</ul>
+<div class="panel text-center">
+	<p>Your affiliate link: <br><a href="{{affiliateLink}}">{{affiliateLink}}</a></p>
+	<p>Place the above link on your website or forward to friends. Whenever someone clicks on the link to visit this website they will be tagged, and when they purchase you will earn commissions.</p>
+</div>
+
+<h4>Affiliate stats</h4>
+<table width="100%">
+	<tr>
+		<td scope="row">Total Unique Click-Thrus:</td>
+		<td>{{clickthrustotal}}</td>
+	</tr>
+	<tr>
+		<td scope="row">Referrals to Date:</td>
+		<td>{{referralstotal}}</td>
+	</tr>
+	<tr>
+		<td scope="row">Referrals Today:</td>
+		<td>{{referralsToday}}</td>
+	</tr>
+	<tr>
+		<td scope="row">Referrals This Week:</td>
+		<td>{{referralslastweek}}</td>
+	</tr>
+	<tr>
+		<td scope="row">Referrals This Month:</td>
+		<td>{{referralslastmonth}}</td>
+	</tr>
+	<tr>
+		<td scope="row">Uncollected Commissions:</td>
+		<td>${% if commissionOwing contains 'There is no commission owing.' %}0{% else %}{{commissionOwing}}{% endif %}</td>
+	</tr>
+</table>

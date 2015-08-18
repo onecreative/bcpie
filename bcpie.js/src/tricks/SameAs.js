@@ -26,7 +26,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			event : 'change', // specify the event that triggers the copy
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
-			trim: false
+			trim: false,
+			convert: null // 'slug' will change the string to an appropriate url path
 		}
 	});
 
@@ -63,11 +64,17 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			else value = settings.prefix + value + settings.suffix;
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
-		if (settings.ref === 'text' || settings.ref === 'value') {
+		if (settings.convert !== null) {
+			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
+			else if (settings.convert === 'lowercase') value = value.toLowerCase();
+			else if (settings.convert === 'uppercase') value = value.toUpperCase();
+		}
+
+		if (settings.target === 'text' || settings.target === 'value') {
 			if (selector.is('select,textarea,input')) selector.val(value);
 			else selector.text(value);
 		}else {
-			selector.attr(settings.ref,value);
+			selector.attr(settings.target,value);
 		}
 
 

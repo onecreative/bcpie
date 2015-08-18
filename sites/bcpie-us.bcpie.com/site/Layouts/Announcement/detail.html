@@ -1,9 +1,11 @@
-<meta property="og:url" content="http://{{globals.site.host}}{{url}}">
-<meta property="og:title" content="{{subject}}"/>
+<meta property="og:title" content="{{subject}}">
+<meta property="og:url" content="{module_pageaddress}">
+<meta property="og:type" content="article">
+
 <div class="row">
 	<div class="medium-8 columns">
 		<article id="post">
-			<p class="subheader">{{fromDate | date: 'MMM dd, yyyy'}}{% if toDate != fromDate %}–{{toDate | date: 'MMM dd, yyyy'}}{% endif %} | <a href="{module_siteurl}{{url}}">permalink</a></p>
+			<p class="subheader">{{fromDate | date: 'MMM dd, yyyy'}}{% if toDate != fromDate %}–{{toDate | date: 'MMM dd, yyyy'}}{% endif %} | <a href="{module_pageaddress}">permalink</a></p>
 			{{body}}
 		</article>
 	</div>
@@ -13,4 +15,4 @@
 			{module_announcement filter="all"}
 		</aside>
 	</div>
-</div>
+</div>,add_Image, remove_Image

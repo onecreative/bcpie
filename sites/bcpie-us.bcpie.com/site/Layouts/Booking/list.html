@@ -1,1 +1,10 @@
-<p><span class="date">{tag_date}</span>{tag_name}</p>
+<h4>{tag_name} <small class="date">{{date | date: 'MMMM dd, yyyy'}}</small></h4>
+{% if capacity != 'Not Set' %}
+<div class="clearfix">
+	<div class="left"><b>Capacity:</b> {{capacityEmpty}}/{{capacity}}&nbsp;</div>
+	<div class="progress left success small-3 medium-1">
+		<span class="meter" style="width: {{percentFull}}%"></span>
+	</div>
+</div>
+{% endif %}
+{% if body %}<p>{{body | strip_html | truncatewords: 20, ' ...' }}</p>{% endif %}

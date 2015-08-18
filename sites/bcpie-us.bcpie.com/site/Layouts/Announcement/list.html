@@ -1,5 +1,2 @@
-<dl>
-	<dt><a href="{{url}}">{{subject}}</a></dt>
-	<dd>{{fromdate | date: 'MMMM dd, yyyy'}}</dd>
-	<dd>{{body | truncate: 100, '...'}}</dd>
-</dl>
+<h4><a href="{{url}}">{{subject}}</a> <small>{{fromdate | date: 'MMMM dd, yyyy'}}</small></h4>
+<p>{{body | truncatewords: 40, ' ...'}}</p>

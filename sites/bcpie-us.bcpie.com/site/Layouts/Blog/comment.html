@@ -1,7 +1,6 @@
-<div class="row">
-    <div class="medium-12 columns">
- 		<span>{tag_flag}</span>  
-        <strong>{tag_fullname}</strong> commented on {tag_usagedate}
-        <p>{tag_feedback}</p>
-    </div>
+<div class="comment">
+	<div class="panel">
+		<strong class="author">{tag_fullname}</strong> commented on <span class="date">{{date | date: 'MMMM dd, yyyy HH:mm'}}</span>
+		<p class="body">{{body}}</p>
+	</div> 
 </div>

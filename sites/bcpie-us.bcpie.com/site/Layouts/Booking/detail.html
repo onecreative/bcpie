@@ -1,88 +1,26 @@
-<h1>{tag_name}</h1> 
-<p>	<strong>Date: </strong><span class="date">{tag_date}</span>
-    
-    <br>	<strong>Capacity: </strong><span class="capacity">{tag_capacity}</span> ({tag_percentfull}
-    booked)</p>
+<b>Date:</b> <span class="date">{{date | date: 'MMMM dd, yyyy'}}</span>
+{% if capacity != 'Not Set' %}
+<div class="clearfix">
+    <div class="left"><b>Capacity:</b> {{capacityEmpty}}/{{capacity}}&nbsp;</div>
+    <div class="progress left success small-3 medium-1">
+        <span class="meter" style="width: {{percentFull}}%"></span>
+    </div>
+</div>
+{% endif %}
+
 
 <h2>Details</h2>
 {tag_body}
-<form name="catwebformform48727" onsubmit="return checkWholeForm48727(this)"
-action="/FormProcessv2.aspx?WebFormID=10254&amp;OID={module_oid}&amp;OTYPE={module_otype}&amp;EID={module_eid}&amp;CID={module_cid}"
-method="post" enctype="multipart/form-data" id="catwebformform48727">
-    <h2>Booking</h2> 
-    <p>&bull; Required</p>    
-    <div class="row">
-        <div class="large-12 columns">
-            <label>Title
-                <select name="Title">
-                    <option value="3395">DR</option>
-                    <option value="3393">MISS</option>
-                    <option value="3391" selected="selected">MR</option>
-                    <option value="3392">MRS</option>
-                    <option value="3394">MS</option>
-                </select>
-            </label>
-        </div></div>
-    <div class="row">
-        <div class="large-12 columns">
-            <label>First Name
-                <input name="FirstName" id="FirstName"
-                />&nbsp;&bull;</label>
-        </div></div>
-    <div class="row">
-        <div class="large-12 columns">
-            <label>Last Name
-                <input name="LastName" id="LastName"
-                />&nbsp;&bull;</label>
-        </div></div>
-    <div class="row">
-        <div class="large-12 columns">
-            <label>Email
-                <input  maxlength="255" name="EmailAddress" id="EmailAddress"
-                />&nbsp;&bull;</label></div>
-    </div>
-    <div class="row">
-        <div class="large-12 columns">
-            <label>Company            
-                <input name="Company" id="Company" /></label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-12 columns">
-            <label>Work Phone Number            
-                <input class="cat_textbox" name="WorkPhone" id="WorkPhone" /></label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-12 columns">
-            <input id="catwebformbutton" type="submit" value="Submit" />
-        </div>
-    </div>
+
+<h2>Booking</h2>
+<form action="/FormProcessv2.aspx?WebFormID=10254&amp;OID={module_oid}&amp;OTYPE={module_otype}&amp;EID={module_eid}&amp;CID={module_cid}" method="post" enctype="multipart/form-data" data-bcpie-formmagic="validateMode:inline">
+    <input type="text" name="FirstName" required="required" placeholder="First Name *">
+    <input type="text" name="LastName" required="required" placeholder="Last Name *">
+    <input type="email" name="EmailAddress" required="required" placeholder="Email *">
+    <input type="text" name="Company" placeholder="Company">
+    <input type="tel" name="WorkPhone" placeholder="Work Phone Number">
+    <input type="submit" value="Submit" class="button">
     <div class="error">{module_error}</div>
-    <script type="text/javascript" src="/CatalystScripts/ValidationFunctions.js"></script>
-    <script type="text/javascript">
-        //<![CDATA[
-        var submitcount48727 = 0;
-        
-        function checkWholeForm48727(theForm) {
-            var why = "";
-            if (theForm.FirstName) why += isEmpty(theForm.FirstName.value, "First Name");
-            if (theForm.LastName) why += isEmpty(theForm.LastName.value, "Last Name");
-            if (theForm.EmailAddress) why += checkEmail(theForm.EmailAddress.value);
-            if (why != "") {
-                alert(why);
-                return false;
-            }
-            if (submitcount48727 == 0) {
-                submitcount48727++;
-                theForm.submit();
-                return false;
-            } else {
-                alert("Form submission is in progress.");
-                return false;
-            }
-        }
-        //]]>
-    </script>
 </form>
+
 <div class="go-back">{module_referreraddress,,Go Back}</div>

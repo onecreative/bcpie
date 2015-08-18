@@ -7548,7 +7548,6 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.url = '/api/v2/admin/sites/current/storage/'+path;
 					options.type = 'GET';
-					options.async = options.async || false;
 					options.headers = {Authorization: bcpie.api.token()};
 					return bcpie.utils.ajax(options);
 				}else return 'no filename provided';
@@ -7562,7 +7561,6 @@ win.bcpie = {
 				options.type = 'PUT';
 				options.contentType = 'application/octet-stream';
 				options.processData = false;
-				options.async = options.async || false;
 				options.headers = {Authorization: bcpie.api.token()};
 				options.data = data;
 				return bcpie.utils.ajax(options);
@@ -7599,7 +7597,6 @@ win.bcpie = {
 					options.method = 'GET';
 					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+item;
 					options.headers = {Authorization: bcpie.api.token()};
-					options.async = options.async || false;
 					return bcpie.utils.ajax(options);
 				},
 				place: function(scope,webapp,item,callback) {
@@ -7610,20 +7607,20 @@ win.bcpie = {
 				},
 				save: function(selector,webapp,id,options) {
 					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', result, msg, fieldTypes = {name:'String', weight:'Number', releaseDate:'dateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
+						type = 'POST', result, msg, fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
 						formData = bcpie.utils.serializeObject(selector);
 
-					if (bcpie.api.webapp.item.save.lastwebapp !== webapp) {
+					if (typeof bcpie.api.webapp.item.save[webapp] === 'undefined') {
 						// Retrieve the custom fields list from the server
-						msg = bcpie.api.webapp.item.save.msg = $.ajax({
+						msg = bcpie.api.webapp.item.save[webapp] = $.ajax({
 							url: '/api/v2/admin/sites/current/webapps/'+webapp+'/fields',
 							type: 'get',
 							async: false,
 							contentType: 'application/json',
 							headers: {'Authorization': bcpie.api.token()}
 						}).responseJSON;
-						bcpie.api.webapp.item.save.lastwebapp = webapp;
-					}else msg = bcpie.api.webapp.item.save.msg;
+
+					}else msg = bcpie.api.webapp.item.save[webapp];
 					if (typeof msg !== 'undefined') {
 						// Retrieve the custom fields list from the server
 						data = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}};
@@ -7655,7 +7652,8 @@ win.bcpie = {
 										if (data[key] === NaN) delete data[key];
 									}else if (fieldTypes[key] === 'Boolean') {
 										data[key] = bcpie.utils.validation.boolean(key,data[key]);
-										if (data[key] === null) delete data[key];
+									}else if (fieldTypes[key] === 'DateTime') {
+										data[key] = bcpie.utils.validation.dateTime(key,data[key]);
 									}
 								}
 							}
@@ -7668,6 +7666,9 @@ win.bcpie = {
 									}else if (fieldTypes.fields[key] === 'Boolean') {
 										data.fields[key] = bcpie.utils.validation.boolean(key,data.fields[key]);
 										if (data.fields[key] === null) delete data.fields[key];
+									}else if (fieldTypes.fields[key] === 'DateTime') {
+										data.fields[key] = bcpie.utils.validation.dateTime(key,data.fields[key]);
+										if (data.fields[key] === null) delete data.fields[key];
 									}
 								}else delete data.fields[key];
 							}
@@ -7677,7 +7678,6 @@ win.bcpie = {
 						options.url = url;
 						options.headers = {'Authorization': bcpie.api.token()};
 						options.type = type;
-						options.async = options.async || true;
 						options.processData = false;
 						options.data = JSON.stringify(data);
 
@@ -7699,7 +7699,6 @@ win.bcpie = {
 						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
 						options.headers = {'Authorization': bcpie.api.token()};
 						options.type = 'get';
-						options.async = false;
 						options.connection = "keep-alive";
 						options.contentType = "application/json";
 						return bcpie.utils.ajax(options);
@@ -7716,6 +7715,14 @@ win.bcpie = {
 						return bcpie.utils.ajax(options);
 					}
 				}
+			},
+			fields: function(webapp,options) {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
+				options.headers = {'Authorization': bcpie.api.token()};
+				options.contentType = "application/json";
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
 			}
 		},
 		crm: {
@@ -7953,6 +7960,17 @@ win.bcpie = {
 			}
 			return obj;
 		},
+		makeSlug: function(string) {
+			var output = '',
+				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+			string = string.replace(/ /g, '-');
+
+			for (var i = 0; i < string.length; i++) {
+				if (valid.indexOf(string.charAt(i)) != -1) output += string.charAt(i);
+			}
+			return output.toLowerCase();
+		},
 		executeCallback: function(selector, callback, data, textStatus, xhr){
 			if (typeof callback === 'function') {
 				function parameter(selector, callback, data, textStatus, xhr){
@@ -7971,9 +7989,14 @@ win.bcpie = {
 		ajax: function(options) {
 			var settings = options || {};
 			settings.url = options.url || '';
-			settings.type = options.type || 'POST';
-			settings.connection = options.connection || 'keep-alive';
+			settings.method = options.type || options.method || 'POST';
+			// settings.connection = options.connection || 'keep-alive';
+
 			settings.contentType = options.contentType || 'application/json';
+			if (typeof settings.data !== 'undefined') {
+				settings.dataType = options.dataType || 'application/json';
+				if (typeof settings.data !== 'string') settings.data = JSON.stringify(options.data);
+			}
 			if (typeof options.success !== 'undefined') settings.success = function(response) {options.success(response)};
 			if (typeof options.error !== 'undefined') settings.error = function(response) {options.error(response)};
 			return $.ajax(settings);
@@ -7991,6 +8014,14 @@ win.bcpie = {
 				if (value.toLowerCase() === 'true' || value === '1') return true;
 				else if (value.toLowerCase() === 'false' || value === '0') return false;
 				else return null;
+			},
+			dateTime: function(fieldName,value) {
+				if (value.trim() === '') return null;
+				else if (value.match(/([0-9]{4})-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2][0-9])|(3[0-1]))T(([0-1][0-9])|(2[0-4])):([0-5][0-9]):([0-5][0-9])/)) return value;
+				else {
+					console.log('The value of "'+fieldName+'" is an invalid dateTime format.');
+					return 'Invalid Date';
+				}
 			}
 		}
 	},
@@ -9312,7 +9343,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			event : 'change', // specify the event that triggers the copy
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
-			trim: false
+			trim: false,
+			convert: null // 'slug' will change the string to an appropriate url path
 		}
 	});
 
@@ -9349,11 +9381,17 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			else value = settings.prefix + value + settings.suffix;
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
-		if (settings.ref === 'text' || settings.ref === 'value') {
+		if (settings.convert !== null) {
+			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
+			else if (settings.convert === 'lowercase') value = value.toLowerCase();
+			else if (settings.convert === 'uppercase') value = value.toUpperCase();
+		}
+
+		if (settings.target === 'text' || settings.target === 'value') {
 			if (selector.is('select,textarea,input')) selector.val(value);
 			else selector.text(value);
 		}else {
-			selector.attr(settings.ref,value);
+			selector.attr(settings.target,value);
 		}
 
 

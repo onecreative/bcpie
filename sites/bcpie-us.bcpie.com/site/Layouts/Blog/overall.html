@@ -1,3 +1,4 @@
+{module_blogpostlist render="collection" collection="posts" template="" blogId="{{globals.get.BlogId}}"}
 {% if pageTitle == 'Blog' %}<h1>{{title}}</h1>{% endif %}
 <div class="row">
 	<div class="medium-8 columns">
@@ -5,11 +6,14 @@
 	</div>
 	<div class="medium-4 columns">
 		<aside>
-			{% for post in posts.items %}
-				{% unless itemid == post.itemid %}
-					<a href="{{url}}">{{post.name}}</a>
-				{% endunless %}
-			{% endfor %}
+			<h4>Latest posts</h4>
+			{% if posts.items.size > 0 %}
+				<ul>
+					{% for post in posts.items limit:10 %}
+						<li><a href="{{post.urlWithHost}}">{{post.title}}</a></li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 		</aside>
 	</div>
 </div>
