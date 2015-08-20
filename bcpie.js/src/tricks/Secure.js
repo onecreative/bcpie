@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.06.02',
+		version: '2015.08.18',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '',

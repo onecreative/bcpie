@@ -8333,7 +8333,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 bcpie.extensions.tricks.Crumbs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Crumbs',
-		version: '2015.03.10',
+		version: '2015.04.06',
 		defaults: {
 			separator: '/',
 			makespace: '-',
@@ -9335,7 +9335,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.07.28',
+		version: '2015.08.17',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -9549,7 +9549,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.06.02',
+		version: '2015.08.18',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '',
@@ -9656,7 +9656,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.03.24',
+		version: '2015.08.19',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -9764,7 +9764,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 bcpie.extensions.tricks.Utility = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Utility',
-		version: '2015.02.05',
+		version: '2015.03.09',
 		defaults: {
 			value: '',
 			list: '', // options are countries, states, timezones.

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.03.24',
+		version: '2015.08.19',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger

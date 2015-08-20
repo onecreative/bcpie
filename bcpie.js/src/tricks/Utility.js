@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Utility = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Utility',
-		version: '2015.02.05',
+		version: '2015.03.09',
 		defaults: {
 			value: '',
 			list: '', // options are countries, states, timezones.

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Crumbs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Crumbs',
-		version: '2015.03.10',
+		version: '2015.04.06',
 		defaults: {
 			separator: '/',
 			makespace: '-',
