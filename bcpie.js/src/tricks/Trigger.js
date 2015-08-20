@@ -23,7 +23,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 	});
 
 	var triggerEl = (settings.trigger === 'self') ? selector : $(settings.trigger);
-	settings.triggerValue = settings.triggerValue.split(',');
+	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
+		settings.triggerValue = settings.triggerValue.split(',');
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
 	switch(settings.event){

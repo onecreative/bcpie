@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.08.11',
+		version: '2015.08.19',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -383,7 +383,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
 
 	// setup some local variables
-	var action = selector.attr('action'),requiredFields,required=[],submitCount=0,
+	var requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
 		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
 		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
@@ -520,7 +520,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			if (settings.useAjax) {
 				$.ajax({
 					type: 'POST',
-					url: action,
+					url: selector.attr('action'),
 					data: selector.serialize(),
 					success: function(response) {
 						var messageClass = '';

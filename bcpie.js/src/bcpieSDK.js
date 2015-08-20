@@ -231,6 +231,14 @@ win.bcpie = {
 					}
 				}
 			},
+			detail: function(webapp,options) {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/webapps/'+webapp;
+				options.headers = {'Authorization': bcpie.api.token()};
+				options.contentType = "application/json";
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
+			},
 			fields: function(webapp,options) {
 				if (typeof options !== 'object') options = {};
 				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
@@ -352,7 +360,9 @@ win.bcpie = {
 			search: function(webappid,formid,responsePageID,data,options) {
 				if (typeof options !== 'object') options = {};
 				options.data = data;
-				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID;
+				if (typeof responsePageID !== 'undefined' && responsePageID !== '') responsePageID = '&PageID='+responsePageID;
+				else responsePageID = '';
+				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True'+responsePageID;
 				options.async = false;
 				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
 				return (response.children().length > 0) ? response.children() : response.html();

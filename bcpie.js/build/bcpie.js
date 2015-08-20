@@ -7716,6 +7716,14 @@ win.bcpie = {
 					}
 				}
 			},
+			detail: function(webapp,options) {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/webapps/'+webapp;
+				options.headers = {'Authorization': bcpie.api.token()};
+				options.contentType = "application/json";
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
+			},
 			fields: function(webapp,options) {
 				if (typeof options !== 'object') options = {};
 				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
@@ -7837,7 +7845,9 @@ win.bcpie = {
 			search: function(webappid,formid,responsePageID,data,options) {
 				if (typeof options !== 'object') options = {};
 				options.data = data;
-				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True&PageID='+responsePageID;
+				if (typeof responsePageID !== 'undefined' && responsePageID !== '') responsePageID = '&PageID='+responsePageID;
+				else responsePageID = '';
+				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True'+responsePageID;
 				options.async = false;
 				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
 				return (response.children().length > 0) ? response.children() : response.html();
@@ -8084,7 +8094,7 @@ $(function() {
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.04.30',
+		version: '2015.08.18',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -8226,7 +8236,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		if (activeLinks.length > 0) {
 			makeActive(activeLinks, first);
 			if ($.trim(settings.removeClass.names).length > 0) {
-				selector.find(settings.removeClass.selector).addBack().removeClass(settings.removeClass.names);
+				selector.removeClass(settings.removeClass.names);
 			}
 		}else if (selector.find(settings.levelClass.selector).size() === 0){
 			if (settings.level > 1) {
@@ -8545,7 +8555,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.08.11',
+		version: '2015.08.19',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -8920,7 +8930,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
 
 	// setup some local variables
-	var action = selector.attr('action'),requiredFields,required=[],submitCount=0,
+	var requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
 		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
 		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
@@ -9057,7 +9067,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			if (settings.useAjax) {
 				$.ajax({
 					type: 'POST',
-					url: action,
+					url: selector.attr('action'),
 					data: selector.serialize(),
 					success: function(response) {
 						var messageClass = '';
@@ -9544,7 +9554,8 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			unsecureLinks: true,
 			onSessionEnd: '',
 			sessionEndRedirect: '',
-			securePayments: true
+			securePayments: true,
+			logoutPage: ''
 		}
 	});
 
@@ -9555,13 +9566,27 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			win.location.href = settings.secureDomain+settings.pageAddress;
 		}
 	}
-	if(settings.onSessionEnd !== '' || settings.sessionEndRedirect !== ''){
+	if (settings.onSessionEnd !== '' || settings.sessionEndRedirect !== '') {
 		if(settings.user.isLoggedIn === true) {
 			sessionBehavior();
 			bindSessionEvents();
 		}
 	}
-	if(settings.unsecureLinks === true) unsecureLinks();
+	if (settings.unsecureLinks === true) unsecureLinks();
+
+	if (settings.logoutPage !== '') {
+		body.find('a').filter(function(){
+			return this.href.toLowerCase().indexOf('/logoutprocess.aspx') > -1 ;
+		}).on('click', function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: '/logoutprocess.aspx'
+			}).done(function() {
+				if (settings.logoutPage === 'same') doc.location.reload();
+				else win.location.href = settings.logoutPage;
+			});
+		});
+	}
 
 	function unsecureLinks () {
 		if (secure === true) {
@@ -9646,7 +9671,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 	});
 
 	var triggerEl = (settings.trigger === 'self') ? selector : $(settings.trigger);
-	settings.triggerValue = settings.triggerValue.split(',');
+	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
+		settings.triggerValue = settings.triggerValue.split(',');
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
 	switch(settings.event){

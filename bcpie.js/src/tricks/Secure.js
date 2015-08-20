@@ -13,7 +13,8 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			unsecureLinks: true,
 			onSessionEnd: '',
 			sessionEndRedirect: '',
-			securePayments: true
+			securePayments: true,
+			logoutPage: ''
 		}
 	});
 
@@ -24,13 +25,27 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			win.location.href = settings.secureDomain+settings.pageAddress;
 		}
 	}
-	if(settings.onSessionEnd !== '' || settings.sessionEndRedirect !== ''){
+	if (settings.onSessionEnd !== '' || settings.sessionEndRedirect !== '') {
 		if(settings.user.isLoggedIn === true) {
 			sessionBehavior();
 			bindSessionEvents();
 		}
 	}
-	if(settings.unsecureLinks === true) unsecureLinks();
+	if (settings.unsecureLinks === true) unsecureLinks();
+
+	if (settings.logoutPage !== '') {
+		body.find('a').filter(function(){
+			return this.href.toLowerCase().indexOf('/logoutprocess.aspx') > -1 ;
+		}).on('click', function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: '/logoutprocess.aspx'
+			}).done(function() {
+				if (settings.logoutPage === 'same') doc.location.reload();
+				else win.location.href = settings.logoutPage;
+			});
+		});
+	}
 
 	function unsecureLinks () {
 		if (secure === true) {
