@@ -8,15 +8,16 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.08.19',
+		version: '2015.08.25',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
 			'errorGroupClass' : 'error-group',
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
-			'messageBoxID' : null,
-			'messageMode' : 'prepend', // 'append', 'box', 'off'
+			'messageBoxID' : null, // Deprecated in favor of messageBox
+			'messageMode' : 'prepend', // 'append', 'box', 'off'. Deprecated in favor of messageBox
+			'messageBox' : 'replace', // 'replace' replaces the form with the message, and 'off' returns no message. Otherwise, a CSS selector indicates where to put the message.
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false,
@@ -522,7 +523,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					type: 'POST',
 					url: selector.attr('action'),
 					data: selector.serialize(),
-					success: function(response) {
+					success: function(response,status,xhr) {
 						var messageClass = '';
 						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
 						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
@@ -531,18 +532,20 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						else if ($(response).is('font')) msg = $(response);
 
 						if ($(msg).size() > 0) successMessage = msg;
-						else successMessage = $(response).filter('.'+messageClass);
-						showSuccess(selector,successMessage);
+						else if (messageClass !== '') {
+							successMessage = $(response).filter('.'+messageClass);
+							showSuccess(selector,successMessage);
+						}
 
-						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response);
-						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],response);
+						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response,status,xhr);
+						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
 					},
 					error: function(xhr,status) {
-						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],status);
+						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
 						return false;
 					},
 					complete: function(xhr,status) {
-						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],status);
+						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],xhr,status);
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
@@ -553,27 +556,36 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function executeCallback(callback,param){
+	function executeCallback(callback,param1,param2,param3){
 		if (typeof callback === 'function') {
 			var deferred = $.Deferred();
-			if (param) deferred.resolve(callback(selector,param));
+			if (param3) deferred.resolve(callback(selector,param1,param2,param3));
+			else if (param2) deferred.resolve(callback(selector,param1,param2));
+			else if (param1) deferred.resolve(callback(selector,param1));
 			else deferred.resolve(callback(selector));
 
 			return deferred.promise();
 		}
 	}
 	function showSuccess(selector,successMessage) {
-		if (settings.afterAjax!=='show') {selector.fadeOut(0);}
-		if (settings.messageMode !== 'off') {
-			if (settings.messageMode === 'append') selector.after(messageBox);
-			else if (settings.messageMode === 'prepend') selector.before(messageBox);
-		}
+		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
 		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
-		messageBox.html(successMessage).fadeIn();
 
-		if (settings.afterAjax==='remove') {selector.remove();}
+		if (settings.messageBoxID !== null && settings.messageBox === 'replace') {
+			if (settings.messageMode !== 'off') {
+				if (settings.messageMode === 'append') selector.after(messageBox);
+				else if (settings.messageMode === 'prepend') selector.before(messageBox);
+				messageBox.html(successMessage).fadeIn();
+			}
+		}else if (settings.messageBox !== 'off') {
+			if (settings.messageBox === 'append') selector.after(successMessage);
+			else if (settings.messageBox === 'prepend') selector.before(successMessage);
+			else body.find(settings.messageBox).html(successMessage);
+		}
+
+		if (settings.afterAjax === 'remove') selector.remove();
 	}
 	function buildRequiredObject(rField,i) {
 		required[i] = {

@@ -14,7 +14,8 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			onSessionEnd: '',
 			sessionEndRedirect: '',
 			securePayments: true,
-			logoutPage: ''
+			logoutPage: '',
+			detectUser: false
 		}
 	});
 
@@ -45,6 +46,16 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 				else win.location.href = settings.logoutPage;
 			});
 		});
+	}
+
+	if (settings.detectUser === true) {
+		if (bcpie.globals.user.isLoggedIn) {
+			updateCookie('firstname',globals.user.firstname);
+		}
+	}
+
+	function updateCookie(property,value) {
+		$.cookie(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
 
 	function unsecureLinks () {

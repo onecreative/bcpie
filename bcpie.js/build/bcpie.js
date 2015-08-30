@@ -7483,10 +7483,10 @@ var Parser = (function (scope) {
 	return Parser
 })(typeof exports === 'undefined' ? {} : exports);
 
-var doc = document,body = $(doc.body),win = window;
+var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.08.10',
+		bcpieSDK: '2015.08.29',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -7498,367 +7498,413 @@ win.bcpie = {
 		countries: {"AF": {"Country": "Afghanistan", "ContinentCode": "AS", "Continent": "Asia"}, "AX": {"Country": "Aland Islands", "ContinentCode": "EU", "Continent": "Europe"}, "AL": {"Country": "Albania", "ContinentCode": "EU", "Continent": "Europe"}, "DZ": {"Country": "Algeria", "ContinentCode": "AF", "Continent": "Africa"}, "AS": {"Country": "American Samoa", "ContinentCode": "OC", "Continent": "Oceania"}, "AD": {"Country": "Andorra", "ContinentCode": "EU", "Continent": "Europe"}, "AO": {"Country": "Angola", "ContinentCode": "AF", "Continent": "Africa"}, "AI": {"Country": "Anguilla", "ContinentCode": "NA", "Continent": "North America"}, "AQ": {"Country": "Antarctica", "ContinentCode": "AN", "Continent": "Antartica"}, "AG": {"Country": "Antigua and Barbuda", "ContinentCode": "NA", "Continent": "North America"}, "AR": {"Country": "Argentina", "ContinentCode": "SA", "Continent": "South America"}, "AM": {"Country": "Armenia", "ContinentCode": "AS", "Continent": "Asia"}, "AW": {"Country": "Aruba", "ContinentCode": "NA", "Continent": "North America"}, "AU": {"Country": "Australia", "ContinentCode": "OC", "Continent": "Oceania"}, "AT": {"Country": "Austria", "ContinentCode": "EU", "Continent": "Europe"}, "AZ": {"Country": "Azerbaijan", "ContinentCode": "AS", "Continent": "Asia"}, "BS": {"Country": "Bahamas", "ContinentCode": "NA", "Continent": "North America"}, "BH": {"Country": "Bahrain", "ContinentCode": "AS", "Continent": "Asia"}, "BD": {"Country": "Bangladesh", "ContinentCode": "AS", "Continent": "Asia"}, "BB": {"Country": "Barbados", "ContinentCode": "NA", "Continent": "North America"}, "BY": {"Country": "Belarus", "ContinentCode": "EU", "Continent": "Europe"}, "BE": {"Country": "Belgium", "ContinentCode": "EU", "Continent": "Europe"}, "BZ": {"Country": "Belize", "ContinentCode": "NA", "Continent": "North America"}, "BJ": {"Country": "Benin", "ContinentCode": "AF", "Continent": "Africa"}, "BM": {"Country": "Bermuda", "ContinentCode": "NA", "Continent": "North America"}, "BT": {"Country": "Bhutan", "ContinentCode": "AS", "Continent": "Asia"}, "BO": {"Country": "Bolivia", "ContinentCode": "SA", "Continent": "South America"}, "BA": {"Country": "Bosnia and Herzegovina", "ContinentCode": "EU", "Continent": "Europe"}, "BW": {"Country": "Botswana", "ContinentCode": "AF", "Continent": "Africa"}, "BV": {"Country": "Bouvet Island", "ContinentCode": "AN", "Continent": "Antartica"}, "BR": {"Country": "Brazil", "ContinentCode": "SA", "Continent": "South America"}, "IO": {"Country": "British Indian Ocean Territory", "ContinentCode": "AS", "Continent": "Asia"}, "VG": {"Country": "British Virgin Islands", "ContinentCode": "NA", "Continent": "North America"}, "BN": {"Country": "Brunei Darussalam", "ContinentCode": "AS", "Continent": "Asia"}, "BG": {"Country": "Bulgaria", "ContinentCode": "EU", "Continent": "Europe"}, "BF": {"Country": "Burkina Faso", "ContinentCode": "AF", "Continent": "Africa"}, "BI": {"Country": "Burundi", "ContinentCode": "AF", "Continent": "Africa"}, "KH": {"Country": "Cambodia", "ContinentCode": "AS", "Continent": "Asia"}, "CM": {"Country": "Cameroon", "ContinentCode": "AF", "Continent": "Africa"}, "CA": {"Country": "Canada", "ContinentCode": "NA", "Continent": "North America"}, "CV": {"Country": "Cape Verde", "ContinentCode": "AF", "Continent": "Africa"}, "KY": {"Country": "Cayman Islands", "ContinentCode": "NA", "Continent": "North America"}, "CF": {"Country": "Central African Republic", "ContinentCode": "AF", "Continent": "Africa"}, "TD": {"Country": "Chad", "ContinentCode": "AF", "Continent": "Africa"}, "CL": {"Country": "Chile", "ContinentCode": "SA", "Continent": "South America"}, "CN": {"Country": "China", "ContinentCode": "AS", "Continent": "Asia"}, "CX": {"Country": "Christmas Island", "ContinentCode": "AS", "Continent": "Asia"}, "CC": {"Country": "Cocos (Keeling) Islands", "ContinentCode": "AS", "Continent": "Asia"}, "CO": {"Country": "Colombia", "ContinentCode": "SA", "Continent": "South America"}, "KM": {"Country": "Comoros", "ContinentCode": "AF", "Continent": "Africa"}, "CG": {"Country": "Congo", "ContinentCode": "AF", "Continent": "Africa"}, "CD": {"Country": "Congo, Democratic Republic of the", "ContinentCode": "AF", "Continent": "Africa"}, "CK": {"Country": "Cook Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "CR": {"Country": "Costa Rica", "ContinentCode": "NA", "Continent": "North America"}, "HR": {"Country": "Croatia", "ContinentCode": "EU", "Continent": "Europe"}, "CY": {"Country": "Cyprus", "ContinentCode": "AS", "Continent": "Asia"}, "CZ": {"Country": "Czech Republic", "ContinentCode": "EU", "Continent": "Europe"}, "DK": {"Country": "Denmark", "ContinentCode": "EU", "Continent": "Europe"}, "DJ": {"Country": "Djibouti", "ContinentCode": "AF", "Continent": "Africa"}, "DM": {"Country": "Dominica", "ContinentCode": "NA", "Continent": "North America"}, "DO": {"Country": "Dominican Republic", "ContinentCode": "NA", "Continent": "North America"}, "TL": {"Country": "East Timor", "ContinentCode": "AS", "Continent": "Asia"}, "EC": {"Country": "Ecuador", "ContinentCode": "SA", "Continent": "South America"}, "EG": {"Country": "Egypt", "ContinentCode": "AF", "Continent": "Africa"}, "SV": {"Country": "El Salvador", "ContinentCode": "NA", "Continent": "North America"}, "GQ": {"Country": "Equatorial Guinea", "ContinentCode": "AF", "Continent": "Africa"}, "ER": {"Country": "Eritrea", "ContinentCode": "AF", "Continent": "Africa"}, "EE": {"Country": "Estonia", "ContinentCode": "EU", "Continent": "Europe"}, "ET": {"Country": "Ethiopia", "ContinentCode": "AF", "Continent": "Africa"}, "FK": {"Country": "Falkland Islands", "ContinentCode": "SA", "Continent": "South America"}, "FO": {"Country": "Faroe Islands", "ContinentCode": "EU", "Continent": "Europe"}, "FJ": {"Country": "Fiji", "ContinentCode": "OC", "Continent": "Oceania"}, "FI": {"Country": "Finland", "ContinentCode": "EU", "Continent": "Europe"}, "FR": {"Country": "France", "ContinentCode": "EU", "Continent": "Europe"}, "GF": {"Country": "French Guiana", "ContinentCode": "SA", "Continent": "South America"}, "PF": {"Country": "French Polynesia", "ContinentCode": "OC", "Continent": "Oceania"}, "TF": {"Country": "French Southern Territories", "ContinentCode": "AN", "Continent": "Antartica"}, "GA": {"Country": "Gabon", "ContinentCode": "AF", "Continent": "Africa"}, "GM": {"Country": "Gambia", "ContinentCode": "AF", "Continent": "Africa"}, "GE": {"Country": "Georgia", "ContinentCode": "AS", "Continent": "Asia"}, "DE": {"Country": "Germany", "ContinentCode": "EU", "Continent": "Europe"}, "GH": {"Country": "Ghana", "ContinentCode": "AF", "Continent": "Africa"}, "GI": {"Country": "Gibraltar", "ContinentCode": "EU", "Continent": "Europe"}, "GR": {"Country": "Greece", "ContinentCode": "EU", "Continent": "Europe"}, "GL": {"Country": "Greenland", "ContinentCode": "NA", "Continent": "North America"}, "GD": {"Country": "Grenada", "ContinentCode": "NA", "Continent": "North America"}, "GP": {"Country": "Guadeloupe", "ContinentCode": "NA", "Continent": "North America"}, "GU": {"Country": "Guam", "ContinentCode": "OC", "Continent": "Oceania"}, "GT": {"Country": "Guatemala", "ContinentCode": "NA", "Continent": "North America"}, "GG": {"Country": "Guernsey", "ContinentCode": "EU", "Continent": "Europe"}, "GN": {"Country": "Guinea", "ContinentCode": "AF", "Continent": "Africa"}, "GW": {"Country": "Guinea-Bissau", "ContinentCode": "AF", "Continent": "Africa"}, "GY": {"Country": "Guyana", "ContinentCode": "SA", "Continent": "South America"}, "HT": {"Country": "Haiti", "ContinentCode": "NA", "Continent": "North America"}, "HM": {"Country": "Heard Island and McDonald Islands", "ContinentCode": "AN", "Continent": "Antartica"}, "VA": {"Country": "Holy See (Vatican City-State)", "ContinentCode": "EU", "Continent": "Europe"}, "HN": {"Country": "Honduras", "ContinentCode": "NA", "Continent": "North America"}, "HK": {"Country": "Hong Kong SAR", "ContinentCode": "AS", "Continent": "Asia"}, "HU": {"Country": "Hungary", "ContinentCode": "EU", "Continent": "Europe"}, "IS": {"Country": "Iceland", "ContinentCode": "EU", "Continent": "Europe"}, "IN": {"Country": "India", "ContinentCode": "AS", "Continent": "Asia"}, "ID": {"Country": "Indonesia", "ContinentCode": "AS", "Continent": "Asia"}, "IQ": {"Country": "Iraq", "ContinentCode": "AS", "Continent": "Asia"}, "IE": {"Country": "Ireland", "ContinentCode": "EU", "Continent": "Europe"}, "IL": {"Country": "Israel", "ContinentCode": "AS", "Continent": "Asia"}, "IT": {"Country": "Italy", "ContinentCode": "EU", "Continent": "Europe"}, "CI": {"Country": "Ivory Coast", "ContinentCode": "AF", "Continent": "Africa"}, "JM": {"Country": "Jamaica", "ContinentCode": "NA", "Continent": "North America"}, "JP": {"Country": "Japan", "ContinentCode": "AS", "Continent": "Asia"}, "JE": {"Country": "Jersey", "ContinentCode": "EU", "Continent": "Europe"}, "JO": {"Country": "Jordan", "ContinentCode": "AS", "Continent": "Asia"}, "KZ": {"Country": "Kazakhstan", "ContinentCode": "AS", "Continent": "Asia"}, "KE": {"Country": "Kenya", "ContinentCode": "AF", "Continent": "Africa"}, "KI": {"Country": "Kiribati", "ContinentCode": "OC", "Continent": "Oceania"}, "KR": {"Country": "Korea, Republic Of", "ContinentCode": "AS", "Continent": "Asia"}, "KW": {"Country": "Kuwait", "ContinentCode": "AS", "Continent": "Asia"}, "KG": {"Country": "Kyrgyzstan", "ContinentCode": "AS", "Continent": "Asia"}, "LA": {"Country": "Laos", "ContinentCode": "AS", "Continent": "Asia"}, "LV": {"Country": "Latvia", "ContinentCode": "EU", "Continent": "Europe"}, "LB": {"Country": "Lebanon", "ContinentCode": "AS", "Continent": "Asia"}, "LS": {"Country": "Lesotho", "ContinentCode": "AF", "Continent": "Africa"}, "LR": {"Country": "Liberia", "ContinentCode": "AF", "Continent": "Africa"}, "LY": {"Country": "Libya", "ContinentCode": "AF", "Continent": "Africa"}, "LI": {"Country": "Liechtenstein", "ContinentCode": "EU", "Continent": "Europe"}, "LT": {"Country": "Lithuania", "ContinentCode": "EU", "Continent": "Europe"}, "LU": {"Country": "Luxembourg", "ContinentCode": "EU", "Continent": "Europe"}, "MO": {"Country": "Macao SAR", "ContinentCode": "AS", "Continent": "Asia"}, "MK": {"Country": "Macedonia, Former Yugoslav Republic of", "ContinentCode": "EU", "Continent": "Europe"}, "MG": {"Country": "Madagascar", "ContinentCode": "AF", "Continent": "Africa"}, "MW": {"Country": "Malawi", "ContinentCode": "AF", "Continent": "Africa"}, "MY": {"Country": "Malaysia", "ContinentCode": "AS", "Continent": "Asia"}, "MV": {"Country": "Maldives", "ContinentCode": "AS", "Continent": "Asia"}, "ML": {"Country": "Mali", "ContinentCode": "AF", "Continent": "Africa"}, "MT": {"Country": "Malta", "ContinentCode": "EU", "Continent": "Europe"}, "MH": {"Country": "Marshall Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "MQ": {"Country": "Martinique", "ContinentCode": "NA", "Continent": "North America"}, "MR": {"Country": "Mauritania", "ContinentCode": "AF", "Continent": "Africa"}, "MU": {"Country": "Mauritius", "ContinentCode": "AF", "Continent": "Africa"}, "YT": {"Country": "Mayotte", "ContinentCode": "AF", "Continent": "Africa"}, "MX": {"Country": "Mexico", "ContinentCode": "NA", "Continent": "North America"}, "FM": {"Country": "Micronesia, Federated States of", "ContinentCode": "OC", "Continent": "Oceania"}, "MD": {"Country": "Moldova", "ContinentCode": "EU", "Continent": "Europe"}, "MC": {"Country": "Monaco", "ContinentCode": "EU", "Continent": "Europe"}, "MN": {"Country": "Mongolia", "ContinentCode": "AS", "Continent": "Asia"}, "ME": {"Country": "Montenegro", "ContinentCode": "EU", "Continent": "Europe"}, "MS": {"Country": "Montserrat", "ContinentCode": "NA", "Continent": "North America"}, "MA": {"Country": "Morocco", "ContinentCode": "AF", "Continent": "Africa"}, "MZ": {"Country": "Mozambique", "ContinentCode": "AF", "Continent": "Africa"}, "MM": {"Country": "Myanmar", "ContinentCode": "AS", "Continent": "Asia"}, "NA": {"Country": "Namibia", "ContinentCode": "AF", "Continent": "Africa"}, "NR": {"Country": "Nauru", "ContinentCode": "OC", "Continent": "Oceania"}, "NP": {"Country": "Nepal", "ContinentCode": "AS", "Continent": "Asia"}, "NL": {"Country": "Netherlands", "ContinentCode": "EU", "Continent": "Europe"}, "AN": {"Country": "Netherlands Antilles", "ContinentCode": "NA", "Continent": "North America"}, "NC": {"Country": "New Caledonia", "ContinentCode": "OC", "Continent": "Oceania"}, "NZ": {"Country": "New Zealand", "ContinentCode": "OC", "Continent": "Oceania"}, "NI": {"Country": "Nicaragua", "ContinentCode": "NA", "Continent": "North America"}, "NE": {"Country": "Niger", "ContinentCode": "AF", "Continent": "Africa"}, "NG": {"Country": "Nigeria", "ContinentCode": "AF", "Continent": "Africa"}, "NU": {"Country": "Niue", "ContinentCode": "OC", "Continent": "Oceania"}, "NF": {"Country": "Norfolk Island", "ContinentCode": "OC", "Continent": "Oceania"}, "MP": {"Country": "Northern Mariana Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "NO": {"Country": "Norway", "ContinentCode": "EU", "Continent": "Europe"}, "OM": {"Country": "Oman", "ContinentCode": "AS", "Continent": "Asia"}, "PK": {"Country": "Pakistan", "ContinentCode": "AS", "Continent": "Asia"}, "PW": {"Country": "Palau", "ContinentCode": "OC", "Continent": "Oceania"}, "PS": {"Country": "Palestine", "ContinentCode": "AS", "Continent": "Asia"}, "PA": {"Country": "Panama", "ContinentCode": "NA", "Continent": "North America"}, "PG": {"Country": "Papua New Guinea", "ContinentCode": "OC", "Continent": "Oceania"}, "PY": {"Country": "Paraguay", "ContinentCode": "SA", "Continent": "South America"}, "PE": {"Country": "Peru", "ContinentCode": "SA", "Continent": "South America"}, "PH": {"Country": "Philippines", "ContinentCode": "AS", "Continent": "Asia"}, "PN": {"Country": "Pitcairn Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "PL": {"Country": "Poland", "ContinentCode": "EU", "Continent": "Europe"}, "PT": {"Country": "Portugal", "ContinentCode": "EU", "Continent": "Europe"}, "PR": {"Country": "Puerto Rico", "ContinentCode": "NA", "Continent": "North America"}, "QA": {"Country": "Qatar", "ContinentCode": "AS", "Continent": "Asia"}, "RE": {"Country": "Reunion", "ContinentCode": "AF", "Continent": "Africa"}, "RO": {"Country": "Romania", "ContinentCode": "EU", "Continent": "Europe"}, "RU": {"Country": "Russian Federation", "ContinentCode": "EU", "Continent": "Europe"}, "RW": {"Country": "Rwanda", "ContinentCode": "AF", "Continent": "Africa"}, "BL": {"Country": "Saint Barthélemy", "ContinentCode": "NA", "Continent": "North America"}, "WS": {"Country": "Samoa", "ContinentCode": "OC", "Continent": "Oceania"}, "SM": {"Country": "San Marino", "ContinentCode": "EU", "Continent": "Europe"}, "ST": {"Country": "Sao Tome and Principe", "ContinentCode": "AF", "Continent": "Africa"}, "SA": {"Country": "Saudi Arabia", "ContinentCode": "AS", "Continent": "Asia"}, "SN": {"Country": "Senegal", "ContinentCode": "AF", "Continent": "Africa"}, "RS": {"Country": "Serbia", "ContinentCode": "EU", "Continent": "Europe"}, "CS": {"Country": "Serbia and Montenegro", "ContinentCode": "EU", "Continent": "Europe"}, "SC": {"Country": "Seychelles", "ContinentCode": "AF", "Continent": "Africa"}, "SL": {"Country": "Sierra Leone", "ContinentCode": "AF", "Continent": "Africa"}, "SG": {"Country": "Singapore", "ContinentCode": "AS", "Continent": "Asia"}, "SK": {"Country": "Slovakia", "ContinentCode": "EU", "Continent": "Europe"}, "SI": {"Country": "Slovenia", "ContinentCode": "EU", "Continent": "Europe"}, "SB": {"Country": "Solomon Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "SO": {"Country": "Somalia", "ContinentCode": "AF", "Continent": "Africa"}, "ZA": {"Country": "South Africa", "ContinentCode": "AF", "Continent": "Africa"}, "GS": {"Country": "South Georgia and the South Sandwich Islands", "ContinentCode": "AN", "Continent": "Antartica"}, "ES": {"Country": "Spain", "ContinentCode": "EU", "Continent": "Europe"}, "LK": {"Country": "Sri Lanka", "ContinentCode": "AS", "Continent": "Asia"}, "SH": {"Country": "St. Helena", "ContinentCode": "AF", "Continent": "Africa"}, "KN": {"Country": "St. Kitts and Nevis", "ContinentCode": "NA", "Continent": "North America"}, "LC": {"Country": "St. Lucia", "ContinentCode": "NA", "Continent": "North America"}, "MF": {"Country": "St. Martin", "ContinentCode": "NA", "Continent": "North America"}, "PM": {"Country": "St. Pierre and Miquelon", "ContinentCode": "NA", "Continent": "North America"}, "VC": {"Country": "St. Vincent and the Grenadines", "ContinentCode": "NA", "Continent": "North America"}, "SR": {"Country": "Suriname", "ContinentCode": "SA", "Continent": "South America"}, "SJ": {"Country": "Svalbard and Jan Mayen", "ContinentCode": "EU", "Continent": "Europe"}, "SZ": {"Country": "Swaziland", "ContinentCode": "AF", "Continent": "Africa"}, "SE": {"Country": "Sweden", "ContinentCode": "EU", "Continent": "Europe"}, "CH": {"Country": "Switzerland", "ContinentCode": "EU", "Continent": "Europe"}, "TW": {"Country": "Taiwan", "ContinentCode": "AS", "Continent": "Asia"}, "TJ": {"Country": "Tajikistan", "ContinentCode": "AS", "Continent": "Asia"}, "TZ": {"Country": "Tanzania", "ContinentCode": "AF", "Continent": "Africa"}, "TH": {"Country": "Thailand", "ContinentCode": "AS", "Continent": "Asia"}, "TG": {"Country": "Togo", "ContinentCode": "AF", "Continent": "Africa"}, "TK": {"Country": "Tokelau", "ContinentCode": "OC", "Continent": "Oceania"}, "TO": {"Country": "Tonga", "ContinentCode": "OC", "Continent": "Oceania"}, "TT": {"Country": "Trinidad and Tobago", "ContinentCode": "NA", "Continent": "North America"}, "TN": {"Country": "Tunisia", "ContinentCode": "AF", "Continent": "Africa"}, "TR": {"Country": "Turkey", "ContinentCode": "EU", "Continent": "Europe"}, "TM": {"Country": "Turkmenistan", "ContinentCode": "AS", "Continent": "Asia"}, "TC": {"Country": "Turks and Caicos Islands", "ContinentCode": "NA", "Continent": "North America"}, "TV": {"Country": "Tuvalu", "ContinentCode": "OC", "Continent": "Oceania"}, "UG": {"Country": "Uganda", "ContinentCode": "AF", "Continent": "Africa"}, "UA": {"Country": "Ukraine", "ContinentCode": "EU", "Continent": "Europe"}, "AE": {"Country": "United Arab Emirates", "ContinentCode": "AS", "Continent": "Asia"}, "GB": {"Country": "United Kingdom", "ContinentCode": "EU", "Continent": "Europe"}, "US": {"Country": "United States", "ContinentCode": "NA", "Continent": "North America"}, "UY": {"Country": "Uruguay", "ContinentCode": "SA", "Continent": "South America"}, "UM": {"Country": "US Minor Outlying Islands", "ContinentCode": "OC", "Continent": "Oceania"}, "VI": {"Country": "US Virgin Islands", "ContinentCode": "NA", "Continent": "North America"}, "UZ": {"Country": "Uzbekistan", "ContinentCode": "AS", "Continent": "Asia"}, "VU": {"Country": "Vanuatu", "ContinentCode": "OC", "Continent": "Oceania"}, "VE": {"Country": "Venezuela", "ContinentCode": "SA", "Continent": "South America"}, "VN": {"Country": "Viet Nam", "ContinentCode": "AS", "Continent": "Asia"}, "WF": {"Country": "Wallis and Futuna", "ContinentCode": "OC", "Continent": "Oceania"}, "EH": {"Country": "Western Sahara", "ContinentCode": "AF", "Continent": "Africa"}, "YE": {"Country": "Yemen", "ContinentCode": "AS", "Continent": "Asia"}, "ZM": {"Country": "Zambia", "ContinentCode": "AF", "Continent": "Africa"}, "ZW": {"Country": "Zimbabwe", "ContinentCode": "AF", "Continent": "Africa"} },
 		states: {"AL": "Alabama", "AK": "Alaska", "AS": "American Samoa", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "DC": "District Of Columbia", "FM": "Federated States Of Micronesia", "FL": "Florida", "GA": "Georgia", "GU": "Guam", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MH": "Marshall Islands", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "MP": "Northern Mariana Islands", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PW": "Palau", "PA": "Pennsylvania", "PR": "Puerto Rico", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VI": "Virgin Islands", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"}
 	},
-	api: {
-		filters: function(filters) {
-			var response = '?limit=';
-			response += filters.limit || 500;
-			response += '&skip=';
-			response += filters.skip || 0;
-			if (typeof filters.order !== 'undefined') response += '&order='+filters.order;
-			if (typeof filters.fields === 'array') response += '&fields='+filters.fields.toString();
-			if (typeof filters.where === 'array') response += '&where='+bcpie.utils.jsonify(filters.where);
-			return response;
-		},
+	ajax: {
 		token: function() {
 			if (typeof $.cookie('access_token') !== 'undefined') return $.cookie('access_token');
 			else return $.cookie('access_token',window.location.hash.replace('#access_token=',''));
 		},
-		data: {
-			place: function(targets,data) {
-				if (targets.length === 1 && targets.is('form')) targets = form.find('input,textarea,select,[data-name]').not('[data-noplace]');
-				else targets = targets.not('[data-noplace]');
-				if (typeof data === 'string') data = $.parseJSON(data);
-				for (var key in data) {
-					var value = data[key], unescapedValue = value;
-					if(typeof value === 'string') unescapedValue = value.replace(/&#(\d+);/g, function (m, n) { return String.fromCharCode(n); });
-					field = targets.filter('[name="'+key+'"]').not('[data-noplace]');
-					element = targets.filter('[data-name="'+key+'"]').not('[data-noplace]');
-					if (typeof element !== 'undefined') element.text(unescapedValue);
-					if (typeof field !== 'undefined') {
-						if (field.is('input[type=radio]')) {
-							targets.filter('[name="'+key+'"]').filter(function(){
-								return $(this).is('[value="'+unescapedValue+'"]');
-							}).attr('checked','checked').prop('checked',true);
-						}else if (field.is('input[type=checkbox]')) {
-							unescapedValue = unescapedValue.split(',');
-							for (var i=0; i<unescapedValue.length; i++) {
-								targets.filter('[name="'+key+'"]').filter('[value="'+unescapedValue[i]+'"]').attr('checked','checked').prop('checked',true);
-							}
-						}else if (field.is('input[type=text],textarea')) field.val(unescapedValue);
-					}
-				}
-			}
-		},
 		file: {
-			get: function(path,options) {
-				if (typeof path !== 'undefined' && path.length > 1) {
-					if (path.charAt(0) === '/') path.slice(1, path.length - 1);
-					if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
-
-					if (typeof options !== 'object') options = {};
-					options.url = '/api/v2/admin/sites/current/storage/'+path;
-					options.type = 'GET';
-					options.headers = {Authorization: bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				}else return 'no filename provided';
-			},
-			save: function(path,data,options) {
-				if (path.charAt(0) === '/') path.slice(1, path.length - 1);
-				if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
+			get: function(data,options) {
+				data = {
+					path: data.path || '', // string
+				}
 
 				if (typeof options !== 'object') options = {};
-				options.url = '/api/v2/admin/sites/current/storage/'+path+'?version=draft-publish';
-				options.type = 'PUT';
-				options.contentType = 'application/octet-stream';
-				options.processData = false;
-				options.headers = {Authorization: bcpie.api.token()};
-				options.data = data;
+				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
+				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
+
+				options.url = '/api/v2/admin/sites/current/storage'+data.path;
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.method = 'GET';
+
 				return bcpie.utils.ajax(options);
 			},
-			delete: function(path){
-				if (path.charAt(0) === '/') path.slice(1, path.length - 1);
-				if (path.charAt(path.length - 1) === '/') path.slice(0, - 1);
+			save: function(data,options) {
+				data = {
+					path: data.path || '', // string
+					content: data.content || '', // file object, string
+					version: data.version || 'draft' // 'draft', 'draft-publish'
+				}
 
 				if (typeof options !== 'object') options = {};
-				options.url = '/api/v2/admin/sites/current/storage/'+path;
-				options.type = 'DELETE';
-				options.headers = {Authorization: bcpie.api.token()};
+				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
+				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
+
+				options.url = '/api/v2/admin/sites/current/storage'+data.path+'?version='+data.version;
+				options.headers = {Authorization: bcpie.ajax.token()};
+
+				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
+					options.method = 'PUT';
+					options.contentType = 'application/octet-stream';
+					if (typeof data.content.lastModified === 'number' && typeof data.content.size === 'number') {
+						options.processData = false;
+						options.data = data.content;
+					}else options.data = JSON.stringify(data.content);
+				}
+				else {
+					options.method = 'POST';
+					options.contentType = false;
+					options.cache = false;
+					options.processData = false;
+					options.data = new FormData();
+					options.data.append('file', data.content);
+				}
+
+				return bcpie.utils.ajax(options);
+			},
+			delete: function(data,options) {
+				data = {
+					path: data.path || '' // string
+				}
+
+				if (typeof options !== 'object') options = {};
+				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
+				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
+
+				options.url = '/api/v2/admin/sites/current/storage'+data.path;
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.method = 'DELETE';
+
+				return bcpie.utils.ajax(options);
+			},
+			uploadStatus: function() {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/storage?status';
+				options.method = 'GET';
+				options.headers = {Authorization: bcpie.ajax.token()};
+
 				return bcpie.utils.ajax(options);
 			}
 		},
 		folder: {
-			get: function(path,options) {
-				if (typeof path !== 'undefined' && path.length > 1) {
-					if (path.charAt(0) === '/') path.slice(1, path.length - 1);
-					if (path.charAt(path.length - 1) !== '/') path = path+'/';
+			get: function(data,options) {
+				data = {
+					path: data.path || ''
+				}
+				if (typeof options !== 'object') options = {};
 
-					if (typeof options !== 'object') options = {};
-					options.url = '/api/v2/admin/sites/current/storage/'+path+'?meta';
-					options.type = 'GET';
-					options.headers = {Authorization: bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				}else return 'no folder name provided';
+				if (data.path.charAt(0) === '/') data.path.slice(1, data.path.length - 1);
+				if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
+
+				options.url = '/api/v2/admin/sites/current/storage/'+data.path+'?meta';
+				options.method = 'GET';
+				options.headers = {Authorization: bcpie.ajax.token()};
+				return bcpie.utils.ajax(options);
 			}
 		},
 		webapp: {
 			item: {
-				get: function(webapp,item,options) {
+				get :function(data,options) {
+					data = {
+						webapp: data.webapp || null, // integer, string
+						item: data.item || null // integer
+					}
+
+					// Catch data errors
+					var errors = bcpie.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
 					if (typeof options !== 'object') options = {};
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+					options.headers = {Authorization: bcpie.ajax.token()};
 					options.method = 'GET';
-					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+item;
-					options.headers = {Authorization: bcpie.api.token()};
 					return bcpie.utils.ajax(options);
 				},
-				place: function(scope,webapp,item,callback) {
-					var data = bcpie.api.webapp.item.get(webapp,item),field,element;
-					bcpie.api.data.place(scope,data);
-					bcpie.api.data.place(scope,data.fields);
-					if(typeof callback !== 'undefined') callback(data);
-				},
-				save: function(selector,webapp,id,options) {
-					var field, data, url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items',
-						type = 'POST', result, msg, fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
-						formData = bcpie.utils.serializeObject(selector);
+				save: function(data,options) {
+					data = {
+						content: data.content || null,  // $, {}
+						webapp: data.webapp || null, // integer, string
+						item: data.item || null // integer
+					}
 
-					if (typeof bcpie.api.webapp.item.save[webapp] === 'undefined') {
-						// Retrieve the custom fields list from the server
-						msg = bcpie.api.webapp.item.save[webapp] = $.ajax({
-							url: '/api/v2/admin/sites/current/webapps/'+webapp+'/fields',
-							type: 'get',
-							async: false,
-							contentType: 'application/json',
-							headers: {'Authorization': bcpie.api.token()}
-						}).responseJSON;
+					// Catch data errors
+					var errors = bcpie.webapp.errors(data);
+					if (errors.length > 0) return errors;
 
-					}else msg = bcpie.api.webapp.item.save[webapp];
-					if (typeof msg !== 'undefined') {
-						// Retrieve the custom fields list from the server
-						data = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}};
-						allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}};
+					if (typeof options !== 'object') options = {};
 
-						if (typeof id !== 'undefined' && id !== '' ) {
-							url = url+'/'+id;
-							type = 'PUT';
-							delete data.releaseDate;
-						}
+					if (bcpie.ajax.token().length > 10) {
+						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+						options.headers = {Authorization: bcpie.ajax.token()};
 
-						// Add custom fields to data object
-						for (var i=0; i<msg.items.length; i++) {
-							if (typeof formData[msg.items[i].name] !== 'undefined') {
-								data.fields[msg.items[i].name] = '';
-								fieldTypes.fields[msg.items[i].name] = msg.items[i].type;
-							}
-						}
+						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
+							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}},
+							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}},
+							field, result, msg;
 
-						// Fill the data object with form values
-						for (var key in formData) {
-							if (typeof allFields[key] !== 'undefined') {
-								if (formData[key] !== 'undefined') {
-									data[key] = formData[key];
-									if (key === 'country' && data[key] === ' ' ) data[key] = '';
-									if (key === 'state' && data[key] === ' ' ) data[key] = '';
-									if (fieldTypes[key] === 'Number') {
-										data[key] = bcpie.utils.validation.number(key,data[key]);
-										if (data[key] === NaN) delete data[key];
-									}else if (fieldTypes[key] === 'Boolean') {
-										data[key] = bcpie.utils.validation.boolean(key,data[key]);
-									}else if (fieldTypes[key] === 'DateTime') {
-										data[key] = bcpie.utils.validation.dateTime(key,data[key]);
-									}
+						options.data = bcpie.utils.serializeObject(data.content);
+						options.processData = false;
+
+						if (typeof bcpie.ajax.webapp.item.save[webapp] === 'undefined') {
+							// Retrieve the custom fields list from the server
+							msg = bcpie.ajax.webapp.item.save[webapp] = bcpie.ajax.webapp.fields(webapp);
+						}else msg = bcpie.ajax.webapp.item.save[webapp];
+
+						$.when(msg).done(function(msg) {
+							msg = msg.responseJSON;
+							if (data.item !== null) {
+								options.method = 'PUT';
+								delete newData.releaseDate;
+							}else options.url = options.url.replace('/'+data.item,'');
+
+							// Add custom fields to newData object
+							for (var i=0; i<msg.items.length; i++) {
+								if (typeof options.data[msg.items[i].name] !== 'undefined') {
+									newData.fields[msg.items[i].name] = '';
+									fieldTypes.fields[msg.items[i].name] = msg.items[i].type;
 								}
 							}
-							else if (typeof data.fields[key] !== 'undefined') {
-								if (formData[key] !== 'undefined') {
-									data.fields[key] = formData[key];
-									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
-										data.fields[key] = bcpie.utils.validation.number(key,data.fields[key]);
-										if (data.fields[key] === NaN) delete data.fields[key];
-									}else if (fieldTypes.fields[key] === 'Boolean') {
-										data.fields[key] = bcpie.utils.validation.boolean(key,data.fields[key]);
-										if (data.fields[key] === null) delete data.fields[key];
-									}else if (fieldTypes.fields[key] === 'DateTime') {
-										data.fields[key] = bcpie.utils.validation.dateTime(key,data.fields[key]);
-										if (data.fields[key] === null) delete data.fields[key];
+
+							// Fill the data object with form values
+							for (var key in options.data) {
+								if (typeof allFields[key] !== 'undefined') {
+									if (options.data[key] !== 'undefined') {
+										newData[key] = options.data[key];
+										if (key === 'country' && newData[key] === ' ' ) newData[key] = '';
+										if (key === 'state' && newData[key] === ' ' ) newData[key] = '';
+										if (fieldTypes[key] === 'Number') {
+											newData[key] = bcpie.utils.validation.number(key,newData[key]);
+											if (newData[key] === NaN) delete data[key];
+										}else if (fieldTypes[key] === 'Boolean') {
+											newData[key] = bcpie.utils.validation.boolean(key,newData[key]);
+										}else if (fieldTypes[key] === 'DateTime') {
+											newData[key] = bcpie.utils.validation.dateTime(key,newData[key]);
+										}
 									}
-								}else delete data.fields[key];
+								}
+								else if (typeof newData.fields[key] !== 'undefined') {
+									if (options.data[key] !== 'undefined') {
+										newData.fields[key] = options.data[key];
+										if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
+											newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
+											if (newData.fields[key] === NaN) delete newData.fields[key];
+										}else if (fieldTypes.fields[key] === 'Boolean') {
+											newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
+											if (newData.fields[key] === null) delete newData.fields[key];
+										}else if (fieldTypes.fields[key] === 'DateTime') {
+											newData.fields[key] = bcpie.utils.validation.dateTime(key,newData.fields[key]);
+											if (newData.fields[key] === null) delete newData.fields[key];
+										}
+									}else delete newData.fields[key];
+								}
 							}
-						}
 
-						if (typeof options !== 'object') options = {};
-						options.url = url;
-						options.headers = {'Authorization': bcpie.api.token()};
-						options.type = type;
-						options.processData = false;
-						options.data = JSON.stringify(data);
+							options.data = JSON.stringify(newData);
+							return bcpie.utils.ajax(options);
+						});
+					}else {
+						if (data.item === null) options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OTYPE=1';
+						else options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+data.webapp+'&OID='+data.item+'&OTYPE=35';
 
-						return bcpie.utils.ajax(options);
+						if (body.find('[name=Amount]').length > 0) options.url = bcpie.globals.secureDomain + options.url;
+						if (data.content instanceof $) {
+							if (data.content.is('form') || data.content.is('input,select,textarea')) options.data = data.content.serialize();
+							else options.data = data.content.find('input,select,textarea').serialize();
+						}else if (bcpie.utils.isElement(data.content)) {
+							data.content = $(data.content);
+							if (data.content.is('form') || data.content.is('input,select,textarea')) options.data = data.content.serialize();
+							else options.data = data.content.find('input,select,textarea').serialize();
+						}else if (typeof data.content === 'object' && data.content.constructor.toString().indexOf('Array') == -1) options.data = $.param(data.content);
+						else return 'Content may not be in the correct form.';
+
+						options.contentType = 'application/x-www-form-urlencoded';
 					}
-				},
-				delete: function(webapp,id,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id;
-					options.type = 'DELETE';
-					options.connection = "keep-alive";
-					options.contentType = "application/json";
-					options.headers = {'Authorization': bcpie.api.token()};
 					return bcpie.utils.ajax(options);
 				},
-				categories: {
-					get: function(webapp,id,options) {
-						if (typeof options !== 'object') options = {};
-						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
-						options.headers = {'Authorization': bcpie.api.token()};
-						options.type = 'get';
-						options.connection = "keep-alive";
-						options.contentType = "application/json";
-						return bcpie.utils.ajax(options);
-					},
-					update: function(webapp,id,data,options) {
-						if (typeof options !== 'object') options = {};
-						options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/items/'+id+'/categories';
-						options.headers = {'Authorization': bcpie.api.token()};
-						options.type = 'put';
-						options.data = (typeof data === 'object') ? JSON.stringify(data) : data;
-						options.connection = "keep-alive";
-						options.contentType = "application/json";
-						options.processData = false;
-						return bcpie.utils.ajax(options);
+				delete: function(data,options) {
+					data = {
+						webapp: data.webapp || null, // integer, string
+						item: data.item || null // integer
 					}
+
+					// Catch data errors
+					var errors = bcpie.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					if (typeof options !== 'object') options = {};
+
+					if (bcpie.ajax.token().length > 10) {
+						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+						options.headers = {Authorization: bcpie.ajax.token()};
+						options.method = 'DELETE';
+					}else {
+						options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OID='+data.item+'&A=Delete';
+						options.contentType = false;
+					}
+					return bcpie.utils.ajax(options);
+				},
+				categories: function(data,options) {
+					data = {
+						mode: data.mode.toLowerCase() || 'get', // 'get', 'save', delete
+						webapp: data.webapp || null, // string
+						item: data.item || null, // integer
+						content: data.content || null  // $, {}
+					}
+					// Catch data errors
+					var errors = bcpie.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					if (typeof options !== 'object') options = {};
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item+'/categories';
+					options.headers = {'Authorization': bcpie.ajax.token()};
+
+					if (data.mode === 'get') options.method = 'GET';
+					else if (data.mode === 'save') {
+						options.method = 'PUT';
+						options.data = JSON.stringify(data.content);
+						options.processData = false;
+					}
+					return bcpie.utils.ajax(options);
 				}
 			},
-			detail: function(webapp,options) {
+			detail: function(data,options) {
+				data = {
+					webapp: data.webapp || null
+				}
+				// Catch data errors
+				var errors = bcpie.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
 				if (typeof options !== 'object') options = {};
+
 				options.url = '/api/v2/admin/sites/current/webapps/'+webapp;
-				options.headers = {'Authorization': bcpie.api.token()};
-				options.contentType = "application/json";
+				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
 			},
-			fields: function(webapp,options) {
-				if (typeof options !== 'object') options = {};
-				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
-				options.headers = {'Authorization': bcpie.api.token()};
-				options.contentType = "application/json";
-				options.method = 'GET';
-				return bcpie.utils.ajax(options);
-			}
-		},
-		crm: {
-			customers: {
-				get: function(customerID,filters,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers';
-					if (typeof filters === 'object') {
-						if (customerID !== 'all' && customerID !== '' && customerID !== null) options.url += '/'+customerID;
-						options.url += bcpie.api.filters(filters);
-					}
-					options.type = 'GET';
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				},
-				create: function(data,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers/';
-					options.type = 'POST';
-					options.data = JSON.stringify(data);
-					options.processData = false;
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				},
-				update: function(customerID,data,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers/'+customerID;
-					options.type = 'PUT';
-					options.data = JSON.stringify(data);
-					options.processData = false;
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				},
-				delete: function(customerID,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers/'+customerID;
-					options.type = 'DELETE';
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				},
-				secureZones: {
-					get: function(customerID,options) {
-						if (typeof options !== 'object') options = {};
-						options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/securezones';
-						options.type = 'GET';
-						options.headers = {'Authorization': bcpie.api.token()};
-						return bcpie.utils.ajax(options);
-					},
-					subscribe: function(zones,options) {
-						if (typeof options !== 'object') options = {};
-						options.url = '/webresources/api/v3/sites/current/customers/'+zones.customerID+'/securezones';
-						options.type = 'POST';
-						options.data = JSON.stringify(data);
-						options.processData = false;
-						options.headers = {'Authorization': bcpie.api.token()};
-						return bcpie.utils.ajax(options);
-					},
-					unsubscribe: function(zones,options) {
-						if (typeof options !== 'object') options = {};
-						options.url = '/webresources/api/v3/sites/current/customers/'+zones.customerID+'/securezones&items='+bcpie.utils.jsonify(zones);
-						options.type = 'DELETE';
-						options.headers = {'Authorization': bcpie.api.token()};
-						return bcpie.utils.ajax(options);
-					}
-				},
-				orders: function(customerID,filters,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/orders';
-					options.url += bcpie.api.filters(filters);
-					options.type = 'GET';
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
-				},
-				addresses: function(customerID,filters,options) {
-					if (typeof options !== 'object') options = {};
-					options.url = '/webresources/api/v3/sites/current/customers/'+customerID+'/addresses';
-					options.url += bcpie.api.filters(filters);
-					options.type = 'GET';
-					options.headers = {'Authorization': bcpie.api.token()};
-					return bcpie.utils.ajax(options);
+			fields: function(data,options) {
+				data = {
+					webapp: data.webapp || null // string
 				}
-			}
-		}
-	},
-	frontend: {
-		webapp: {
-			item: {
-				new: function(webappid,data,options) {
-					if (typeof options !== 'object') options = {};
-					options.data = data;
-					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OTYPE=1';
-					if (body.find('[name=Amount]').length > 0) options.url = bcpie.globals.secureDomain+options.url;
-					return bcpie.utils.ajax(options);
-				},
-				update: function(webappid,itemid,data,options) {
-					if (typeof options !== 'object') options = {};
-					if (typeof webappid === 'undefined') return 'Missing webappid';
-					if (typeof itemid === 'undefined') return 'Missing itemid';
-					options.data = data;
-					options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+webappid+'&OID='+itemid+'&OTYPE=35';
-					return bcpie.utils.ajax(options);
+				// Catch data errors
+				var errors = bcpie.webapp.errors(data);
+				if (errors.length > 0) return errors;
 
-				},
-				delete: function(webappid,itemid,options) {
-					if (typeof options !== 'object') options = {};
-					if (typeof webappid === 'undefined') return 'Missing webappid';
-					if (typeof itemid === 'undefined') return 'Missing itemid';
-					options.url = '/CustomContentProcess.aspx?CCID='+webappid+'&OID='+itemid+'&A=Delete'
-					return bcpie.utils.ajax(options);
-				}
-			},
-			search: function(webappid,formid,responsePageID,data,options) {
 				if (typeof options !== 'object') options = {};
-				options.data = data;
-				if (typeof responsePageID !== 'undefined' && responsePageID !== '') responsePageID = '&PageID='+responsePageID;
-				else responsePageID = '';
-				options.url = '/Default.aspx?CCID='+webappid+'&FID='+formid+'&ExcludeBoolFalse=True'+responsePageID;
-				options.async = false;
+
+				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
+			},
+			search: function(data,options) {
+				data = {
+					webapp: data.webapp || null,
+					formID: data.formID || null,
+					responsePageID: data.responsePageID || null,
+					content: data.content || null
+				}
+				// Catch data errors
+				var errors = bcpie.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
+				if (typeof options !== 'object') options = {};
+
+				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
+				else data.responsePageID = '';
+				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID;
+				options.data = $.param(data.content);
+				options.contentType = false;
 				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
 				return (response.children().length > 0) ? response.children() : response.html();
+			},
+			errors: function(data) {
+				data.errors = [];
+				if (typeof data.webapp !== 'undefined') {
+					if (data.webapp === null) errors.push('"webapp" parameter cannot be null.');
+					else if (data.webapp.isInteger() && bcpie.ajax.token().length > 10) errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
+					else if (!data.webapp.isInteger() && bcpie.ajax.token().length < 10) errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
+				}
+				if (typeof data.item !== 'undefined') {
+					if (data.item === null) {
+						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.ajax.token().length < 10)) errors.push('"item" parameter cannot be null.');
+					}else if (!data.item.isInteger()) errors.push('"item" parameter must be an integer.');
+				}
+				if (typeof data.formID !== 'undefined') {
+					if (!data.item.isInteger()) errors.push('"formID" parameter must be an integer.');
+				}
+				if (data.mode === 'get' && bcpie.ajax.token().length < 10) errors.push('"get" mode is for API use only.');
+				return data.errors;
 			}
 		},
 		crm: {
-			update: function(data,options) {
+			customers: function(data,options) {
+				data = {
+					mode: data.mode.toLowerCase() || 'get', // 'get','save',delete
+					customerID: data.customerID || null, // integer
+					filters: data.filters || null, // object
+					content: data.content || null
+				}
 				if (typeof options !== 'object') options = {};
-				options.data = data;
-				options.url = '/MemberProcess.aspx';
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.url = '/webresources/api/v3/sites/current/customers';
+				if (data.customerID !== null) options.url += '/'+customerID;
+				if (data.mode === 'get') {
+					options.method = 'GET';
+					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
+				}else if (data.mode === 'delete') options.method = 'DELETE';
+				else if (data.mode === 'save') {
+					if (bcpie.ajax.token().length > 10) {
+						options.data = JSON.stringify(data.content);
+						options.processData = false;
+						if (data.customerID !== null) options.method = 'PUT';
+						else options.method = 'POST';
+					}else {
+						options.url = '/MemberProcess.aspx';
+						options.data = $.param(data.content);
+						options.contentType = false;
+					}
+				}
 				return bcpie.utils.ajax(options);
+			},
+			customers: {
+				secureZones: function(data,options) {
+					data = {
+						mode: data.mode.toLowerCase() || 'get', // 'get','subscribe',unsubscribe
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+						zones: data.zones || null // object
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/securezones';
+
+					if (data.mode === 'get') options.method = 'GET';
+					else if (data.mode === 'subscribe') {
+						options.method = 'POST';
+						options.data = JSON.stringify(data);
+						options.processData = false;
+					}else if (data.mode === 'unsubscribe') {
+						options.method = 'DELETE';
+						options.url += '&items='+bcpie.utils.jsonify(data.zones);
+					}
+					return bcpie.utils.ajax(options);
+				},
+				orders: function(data,options) {
+					data = {
+						mode: data.mode.toLowerCase() || 'get', // 'get'
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.ajax.filters(data.filters);
+					options.method = 'GET';
+					return bcpie.utils.ajax(options);
+				},
+				addresses: function(data,options) {
+					data = {
+						mode: data.mode.toLowerCase() || 'get', // 'get'
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.ajax.filters(filters);
+					options.method = 'GET';
+					return bcpie.utils.ajax(options);
+				}
 			}
 		}
 	},
@@ -7882,11 +7928,23 @@ win.bcpie = {
 				else return '"'+ a.replace(bcpie.utils._jsonify_quote, '$1').replace(bcpie.utils._jsonify_escap, '\\$1')+ '"';
 			});
 		},
+		encode: function(str) {
+			return encodeURIComponent(str).replace(/'/g,"%27").replace(/"/g,"%22");
+		},
+		decode: function(str) {
+			return decodeURIComponent(str.replace(/\+/g,  " "));
+		},
 		guid: function() {
 			function s4() {
 				return Math.floor((1+Math.random()) * 0x10000).toString(16).substring(1);
 			}
 			return s4()+s4()+'-'+s4()+'-'+s4()+'-'+s4()+'-'+s4()+s4()+s4();
+		},
+		isElement: function(o){
+			return (
+				typeof HTMLElement === 'object' ? o instanceof HTMLElement : //DOM2
+					o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName==='string'
+			);
 		},
 		serializeObject: function(object) {
 			var o = {};
@@ -7996,19 +8054,22 @@ win.bcpie = {
 				return $.when(parameter(selector, callback, data, textStatus, xhr));
 			}
 		},
+		filters: function(filters) {
+			var response = '?limit=';
+			response += filters.limit || 500;
+			response += '&skip=';
+			response += filters.skip || 0;
+			if (typeof filters.order !== 'undefined') response += '&order='+bcpie.utils.encode(filters.order);
+			if ($.isArray(filters.fields)) response += '&fields='+bcpie.utils.encode(filters.fields.toString());
+			if (typeof filters.where === 'object') response += '&where='+bcpie.utils.encode(JSON.stringify(filters.where));
+			return response;
+		},
 		ajax: function(options) {
 			var settings = options || {};
 			settings.url = options.url || '';
 			settings.method = options.type || options.method || 'POST';
-			// settings.connection = options.connection || 'keep-alive';
-
-			settings.contentType = options.contentType || 'application/json';
-			if (typeof settings.data !== 'undefined') {
-				settings.dataType = options.dataType || 'application/json';
-				if (typeof settings.data !== 'string') settings.data = JSON.stringify(options.data);
-			}
-			if (typeof options.success !== 'undefined') settings.success = function(response) {options.success(response)};
-			if (typeof options.error !== 'undefined') settings.error = function(response) {options.error(response)};
+			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
+			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
 			return $.ajax(settings);
 		},
 		validation: {
@@ -8555,15 +8616,16 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.08.19',
+		version: '2015.08.25',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
 			'errorGroupClass' : 'error-group',
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
-			'messageBoxID' : null,
-			'messageMode' : 'prepend', // 'append', 'box', 'off'
+			'messageBoxID' : null, // Deprecated in favor of messageBox
+			'messageMode' : 'prepend', // 'append', 'box', 'off'. Deprecated in favor of messageBox
+			'messageBox' : 'replace', // 'replace' replaces the form with the message, and 'off' returns no message. Otherwise, a CSS selector indicates where to put the message.
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false,
@@ -9069,7 +9131,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					type: 'POST',
 					url: selector.attr('action'),
 					data: selector.serialize(),
-					success: function(response) {
+					success: function(response,status,xhr) {
 						var messageClass = '';
 						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
 						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
@@ -9078,18 +9140,20 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						else if ($(response).is('font')) msg = $(response);
 
 						if ($(msg).size() > 0) successMessage = msg;
-						else successMessage = $(response).filter('.'+messageClass);
-						showSuccess(selector,successMessage);
+						else if (messageClass !== '') {
+							successMessage = $(response).filter('.'+messageClass);
+							showSuccess(selector,successMessage);
+						}
 
-						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response);
-						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],response);
+						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response,status,xhr);
+						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
 					},
 					error: function(xhr,status) {
-						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],status);
+						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
 						return false;
 					},
 					complete: function(xhr,status) {
-						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],status);
+						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],xhr,status);
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
@@ -9100,27 +9164,36 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function executeCallback(callback,param){
+	function executeCallback(callback,param1,param2,param3){
 		if (typeof callback === 'function') {
 			var deferred = $.Deferred();
-			if (param) deferred.resolve(callback(selector,param));
+			if (param3) deferred.resolve(callback(selector,param1,param2,param3));
+			else if (param2) deferred.resolve(callback(selector,param1,param2));
+			else if (param1) deferred.resolve(callback(selector,param1));
 			else deferred.resolve(callback(selector));
 
 			return deferred.promise();
 		}
 	}
 	function showSuccess(selector,successMessage) {
-		if (settings.afterAjax!=='show') {selector.fadeOut(0);}
-		if (settings.messageMode !== 'off') {
-			if (settings.messageMode === 'append') selector.after(messageBox);
-			else if (settings.messageMode === 'prepend') selector.before(messageBox);
-		}
+		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
 		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
-		messageBox.html(successMessage).fadeIn();
 
-		if (settings.afterAjax==='remove') {selector.remove();}
+		if (settings.messageBoxID !== null && settings.messageBox === 'replace') {
+			if (settings.messageMode !== 'off') {
+				if (settings.messageMode === 'append') selector.after(messageBox);
+				else if (settings.messageMode === 'prepend') selector.before(messageBox);
+				messageBox.html(successMessage).fadeIn();
+			}
+		}else if (settings.messageBox !== 'off') {
+			if (settings.messageBox === 'append') selector.after(successMessage);
+			else if (settings.messageBox === 'prepend') selector.before(successMessage);
+			else body.find(settings.messageBox).html(successMessage);
+		}
+
+		if (settings.afterAjax === 'remove') selector.remove();
 	}
 	function buildRequiredObject(rField,i) {
 		required[i] = {
@@ -9555,7 +9628,8 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			onSessionEnd: '',
 			sessionEndRedirect: '',
 			securePayments: true,
-			logoutPage: ''
+			logoutPage: '',
+			detectUser: false
 		}
 	});
 
@@ -9586,6 +9660,16 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 				else win.location.href = settings.logoutPage;
 			});
 		});
+	}
+
+	if (settings.detectUser === true) {
+		if (bcpie.globals.user.isLoggedIn) {
+			updateCookie('firstname',globals.user.firstname);
+		}
+	}
+
+	function updateCookie(property,value) {
+		$.cookie(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
 
 	function unsecureLinks () {
