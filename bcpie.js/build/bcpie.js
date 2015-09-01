@@ -7536,7 +7536,7 @@ win.bcpie = {
 				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
 					options.method = 'PUT';
 					options.contentType = 'application/octet-stream';
-					if (typeof data.content.lastModified === 'number' && typeof data.content.size === 'number') {
+					if (typeof data.content.upload !== 'undefined') {
 						options.processData = false;
 						options.data = data.content;
 					}else options.data = JSON.stringify(data.content);
@@ -7601,7 +7601,7 @@ win.bcpie = {
 					}
 
 					// Catch data errors
-					var errors = bcpie.webapp.errors(data);
+					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
 
 					if (typeof options !== 'object') options = {};
@@ -7618,8 +7618,8 @@ win.bcpie = {
 					}
 
 					// Catch data errors
-					var errors = bcpie.webapp.errors(data);
-					if (errors.length > 0) return errors;
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return console.log(errors);
 
 					if (typeof options !== 'object') options = {};
 
@@ -7630,68 +7630,66 @@ win.bcpie = {
 						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
 							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}},
 							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}},
-							field, result, msg;
+							field, result, fields;
 
 						options.data = bcpie.utils.serializeObject(data.content);
 						options.processData = false;
 
-						if (typeof bcpie.ajax.webapp.item.save[webapp] === 'undefined') {
+						if (typeof bcpie.ajax.webapp.item.save[data.webapp] === 'undefined') {
 							// Retrieve the custom fields list from the server
-							msg = bcpie.ajax.webapp.item.save[webapp] = bcpie.ajax.webapp.fields(webapp);
-						}else msg = bcpie.ajax.webapp.item.save[webapp];
+							bcpie.ajax.webapp.item.save[data.webapp] = bcpie.ajax.webapp.fields({webapp: data.webapp},{async:false});
+						}
 
-						$.when(msg).done(function(msg) {
-							msg = msg.responseJSON;
-							if (data.item !== null) {
-								options.method = 'PUT';
-								delete newData.releaseDate;
-							}else options.url = options.url.replace('/'+data.item,'');
 
-							// Add custom fields to newData object
-							for (var i=0; i<msg.items.length; i++) {
-								if (typeof options.data[msg.items[i].name] !== 'undefined') {
-									newData.fields[msg.items[i].name] = '';
-									fieldTypes.fields[msg.items[i].name] = msg.items[i].type;
-								}
+						fields = bcpie.ajax.webapp.item.save[data.webapp].responseJSON;
+						if (data.item !== null) {
+							options.method = 'PUT';
+							delete newData.releaseDate;
+						}else options.url = options.url.replace('/'+data.item,'');
+
+						// Add custom fields to newData object
+						for (var i=0; i<fields.items.length; i++) {
+							if (typeof options.data[fields.items[i].name] !== 'undefined') {
+								newData.fields[fields.items[i].name] = '';
+								fieldTypes.fields[fields.items[i].name] = fields.items[i].type;
 							}
+						}
 
-							// Fill the data object with form values
-							for (var key in options.data) {
-								if (typeof allFields[key] !== 'undefined') {
-									if (options.data[key] !== 'undefined') {
-										newData[key] = options.data[key];
-										if (key === 'country' && newData[key] === ' ' ) newData[key] = '';
-										if (key === 'state' && newData[key] === ' ' ) newData[key] = '';
-										if (fieldTypes[key] === 'Number') {
-											newData[key] = bcpie.utils.validation.number(key,newData[key]);
-											if (newData[key] === NaN) delete data[key];
-										}else if (fieldTypes[key] === 'Boolean') {
-											newData[key] = bcpie.utils.validation.boolean(key,newData[key]);
-										}else if (fieldTypes[key] === 'DateTime') {
-											newData[key] = bcpie.utils.validation.dateTime(key,newData[key]);
-										}
+						// Fill the data object with form values
+						for (var key in options.data) {
+							if (typeof allFields[key] !== 'undefined') {
+								if (options.data[key] !== 'undefined') {
+									newData[key] = options.data[key];
+									if (key === 'country' && newData[key] === ' ' ) newData[key] = '';
+									if (key === 'state' && newData[key] === ' ' ) newData[key] = '';
+									if (fieldTypes[key] === 'Number') {
+										newData[key] = bcpie.utils.validation.number(key,newData[key]);
+										if (newData[key] === NaN) delete data[key];
+									}else if (fieldTypes[key] === 'Boolean') {
+										newData[key] = bcpie.utils.validation.boolean(key,newData[key]);
+									}else if (fieldTypes[key] === 'DateTime') {
+										newData[key] = bcpie.utils.validation.dateTime(key,newData[key]);
 									}
 								}
-								else if (typeof newData.fields[key] !== 'undefined') {
-									if (options.data[key] !== 'undefined') {
-										newData.fields[key] = options.data[key];
-										if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
-											newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
-											if (newData.fields[key] === NaN) delete newData.fields[key];
-										}else if (fieldTypes.fields[key] === 'Boolean') {
-											newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
-											if (newData.fields[key] === null) delete newData.fields[key];
-										}else if (fieldTypes.fields[key] === 'DateTime') {
-											newData.fields[key] = bcpie.utils.validation.dateTime(key,newData.fields[key]);
-											if (newData.fields[key] === null) delete newData.fields[key];
-										}
-									}else delete newData.fields[key];
-								}
 							}
+							else if (typeof newData.fields[key] !== 'undefined') {
+								if (options.data[key] !== 'undefined') {
+									newData.fields[key] = options.data[key];
+									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
+										newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
+										if (newData.fields[key] === NaN) delete newData.fields[key];
+									}else if (fieldTypes.fields[key] === 'Boolean') {
+										newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
+										if (newData.fields[key] === null) delete newData.fields[key];
+									}else if (fieldTypes.fields[key] === 'DateTime') {
+										newData.fields[key] = bcpie.utils.validation.dateTime(key,newData.fields[key]);
+										if (newData.fields[key] === null) delete newData.fields[key];
+									}
+								}else delete newData.fields[key];
+							}
+						}
 
-							options.data = JSON.stringify(newData);
-							return bcpie.utils.ajax(options);
-						});
+						options.data = JSON.stringify(newData);
 					}else {
 						if (data.item === null) options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OTYPE=1';
 						else options.url = '/CustomContentProcess.aspx?A=EditSave&CCID='+data.webapp+'&OID='+data.item+'&OTYPE=35';
@@ -7718,7 +7716,7 @@ win.bcpie = {
 					}
 
 					// Catch data errors
-					var errors = bcpie.webapp.errors(data);
+					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
 
 					if (typeof options !== 'object') options = {};
@@ -7741,7 +7739,7 @@ win.bcpie = {
 						content: data.content || null  // $, {}
 					}
 					// Catch data errors
-					var errors = bcpie.webapp.errors(data);
+					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
 
 					if (typeof options !== 'object') options = {};
@@ -7763,7 +7761,7 @@ win.bcpie = {
 					webapp: data.webapp || null
 				}
 				// Catch data errors
-				var errors = bcpie.webapp.errors(data);
+				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
 				if (typeof options !== 'object') options = {};
@@ -7778,12 +7776,12 @@ win.bcpie = {
 					webapp: data.webapp || null // string
 				}
 				// Catch data errors
-				var errors = bcpie.webapp.errors(data);
+				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
 				if (typeof options !== 'object') options = {};
 
-				options.url = '/api/v2/admin/sites/current/webapps/'+webapp+'/fields';
+				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
@@ -7796,7 +7794,7 @@ win.bcpie = {
 					content: data.content || null
 				}
 				// Catch data errors
-				var errors = bcpie.webapp.errors(data);
+				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
 				if (typeof options !== 'object') options = {};
@@ -7812,19 +7810,19 @@ win.bcpie = {
 			errors: function(data) {
 				data.errors = [];
 				if (typeof data.webapp !== 'undefined') {
-					if (data.webapp === null) errors.push('"webapp" parameter cannot be null.');
-					else if (data.webapp.isInteger() && bcpie.ajax.token().length > 10) errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
-					else if (!data.webapp.isInteger() && bcpie.ajax.token().length < 10) errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
+					if (data.webapp === null) data.errors.push('"webapp" parameter cannot be null.');
+					else if (data.webapp.toString().match(/\D/g) === null && bcpie.ajax.token().length > 10) data.errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
+					else if (data.webapp.toString().match(/\D/g) !== null && bcpie.ajax.token().length < 10) data.errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
 				}
 				if (typeof data.item !== 'undefined') {
 					if (data.item === null) {
-						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.ajax.token().length < 10)) errors.push('"item" parameter cannot be null.');
-					}else if (!data.item.isInteger()) errors.push('"item" parameter must be an integer.');
+						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.ajax.token().length < 10)) data.errors.push('"item" parameter cannot be null.');
+					}else if (data.item.toString().match(/\D/g) !== null) data.errors.push('"item" parameter must be an integer.');
 				}
 				if (typeof data.formID !== 'undefined') {
-					if (!data.item.isInteger()) errors.push('"formID" parameter must be an integer.');
+					if (data.formID.toString().match(/\D/g) !== null) data.errors.push('"formID" parameter must be an integer.');
 				}
-				if (data.mode === 'get' && bcpie.ajax.token().length < 10) errors.push('"get" mode is for API use only.');
+				if (data.mode === 'get' && bcpie.ajax.token().length < 10) data.errors.push('"get" mode is for API use only.');
 				return data.errors;
 			}
 		},
@@ -8070,6 +8068,7 @@ win.bcpie = {
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
+			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined') settings.dataType = 'application/json';
 			return $.ajax(settings);
 		},
 		validation: {
