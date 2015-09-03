@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Utility = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Utility',
-		version: '2015.03.09',
+		version: '2015.09.02',
 		defaults: {
 			value: '',
 			list: '', // options are countries, states, timezones.
@@ -18,8 +18,8 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 	// take care of backwards compatibility first
 	settings.value = settings.setValue || settings.value;
 	settings.list = settings.getList || settings.list;
-	if (settings.value === '') settings.value = settings.value.toLowerCase();
-	if (settings.list === '') settings.list = settings.list.toLowerCase();
+	if (settings.value !== '') settings.value = settings.value.toLowerCase();
+	if (settings.list !== '') settings.list = settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {

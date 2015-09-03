@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.08.29',
+		bcpieSDK: '2015.09.02',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -38,7 +38,7 @@ win.bcpie = {
 				data = {
 					path: data.path || '', // string
 					content: data.content || '', // file object, string
-					version: data.version || 'draft' // 'draft', 'draft-publish'
+					version: data.version || 'draft-publish' // 'draft', 'draft-publish'
 				}
 
 				if (typeof options !== 'object') options = {};
@@ -51,12 +51,12 @@ win.bcpie = {
 				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
 					options.method = 'PUT';
 					options.contentType = 'application/octet-stream';
-					if (typeof data.content.upload !== 'undefined') {
+					if (typeof data.content.upload !== 'undefined' || typeof data.content.type !== 'undefined') {
 						options.processData = false;
+						options.url.replace('?version='+data.version,'');
 						options.data = data.content;
 					}else options.data = JSON.stringify(data.content);
-				}
-				else {
+				}else {
 					options.method = 'POST';
 					options.contentType = false;
 					options.cache = false;
@@ -139,7 +139,8 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 
 					if (bcpie.ajax.token().length > 10) {
-						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
+						if (data.item !== null) options.url += '/'+data.item;
 						options.headers = {Authorization: bcpie.ajax.token()};
 
 						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
@@ -281,7 +282,7 @@ win.bcpie = {
 
 				if (typeof options !== 'object') options = {};
 
-				options.url = '/api/v2/admin/sites/current/webapps/'+webapp;
+				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
@@ -342,22 +343,31 @@ win.bcpie = {
 			}
 		},
 		crm: {
-			customers: function(data,options) {
-				data = {
-					mode: data.mode.toLowerCase() || 'get', // 'get','save',delete
-					customerID: data.customerID || null, // integer
-					filters: data.filters || null, // object
-					content: data.content || null
-				}
-				if (typeof options !== 'object') options = {};
-				options.headers = {'Authorization': bcpie.ajax.token()};
-				options.url = '/webresources/api/v3/sites/current/customers';
-				if (data.customerID !== null) options.url += '/'+customerID;
-				if (data.mode === 'get') {
+			customers: {
+				get: function(data,options) {
+					data = {
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+						content: data.content || null
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers';
+					if (data.customerID !== null) options.url += '/'+customerID;
 					options.method = 'GET';
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
-				}else if (data.mode === 'delete') options.method = 'DELETE';
-				else if (data.mode === 'save') {
+					return bcpie.utils.ajax(options);
+				},
+				save: function(data,options) {
+					data = {
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+						content: data.content || null
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers';
+					if (data.customerID !== null) options.url += '/'+customerID;
 					if (bcpie.ajax.token().length > 10) {
 						options.data = JSON.stringify(data.content);
 						options.processData = false;
@@ -368,10 +378,21 @@ win.bcpie = {
 						options.data = $.param(data.content);
 						options.contentType = false;
 					}
-				}
-				return bcpie.utils.ajax(options);
-			},
-			customers: {
+					return bcpie.utils.ajax(options);
+				},
+				delete: function(data,options) {
+					data = {
+						customerID: data.customerID || null, // integer
+						filters: data.filters || null, // object
+						content: data.content || null
+					}
+					if (typeof options !== 'object') options = {};
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.url = '/webresources/api/v3/sites/current/customers';
+					if (data.customerID !== null) options.url += '/'+customerID;
+					options.method = 'DELETE';
+					return bcpie.utils.ajax(options);
+				},
 				secureZones: function(data,options) {
 					data = {
 						mode: data.mode.toLowerCase() || 'get', // 'get','subscribe',unsubscribe
@@ -541,6 +562,14 @@ win.bcpie = {
 			}
 			return obj;
 		},
+		isJson: function(str) {
+			try {
+				JSON.parse(str);
+			} catch (e) {
+				return false;
+			}
+			return true;
+		},
 		makeSlug: function(string) {
 			var output = '',
 				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -583,7 +612,7 @@ win.bcpie = {
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
-			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined') settings.dataType = 'application/json';
+			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
 		},
 		validation: {

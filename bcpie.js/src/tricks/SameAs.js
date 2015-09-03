@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.08.17',
+		version: '2015.09.01',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -58,10 +58,12 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			else if (settings.ref === 'html') value = value.html();
 			else value = value.attr(settings.ref);
 
-			if (settings.trim === true) value = value.trim();
+			if (typeof value !== 'undefined') {
+				if (settings.trim === true) value = value.trim();
 
-			if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
-			else value = settings.prefix + value + settings.suffix;
+				if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
+				else value = settings.prefix + value + settings.suffix;
+			}
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
 		if (settings.convert !== null) {
@@ -156,9 +158,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				else if (settings.ref === 'html') value = value.html();
 				else value = value.attr(settings.ref);
 
-				if (settings.trim === true) value = value.trim();
+				if (typeof value !== 'undefined') {
+					if (settings.trim === true) value = value.trim();
 
-				str = str.replace(fieldSelectors[i],value);
+					str = str.replace(fieldSelectors[i],value);
+				}
 			}
 
 			return str;
