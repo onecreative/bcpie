@@ -8,15 +8,13 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.08.25',
+		version: '2015.09.09',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
 			'errorGroupClass' : 'error-group',
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
-			'messageBoxID' : null, // Deprecated in favor of messageBox
-			'messageMode' : 'prepend', // 'append', 'box', 'off'. Deprecated in favor of messageBox
 			'messageBox' : 'replace', // 'replace' replaces the form with the message, and 'off' returns no message. Otherwise, a CSS selector indicates where to put the message.
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
@@ -35,8 +33,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
 			'steps' : '', // multistep container selectors, separated by comma
-			'continueButton' : '', // Continue button selector for multi step form
-			'backButton' : '', // back button selector for multi step form
+			'continueButton' : '', // Continue button selector for multistep form
+			'backButton' : '', // back button selector for multistep form
 			'buttonOnSubmit' : 'disable', // none,disable,hide
 			'buttonAfterSubmit' : 'enable', //none,enable,hide,show,disable
 			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
