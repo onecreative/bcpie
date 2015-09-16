@@ -94,12 +94,14 @@ bcpie.extensions.tricks.Date = function(selector,options){
 
 	// Initialize Language Support
 	if (settings.locale !== 'en') {
-		var momentLocale = document.createElement('script');
-		momentLocale.type = 'text/javascript';
-		momentLocale.async = true;
-		momentLocale.src = '//cdn.jsdelivr.net/momentjs/'+moment.version+'/locales.min.js';
-		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
-
+		var src = '//cdn.jsdelivr.net/momentjs/'+moment.version+'/locales.min.js';
+		if ($(doc).find('script[src="'+src+'"]').length === 0) {
+			var momentLocale = document.createElement('script');
+			momentLocale.type = 'text/javascript';
+			momentLocale.async = true;
+			momentLocale.src = src;
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
+		}
 		initLangSupport();
 	}else runDate();
 
