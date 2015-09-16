@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.07.17',
+		version: '2015.09.16',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -19,15 +19,27 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			toZone: '', // specify a valid timezone string (like America/Denver) or use 'local' to automatically detect it
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
-			event: 'load' // specify the window event that triggers Date's behavior
+			event: 'load', // specify the window event that triggers Date's behavior
+			locale: 'off' // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
 		}
 	});
+
+	if (settings.locale === 'off') settings.locale = bcpie.globals.site.language.toLowerCase();
+	else if (settings.locale === 'auto') settings.locale = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 
 	if (settings.add !== '') settings.add = $.parseJSON(bcpie.utils.jsonify(settings.add));
 	if (settings.subtract !== '') settings.subtract = $.parseJSON(bcpie.utils.jsonify(settings.subtract));
 
 	var ref,value,targets,parseFormat,order;
 
+	function initLangSupport() {
+		if (moment.localeData('es') !== null) { // check for the existence of language data other than 'en'
+			moment.locale(settings.locale);
+			runDate();
+		}else {
+			setTimeout(initLangSupport, 100);
+		}
+	}
 	function runDate() {
 		// determine the reference
 		if (settings.ref === 'text' && selector.is('input')) settings.ref = 'value';
@@ -47,8 +59,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 				else value = moment.unix(ref);
 			}else {
 				if (typeof settings.site.countryCode === 'undefined') settings.site.countryCode = 'US';
-				switch(settings.countries[settings.site.countryCode].ContinentCode) {
-					case 'NA': order = 'MDY'; break;
+				switch(settings.site.countryCode) {
+					case 'US': order = 'MDY'; break;
 					default: order = 'DMY';
 				}
 				parseFormat = (settings.moment === 'auto') ? moment.parseFormat(ref,{preferredOrder: order}) : settings.moment;
@@ -79,10 +91,22 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			}
 		}
 	}
-	runDate();
+
+	// Initialize Language Support
+	if (settings.locale !== 'en') {
+		var momentLocale = document.createElement('script');
+		momentLocale.type = 'text/javascript';
+		momentLocale.async = true;
+		momentLocale.src = '//cdn.jsdelivr.net/momentjs/'+moment.version+'/locales.min.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
+
+		initLangSupport();
+	}else runDate();
+
 	if (settings.event !== 'load') {
 		body.on(settings.event, selector, function() {
 			runDate();
 		});
 	}
+
 };

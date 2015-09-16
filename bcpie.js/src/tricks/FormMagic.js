@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.09',
+		version: '2015.09.15',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -35,8 +35,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'steps' : '', // multistep container selectors, separated by comma
 			'continueButton' : '', // Continue button selector for multistep form
 			'backButton' : '', // back button selector for multistep form
-			'buttonOnSubmit' : 'disable', // none,disable,hide
-			'buttonAfterSubmit' : 'enable', //none,enable,hide,show,disable
+			'buttonOnLoad' : 'enable', // none,disable,hide
+			'buttonOnSubmit' : 'disable', // none,enable,hide
+			'buttonAfterSubmit' : 'enable', //none,hide,show,disable
 			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
 			'customErrorFields' : '' // takes a comma delimited list of selectors to match against during validation
 		}
@@ -660,6 +661,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		selector.get(0).scrollIntoView();
 
 	}
+
+	buttonSubmitBehaviour(settings.buttonOnLoad);
 
 	// Auto Require certain fields
 	autoRequire = ['FirstName','LastName','FullName','EmailAddress','CaptchaV2','ItemName'];
