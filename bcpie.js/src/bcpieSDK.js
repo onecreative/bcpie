@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.09.02',
+		sdk: '2015.09.16',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -24,7 +24,7 @@ win.bcpie = {
 		file: {
 			get: function(data,options) {
 				data = {
-					path: data.path || '', // string
+					path: data.path || '' // string
 				}
 
 				if (typeof options !== 'object') options = {};

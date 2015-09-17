@@ -7486,7 +7486,7 @@ var Parser = (function (scope) {
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		bcpieSDK: '2015.09.02',
+		sdk: '2015.09.16',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -7509,7 +7509,7 @@ win.bcpie = {
 		file: {
 			get: function(data,options) {
 				data = {
-					path: data.path || '', // string
+					path: data.path || '' // string
 				}
 
 				if (typeof options !== 'object') options = {};
@@ -9803,7 +9803,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.08.19',
+		version: '2015.09.17',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -9813,7 +9813,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			offClass: '', // css class to be applied
 			toggle: false, // if true, class will be toggled on events
 			onCallback: '', // on callback
-			offCallback: '' // off callback
+			offCallback: '', // off callback
+			onValue: null, // specify default value when trigger is on
+			offValue: null // specify default value when trigger is off
 		}
 	});
 
@@ -9833,28 +9835,39 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	// Generic event for all events
 	function triggerEvent(){
-			if(settings.toggle === true) {
-				if(selector.hasClass(settings.onClass) && settings.onClass !== '') {
-					selector.removeClass(settings.onClass);
-					executeCallback(settings.offCallback);
-				}else {
-					selector.addClass(settings.onClass);
-					executeCallback(settings.onCallback);
-				}
-				if(selector.hasClass(settings.offClass) && settings.offClass !== '') {
-					selector.removeClass(settings.offClass);
-					executeCallback(settings.onCallback);
-				}else {
-					selector.addClass(settings.offClass);
-					executeCallback(settings.offCallback);
-				}
+		if(settings.toggle === true) {
+			if(selector.hasClass(settings.onClass) && settings.onClass !== '') {
+				selector.removeClass(settings.onClass);
+				changeValue('off');
+				executeCallback(settings.offCallback);
 			}else {
 				selector.addClass(settings.onClass);
+				changeValue('on');
 				executeCallback(settings.onCallback);
 			}
+			if(selector.hasClass(settings.offClass) && settings.offClass !== '') {
+				selector.removeClass(settings.offClass);
+				changeValue('on');
+				executeCallback(settings.onCallback);
+			}else {
+				selector.addClass(settings.offClass);
+				changeValue('off');
+				executeCallback(settings.offCallback);
+			}
+		}else {
+			selector.addClass(settings.onClass);
+			changeValue('on');
+			executeCallback(settings.onCallback);
+		}
 	}
-
-	// Change event
+	function changeValue(state) {
+		if (state === 'off') state = settings.offValue;
+		else if (state === 'on') state = settings.onValue;
+		if (state !== null) {
+			if (selector.is('input,select,textarea')) selector.val(state);
+			else selector.text(state);
+		}
+	}
 	function changeTrigger(){
 			var found = 0;
 			for (var i=0; i<settings.triggerValue.length; i++) {
@@ -9862,9 +9875,11 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			}
 			if(found > 0){
 				selector.removeClass(settings.offClass).addClass(settings.onClass);
+				changeValue('on');
 				executeCallback(settings.onCallback);
 			}else{
 				selector.removeClass(settings.onClass).addClass(settings.offClass);
+				changeValue('off');
 				executeCallback(settings.offCallback);
 			}
 	}
@@ -9888,7 +9903,6 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		if (typeof value === 'undefined') value = '';
 		return value.trim();
 	}
-	// execute function helper
 	function executeCallback(callbackName){
 		if(callbackName.length > 0){
 			var callback = window[callbackName];
