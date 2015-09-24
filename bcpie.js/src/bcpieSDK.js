@@ -364,7 +364,6 @@ win.bcpie = {
 				save: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						filters: data.filters || null, // object
 						content: data.content || null
 					}
 					if (typeof options !== 'object') options = {};
@@ -386,7 +385,6 @@ win.bcpie = {
 				delete: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						filters: data.filters || null, // object
 						content: data.content || null
 					}
 					if (typeof options !== 'object') options = {};
@@ -484,9 +482,13 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = {};
+			var o = {},boolFalse;
 			if (object instanceof jQuery) {
 				var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
+				var boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
+				for (var i = 0; i < boolFalse.length; i++) {
+					a.push({name: $(boolFalse[i]).attr('name'), value:null});
+				}
 			}else if ($.isArray(object) && typeof object[0].name !== 'undefined' && typeof object[0].value !== 'undefined') {
 				var a = object;
 			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
@@ -628,8 +630,9 @@ win.bcpie = {
 				}else return Number(value);
 			},
 			boolean: function(fieldName,value) {
-				if (value.toLowerCase() === 'true' || value === '1') return true;
-				else if (value.toLowerCase() === 'false' || value === '0') return false;
+				if (value == null || value.trim() == '' || value.toLowerCase() === 'false' || value == '0' || value === 'off') return false;
+				else if (value.toLowerCase() === 'true' || value === '1' || value === 'on') return true;
+
 				else return null;
 			},
 			dateTime: function(fieldName,value) {

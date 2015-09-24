@@ -22,7 +22,8 @@
 		"moment-parseformat": "latest",
 		"moment-duration-format": "latest",
 		"jquery.mobilephonenumber": "latest",
-		"js-expression-eval": "latest"
+		"js-expression-eval": "latest",
+		"alertify-js": "latest"
 	},
 	"install": {
 		"path": {
@@ -40,7 +41,8 @@
 				"bower_components/jquery.mobilephonenumber/vendor/jquery.caret.js",
 				"bower_components/jquery.mobilephonenumber/lib/jquery.mobilePhoneNumber.js"
 			],
-			"js-expression-eval": "bower_components/js-expression-eval/parser.js"
+			"js-expression-eval": "bower_components/js-expression-eval/parser.js",
+			"alertify-js": "bower_components/alertify-js/build/alertify.js"
 		},
 		"ignore": [
 			"jquery",

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.15',
+		version: '2015.09.21',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -18,12 +18,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'messageBox' : 'replace', // 'replace' replaces the form with the message, and 'off' returns no message. Otherwise, a CSS selector indicates where to put the message.
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
-			'useAjax' : false,
+			'useAjax' : false, // deprecated in favor of 'mode'
 			'validateMode' : 'alert', // 'inline', 'off'
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
 			'successClass' : 'success',
+			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
 			'submitEvent' : null,
 			'submitField' : '[type="submit"]',
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
@@ -381,6 +382,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 
 	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
+	if (settings.mode === 'standard' && settings.useAjax === true) settings.mode = 'ajax';
 
 	// setup some local variables
 	var requiredFields,required=[],submitCount=0,
@@ -388,8 +390,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
 		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
 		multistep = {containers: selector.find(settings.steps), step: 0},
-		lockSubmit = false, messageBox = (settings.messageBoxID === null) ? $('<div id="ajaxresponse" />') : $('#'+settings.messageBoxID),
-		messageBoxContents = $('#'+settings.messageBoxID).html(), customFlag = false,msg,
+		lockSubmit = false, messageBoxContents = (body.find(settings.messageBox).length > 0) ? body.find(settings.messageBox).html() : selector.html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha'};
 
 	if (settings.customErrorFields !== '') settings.customErrorFields = settings.customErrorFields.split(',');
@@ -517,7 +518,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function submitForm(submitCount) {
 		if (submitCount===0) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
-			if (settings.useAjax) {
+			if (settings.mode = 'ajax') {
 				$.ajax({
 					type: 'POST',
 					url: selector.attr('action'),
@@ -528,7 +529,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
 
 						if (messageClass !== '') msg = $(response).find('.'+messageClass);
-						else if ($(response).is('font')) msg = $(response);
+						else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
 
 						if ($(msg).size() > 0) successMessage = msg;
 						else if (messageClass !== '') {
@@ -548,7 +549,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
+			}else if (settings.mode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
+				settings.mode.data = {};
+				settings.mode.data.webapp = settings.webapp;
+				if (typeof settings.item !== 'undefined') settings.mode.data.item = settings.item;
+				bcpie.ajax.webapp.item.save(settings.mode.data);
 			}else selector.off('submit').submit();
+
 			return submitCount++;
 		}else{
 			alert("This form has already been submitted. Please refresh the page if you need to submit again.");
@@ -569,22 +576,14 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function showSuccess(selector,successMessage) {
 		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
-		if (successMessage.html().replace(/\n/g,'').replace(/	/g,'').replace(/ /g,'').length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
-		else if(successMessage.find('.search-results').length) successMessage = successMessage.find('.search-results').html();
+		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
+		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
 
-		if (settings.messageBoxID !== null && settings.messageBox === 'replace') {
-			if (settings.messageMode !== 'off') {
-				if (settings.messageMode === 'append') selector.after(messageBox);
-				else if (settings.messageMode === 'prepend') selector.before(messageBox);
-				messageBox.html(successMessage).fadeIn();
-			}
-		}else if (settings.messageBox !== 'off') {
-			if (settings.messageBox === 'append') selector.after(successMessage);
-			else if (settings.messageBox === 'prepend') selector.before(successMessage);
-			else body.find(settings.messageBox).html(successMessage);
+		if (settings.messageBox === 'replace') selector.html(successMessage).fadeIn();
+		else if (settings.messageBox !== 'off') {
+			body.find(settings.messageBox).html(successMessage);
+			if (settings.afterAjax === 'remove') selector.remove();
 		}
-
-		if (settings.afterAjax === 'remove') selector.remove();
 	}
 	function buildRequiredObject(rField,i) {
 		required[i] = {
