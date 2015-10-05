@@ -17,6 +17,7 @@
 		"*.codekit"
 	],
 	"dependencies": {
+		"js-cookie": "latest",
 		"moment": "latest",
 		"moment-timezone": "latest",
 		"moment-parseformat": "latest",
@@ -30,6 +31,7 @@
 			"js": "src/vendor"
 		},
 		"sources": {
+			"js-cookie": "bower_components/js-cookie/src/js.cookie.js",
 			"moment": "bower_components/moment/moment.js",
 			"moment-timezone": [
 				"bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js",

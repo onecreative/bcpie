@@ -18,8 +18,8 @@ win.bcpie = {
 	},
 	ajax: {
 		token: function() {
-			if (typeof $.cookie('access_token') !== 'undefined') return $.cookie('access_token');
-			else return $.cookie('access_token',window.location.hash.replace('#access_token=',''));
+			if (typeof Cookies('access_token') !== 'undefined') return Cookies('access_token');
+			else return Cookies('access_token',window.location.hash.replace('#access_token=',''));
 		},
 		file: {
 			get: function(data,options) {
@@ -115,7 +115,8 @@ win.bcpie = {
 				get :function(data,options) {
 					data = {
 						webapp: data.webapp || null, // integer, string
-						item: data.item || null // integer
+						item: data.item || null, // integer
+						filters: data.filters || null // object
 					}
 
 					// Catch data errors
@@ -123,7 +124,9 @@ win.bcpie = {
 					if (errors.length > 0) return errors;
 
 					if (typeof options !== 'object') options = {};
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
+					if (data.item !== null) options.url += '/'+data.item;
+					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
 					options.headers = {Authorization: bcpie.ajax.token()};
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
@@ -275,7 +278,7 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				}
 			},
-			detail: function(data,options) {
+			get: function(data,options) {
 				data = {
 					webapp: data.webapp || null
 				}
@@ -292,7 +295,8 @@ win.bcpie = {
 			},
 			fields: function(data,options) {
 				data = {
-					webapp: data.webapp || null // string
+					webapp: data.webapp || null, // string
+					field: data.field || null, // string
 				}
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
@@ -301,6 +305,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 
 				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+				if (data.field !== null) options.url += '/' + data.field;
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
@@ -350,14 +355,14 @@ win.bcpie = {
 				get: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						filters: data.filters || null, // object
-						content: data.content || null
+						filters: data.filters || null // object
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+customerID;
 					options.method = 'GET';
+					options.mimeType = 'application/json';
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
 					return bcpie.utils.ajax(options);
 				},
@@ -385,7 +390,6 @@ win.bcpie = {
 				delete: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						content: data.content || null
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
@@ -424,7 +428,7 @@ win.bcpie = {
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.ajax.filters(data.filters);
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
 				},
@@ -436,7 +440,7 @@ win.bcpie = {
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.ajax.filters(filters);
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
 				}
@@ -444,23 +448,23 @@ win.bcpie = {
 		}
 	},
 	utils: {
-		_jsonify_brace: /^[{\[]/,
-		_jsonify_token: /[^,:{}\[\]]+/g,
-		_jsonify_quote: /^['"](.*)['"]$/,
-		_jsonify_escap: /(["])/g,
 		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
 		jsonify: function(str) {
+			bcpie.utils.jsonify.brace = /^[{\[]/;
+			bcpie.utils.jsonify.token = /[^,:{}\[\]]+/g;
+			bcpie.utils.jsonify.quote = /^['"](.*)['"]$/;
+			bcpie.utils.jsonify.escap = /(["])/g;
 			// Wrap with `{}` if not JavaScript object literal
 			str = $.trim(str);
-			if (bcpie.utils._jsonify_brace.test(str) === false) str = '{'+str+'}';
+			if (bcpie.utils.jsonify.brace.test(str) === false) str = '{'+str+'}';
 
 			// Retrieve token and convert to JSON
-			return str.replace(bcpie.utils._jsonify_token, function (a) {
+			return str.replace(bcpie.utils.jsonify.token, function (a) {
 				a = $.trim(a);
 				// Keep some special strings as they are
 				if ('' === a || 'true' === a || 'false' === a || 'null' === a || (!isNaN(parseFloat(a)) && isFinite(a))) return a;
 				// For string literal: 1. remove quotes at the top end; 2. escape double quotes in the middle; 3. wrap token with double quotes
-				else return '"'+ a.replace(bcpie.utils._jsonify_quote, '$1').replace(bcpie.utils._jsonify_escap, '\\$1')+ '"';
+				else return '"'+ a.replace(bcpie.utils.jsonify.quote, '$1').replace(bcpie.utils.jsonify.escap, '\\$1')+ '"';
 			});
 		},
 		encode: function(str) {
@@ -475,10 +479,10 @@ win.bcpie = {
 			}
 			return s4()+s4()+'-'+s4()+'-'+s4()+'-'+s4()+'-'+s4()+s4()+s4();
 		},
-		isElement: function(o){
+		isElement: function(object){
 			return (
-				typeof HTMLElement === 'object' ? o instanceof HTMLElement : //DOM2
-					o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName==='string'
+				typeof HTMLElement === 'object' ? object instanceof HTMLElement : //DOM2
+					object && typeof object === 'object' && object !== null && object.nodeType === 1 && typeof object.nodeName==='string'
 			);
 		},
 		serializeObject: function(object) {
@@ -616,6 +620,7 @@ win.bcpie = {
 			settings.url = options.url || '';
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
+			if (bcpie.ajax.token().length > 10) settings.connection = options.connection || 'keep-alive';
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);

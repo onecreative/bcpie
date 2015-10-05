@@ -1,5 +1,144 @@
-/**
- * alertifyjs 1.4.1 http://alertifyjs.com
+/*!
+ * JavaScript Cookie v2.0.3
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory();
+	} else {
+		var _OldCookies = window.Cookies;
+		var api = window.Cookies = factory(window.jQuery);
+		api.noConflict = function () {
+			window.Cookies = _OldCookies;
+			return api;
+		};
+	}
+}(function () {
+	function extend () {
+		var i = 0;
+		var result = {};
+		for (; i < arguments.length; i++) {
+			var attributes = arguments[ i ];
+			for (var key in attributes) {
+				result[key] = attributes[key];
+			}
+		}
+		return result;
+	}
+
+	function init (converter) {
+		function api (key, value, attributes) {
+			var result;
+
+			// Write
+
+			if (arguments.length > 1) {
+				attributes = extend({
+					path: '/'
+				}, api.defaults, attributes);
+
+				if (typeof attributes.expires === 'number') {
+					var expires = new Date();
+					expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+					attributes.expires = expires;
+				}
+
+				try {
+					result = JSON.stringify(value);
+					if (/^[\{\[]/.test(result)) {
+						value = result;
+					}
+				} catch (e) {}
+
+				value = encodeURIComponent(String(value));
+				value = value.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+
+				key = encodeURIComponent(String(key));
+				key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+				key = key.replace(/[\(\)]/g, escape);
+
+				return (document.cookie = [
+					key, '=', value,
+					attributes.expires && '; expires=' + attributes.expires.toUTCString(), // use expires attribute, max-age is not supported by IE
+					attributes.path    && '; path=' + attributes.path,
+					attributes.domain  && '; domain=' + attributes.domain,
+					attributes.secure ? '; secure' : ''
+				].join(''));
+			}
+
+			// Read
+
+			if (!key) {
+				result = {};
+			}
+
+			// To prevent the for loop in the first place assign an empty array
+			// in case there are no cookies at all. Also prevents odd result when
+			// calling "get()"
+			var cookies = document.cookie ? document.cookie.split('; ') : [];
+			var rdecode = /(%[0-9A-Z]{2})+/g;
+			var i = 0;
+
+			for (; i < cookies.length; i++) {
+				var parts = cookies[i].split('=');
+				var name = parts[0].replace(rdecode, decodeURIComponent);
+				var cookie = parts.slice(1).join('=');
+
+				if (cookie.charAt(0) === '"') {
+					cookie = cookie.slice(1, -1);
+				}
+
+				try {
+					cookie = converter && converter(cookie, name) || cookie.replace(rdecode, decodeURIComponent);
+
+					if (this.json) {
+						try {
+							cookie = JSON.parse(cookie);
+						} catch (e) {}
+					}
+
+					if (key === name) {
+						result = cookie;
+						break;
+					}
+
+					if (!key) {
+						result[name] = cookie;
+					}
+				} catch (e) {}
+			}
+
+			return result;
+		}
+
+		api.get = api.set = api;
+		api.getJSON = function () {
+			return api.apply({
+				json: true
+			}, [].slice.call(arguments));
+		};
+		api.defaults = {};
+
+		api.remove = function (key, attributes) {
+			api(key, '', extend(attributes, {
+				expires: -1
+			}));
+		};
+
+		api.withConverter = init;
+
+		return api;
+	}
+
+	return init();
+}));
+;/**
+ * alertifyjs 1.5.0 http://alertifyjs.com
  * AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.
  * Copyright 2015 Mohammad Younes <Mohammad@alertifyjs.com> (http://alertifyjs.com) 
  * Licensed under MIT <http://opensource.org/licenses/mit-license.php>*/
@@ -127,7 +266,68 @@
             element.removeChild(element.lastChild);
         }
     }
+    /**
+     * Extends a given prototype by merging properties from base into sub.
+     *
+     * @sub {Object} sub The prototype being overwritten.
+     * @base {Object} base The prototype being written.
+     *
+     * @return {Object} The extended prototype.
+     */
+    function copy(src) {
+        if(null === src)
+          return src;
         
+        if(Array.isArray(src)){
+          var cpy = [];  
+          for(var x=0;x<src.length;x+=1){
+            cpy.push(copy(src[x]));
+          }
+          return cpy;          
+        }
+      
+        if(src instanceof Date){
+          return new Date(src.getTime());
+        }
+      
+        if(src instanceof RegExp){
+          var cpy = new RegExp(src.source);
+          cpy.global = src.global;
+          cpy.ignoreCase = src.ignoreCase;
+          cpy.multiline = src.multiline;
+          cpy.lastIndex = src.lastIndex;
+          return cpy;
+        }
+        
+        if(typeof src === 'object'){
+          var cpy = {};
+          // copy dialog pototype over definition.
+          for (var prop in src) {
+              if (src.hasOwnProperty(prop)) {
+                  cpy[prop] = copy(src[prop]);
+              }
+          }
+          return cpy;
+        }
+      
+        return src;        
+    }
+    /**
+      * Helper: destruct the dialog
+      *
+      */
+    function destruct(instance, initialize){
+      //delete the dom and it's references.
+      var root = instance.elements.root;
+      root.parentNode.removeChild(root);
+      delete instance.elements;
+      //copy back initial settings.
+      instance.settings = copy(instance.__settings);
+      //re-reference init function.
+      instance.__init = initialize;
+      //delete __internal variable to allow re-initialization. 
+      delete instance.__internal;
+    }
 
     /**
      * Use a closure to return proper event listener method. Try to use
@@ -315,6 +515,10 @@
 				
                 //no need to expose init after this.
                 delete instance.__init;
+              
+                //keep a copy of initial dialog settings
+                if(!this.__settings)
+                  this.__settings = copy(this.settings);
 				
                 //in case the script was included before body.
                 //after first dialog gets initialized, it won't be null anymore!				
@@ -352,13 +556,13 @@
                 if(Array.isArray(setup.buttons)){
                     for(var b=0;b<setup.buttons.length;b+=1){
                         var ref  = setup.buttons[b],
-                            copy = {};
+                            cpy = {};
                         for (var i in ref) {
                             if (ref.hasOwnProperty(i)) {
-                                copy[i] = ref[i];
+                                cpy[i] = ref[i];
                             }
                         }
-                        buttonsDefinition.push(copy);
+                        buttonsDefinition.push(cpy);
                     }
                 }
 
@@ -410,7 +614,8 @@
                     buttonsClickHandler:undefined,
                     commandsClickHandler:undefined,
                     transitionInHandler:undefined,
-                    transitionOutHandler:undefined
+                    transitionOutHandler:undefined,
+                    destroy:undefined
                 };
 				
                                 
@@ -547,8 +752,8 @@
          */
         var scrollX, scrollY;
         function saveScrollPosition(){
-            scrollX = window.scrollX;
-            scrollY = window.scrollY;
+            scrollX = getScrollLeft();
+            scrollY = getScrollTop();
         }
         function restoreScrollPosition(){
             window.scrollTo(scrollX, scrollY);
@@ -1375,6 +1580,11 @@
             if (alertify.defaults.maintainFocus && instance.__internal.activeElement) {
                 instance.__internal.activeElement.focus();
                 instance.__internal.activeElement = null;
+            }
+            
+            //destory the instance
+            if (typeof instance.__internal.destroy === 'function') {
+              instance.__internal.destroy.apply(instance);
             }
         }
         /* Controls moving a dialog around */
@@ -2296,7 +2506,25 @@
             closeOthers:function(){
                 alertify.closeAll(this);
                 return this;
-            }
+            },
+            /**
+             * Destroys this dialog instance
+             *
+             * @return {undefined}
+             */
+            destroy:function(){
+              if (this.__internal.isOpen ) {
+                //mark dialog for destruction, this will be called on tranistionOut event.
+                this.__internal.destroy = function(){
+                  destruct(this, initialize);
+                }
+                //close the dialog to unbind all events.
+                this.close();
+              }else{
+                destruct(this, initialize);
+              }
+              return this;
+            },
         };
 	} () );
     var notifier = (function () {
@@ -10960,8 +11188,8 @@ win.bcpie = {
 	},
 	ajax: {
 		token: function() {
-			if (typeof $.cookie('access_token') !== 'undefined') return $.cookie('access_token');
-			else return $.cookie('access_token',window.location.hash.replace('#access_token=',''));
+			if (typeof Cookies('access_token') !== 'undefined') return Cookies('access_token');
+			else return Cookies('access_token',window.location.hash.replace('#access_token=',''));
 		},
 		file: {
 			get: function(data,options) {
@@ -11057,7 +11285,8 @@ win.bcpie = {
 				get :function(data,options) {
 					data = {
 						webapp: data.webapp || null, // integer, string
-						item: data.item || null // integer
+						item: data.item || null, // integer
+						filters: data.filters || null // object
 					}
 
 					// Catch data errors
@@ -11065,7 +11294,9 @@ win.bcpie = {
 					if (errors.length > 0) return errors;
 
 					if (typeof options !== 'object') options = {};
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
+					if (data.item !== null) options.url += '/'+data.item;
+					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
 					options.headers = {Authorization: bcpie.ajax.token()};
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
@@ -11217,7 +11448,7 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				}
 			},
-			detail: function(data,options) {
+			get: function(data,options) {
 				data = {
 					webapp: data.webapp || null
 				}
@@ -11234,7 +11465,8 @@ win.bcpie = {
 			},
 			fields: function(data,options) {
 				data = {
-					webapp: data.webapp || null // string
+					webapp: data.webapp || null, // string
+					field: data.field || null, // string
 				}
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
@@ -11243,6 +11475,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 
 				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+				if (data.field !== null) options.url += '/' + data.field;
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
@@ -11292,14 +11525,14 @@ win.bcpie = {
 				get: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						filters: data.filters || null, // object
-						content: data.content || null
+						filters: data.filters || null // object
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+customerID;
 					options.method = 'GET';
+					options.mimeType = 'application/json';
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
 					return bcpie.utils.ajax(options);
 				},
@@ -11327,7 +11560,6 @@ win.bcpie = {
 				delete: function(data,options) {
 					data = {
 						customerID: data.customerID || null, // integer
-						content: data.content || null
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
@@ -11366,7 +11598,7 @@ win.bcpie = {
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.ajax.filters(data.filters);
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
 				},
@@ -11378,7 +11610,7 @@ win.bcpie = {
 					}
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.ajax.filters(filters);
+					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
 				}
@@ -11386,23 +11618,23 @@ win.bcpie = {
 		}
 	},
 	utils: {
-		_jsonify_brace: /^[{\[]/,
-		_jsonify_token: /[^,:{}\[\]]+/g,
-		_jsonify_quote: /^['"](.*)['"]$/,
-		_jsonify_escap: /(["])/g,
 		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
 		jsonify: function(str) {
+			bcpie.utils.jsonify.brace = /^[{\[]/;
+			bcpie.utils.jsonify.token = /[^,:{}\[\]]+/g;
+			bcpie.utils.jsonify.quote = /^['"](.*)['"]$/;
+			bcpie.utils.jsonify.escap = /(["])/g;
 			// Wrap with `{}` if not JavaScript object literal
 			str = $.trim(str);
-			if (bcpie.utils._jsonify_brace.test(str) === false) str = '{'+str+'}';
+			if (bcpie.utils.jsonify.brace.test(str) === false) str = '{'+str+'}';
 
 			// Retrieve token and convert to JSON
-			return str.replace(bcpie.utils._jsonify_token, function (a) {
+			return str.replace(bcpie.utils.jsonify.token, function (a) {
 				a = $.trim(a);
 				// Keep some special strings as they are
 				if ('' === a || 'true' === a || 'false' === a || 'null' === a || (!isNaN(parseFloat(a)) && isFinite(a))) return a;
 				// For string literal: 1. remove quotes at the top end; 2. escape double quotes in the middle; 3. wrap token with double quotes
-				else return '"'+ a.replace(bcpie.utils._jsonify_quote, '$1').replace(bcpie.utils._jsonify_escap, '\\$1')+ '"';
+				else return '"'+ a.replace(bcpie.utils.jsonify.quote, '$1').replace(bcpie.utils.jsonify.escap, '\\$1')+ '"';
 			});
 		},
 		encode: function(str) {
@@ -11417,10 +11649,10 @@ win.bcpie = {
 			}
 			return s4()+s4()+'-'+s4()+'-'+s4()+'-'+s4()+'-'+s4()+s4()+s4();
 		},
-		isElement: function(o){
+		isElement: function(object){
 			return (
-				typeof HTMLElement === 'object' ? o instanceof HTMLElement : //DOM2
-					o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName==='string'
+				typeof HTMLElement === 'object' ? object instanceof HTMLElement : //DOM2
+					object && typeof object === 'object' && object !== null && object.nodeType === 1 && typeof object.nodeName==='string'
 			);
 		},
 		serializeObject: function(object) {
@@ -11558,6 +11790,7 @@ win.bcpie = {
 			settings.url = options.url || '';
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
+			if (bcpie.ajax.token().length > 10) settings.connection = options.connection || 'keep-alive';
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
@@ -12130,7 +12363,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.21',
+		version: '2015.09.30',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -12640,7 +12873,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function submitForm(submitCount) {
 		if (submitCount===0) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
-			if (settings.mode = 'ajax') {
+			if (settings.mode === 'ajax') {
 				$.ajax({
 					type: 'POST',
 					url: selector.attr('action'),
@@ -13184,7 +13417,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 
 	function updateCookie(property,value) {
-		$.cookie(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
+		Cookies(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
 
 	function unsecureLinks () {
@@ -13374,7 +13607,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 bcpie.extensions.tricks.Utility = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Utility',
-		version: '2015.09.02',
+		version: '2015.09.25',
 		defaults: {
 			value: '',
 			list: '', // options are countries, states, timezones.
@@ -13384,8 +13617,8 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 	// take care of backwards compatibility first
 	settings.value = settings.setValue || settings.value;
 	settings.list = settings.getList || settings.list;
-	if (settings.value !== '') settings.value = settings.value.toLowerCase();
-	if (settings.list !== '') settings.list = settings.list.toLowerCase();
+	// if (settings.value !== '') settings.value = settings.value.toLowerCase();
+	// if (settings.list !== '') settings.list = settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {
@@ -13404,6 +13637,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.value[i]+'"]').attr('checked','checked').prop('checked',true);
 			}
 		}
+		selector.change();
 	}
 	if (settings.list !== '') {
 		var list='';
@@ -13412,7 +13646,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 			var countryData = body.data('bcCountries');
 			for (var cc in countryData) {
 				if (countryData.hasOwnProperty(cc)) {
-					if (selector.is('select')) list += '<option value="'+cc+'">'+countryData[cc].Country+'</option>';
+					if (selector.is('select')) list += '<option value="'+cc+'">'+countryData[cc]+'</option>';
 				}
 			}
 		}else if (settings.list === 'timezones') {

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.21',
+		version: '2015.09.30',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -518,7 +518,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function submitForm(submitCount) {
 		if (submitCount===0) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
-			if (settings.mode = 'ajax') {
+			if (settings.mode === 'ajax') {
 				$.ajax({
 					type: 'POST',
 					url: selector.attr('action'),

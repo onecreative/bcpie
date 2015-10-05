@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Utility = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Utility',
-		version: '2015.09.02',
+		version: '2015.09.25',
 		defaults: {
 			value: '',
 			list: '', // options are countries, states, timezones.
@@ -18,8 +18,8 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 	// take care of backwards compatibility first
 	settings.value = settings.setValue || settings.value;
 	settings.list = settings.getList || settings.list;
-	if (settings.value !== '') settings.value = settings.value.toLowerCase();
-	if (settings.list !== '') settings.list = settings.list.toLowerCase();
+	// if (settings.value !== '') settings.value = settings.value.toLowerCase();
+	// if (settings.list !== '') settings.list = settings.list.toLowerCase();
 
 	function setValue() {
 		if (selector.is('select')) {
@@ -38,6 +38,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.value[i]+'"]').attr('checked','checked').prop('checked',true);
 			}
 		}
+		selector.change();
 	}
 	if (settings.list !== '') {
 		var list='';
@@ -46,7 +47,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 			var countryData = body.data('bcCountries');
 			for (var cc in countryData) {
 				if (countryData.hasOwnProperty(cc)) {
-					if (selector.is('select')) list += '<option value="'+cc+'">'+countryData[cc].Country+'</option>';
+					if (selector.is('select')) list += '<option value="'+cc+'">'+countryData[cc]+'</option>';
 				}
 			}
 		}else if (settings.list === 'timezones') {

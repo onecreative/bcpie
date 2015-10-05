@@ -55,7 +55,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 
 	function updateCookie(property,value) {
-		$.cookie(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
+		Cookies(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
 
 	function unsecureLinks () {
