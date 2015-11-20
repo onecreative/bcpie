@@ -27,7 +27,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false,
-			convert: null // 'slug' will change the string to an appropriate url path
+			convert: null // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
 		}
 	});
 
@@ -66,7 +66,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
-		if (settings.convert !== null) {
+		if (settings.convert !== null && typeof value !== 'undefined') {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
@@ -81,20 +81,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
-			selector.trigger(settings.event+'.sameAs').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.trigger(settings.event+'.sameas').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change').trigger('change.sameas'); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+'.sameAs',function() {
+			$(copyFields[i]).on(settings.event+'.sameas',function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+'.sameAs',function(){
+			selector.on(settings.event+'.sameas',function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -112,13 +112,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+'.sameAs');
+				copyFields[i].off(settings.event+'.sameas');
 			}
-			selector.off(settings.event+'.sameAs');
+			selector.off(settings.event+'.sameas');
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {
-				selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+				selector.trigger(settings.event+'.sameas').trigger(settings.event);
 				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 				selector.data('sameAsLastVal',selector.val());
 			}
@@ -175,31 +175,31 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (checkbox.length || altCheckbox.length) {
 		if(checkbox.length){
 			checkboxChange(checkbox,selector,copyFields);
-			checkbox.on(settings.event+'.sameAs',function(){
+			checkbox.on(settings.event+'.sameas',function(){
 				checkboxChange(checkbox,selector,copyFields);
 			});
 			if (settings.breakOnChange !== false) {
 				selector.on('change',function() {
-					checkbox.off(settings.event+'.sameAs');
+					checkbox.off(settings.event+'.sameas');
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+'.sameAs');
+						copyFields[i].off(settings.event+'.sameas');
 					}
-					selector.off(settings.event+'.sameAs');
+					selector.off(settings.event+'.sameas');
 				});
 			}
 		}
 		if(altCheckbox.length){
 			checkboxChange(altCheckbox,selector,altCopyFields);
-			altCheckbox.on(settings.event+'.sameAs',function(){
+			altCheckbox.on(settings.event+'.sameas',function(){
 				checkboxChange(altCheckbox,selector,altCopyFields);
 			});
 			if (settings.breakOnChange !== false) {
 				selector.on('change',function() {
-					altCheckbox.off(settings.event+'.sameAs');
+					altCheckbox.off(settings.event+'.sameas');
 					for (var i = altCopyFields.length - 1; i >= 0; i--) {
-						altCopyFields[i].off(settings.event+'.sameAs');
+						altCopyFields[i].off(settings.event+'.sameas');
 					}
-					selector.off(settings.event+'.sameAs');
+					selector.off(settings.event+'.sameas');
 				});
 			}
 		}
@@ -209,9 +209,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.breakOnChange !== false) {
 			selector.on('change',function() {
 				for (var i = copyFields.length - 1; i >= 0; i--) {
-					copyFields[i].off(settings.event+'.sameAs');
+					copyFields[i].off(settings.event+'.sameas');
 				}
-				selector.off(settings.event+'.sameAs');
+				selector.off(settings.event+'.sameas');
 			});
 		}
 	}

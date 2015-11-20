@@ -8,23 +8,27 @@
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.08.18',
+		version: '2015.11.12',
 		defaults: {
 			unsecureLinks: true,
-			onSessionEnd: '',
-			sessionEndRedirect: '',
-			securePayments: true,
-			logoutPage: '',
-			detectUser: false
+			onSessionEnd: '', // callback function to call when a session ends.
+			sessionEndRedirect: '', // site relative url of a page to redirect to when a session ends.
+			memberProcessRedirect: '', // site relative url of a page to redirect to after a user updates their profile. 'same' points it back to the page where submission occurred.
+			securePayments: true, // forces a non-secure page to reload on the secure domain if it has an Amount field.
+			logoutPage: '', // site relative url or 'same' to indicate where to redirect to after a logout link is clicked.
+			detectUser: false, // creates a cookie that remembers a user's first name.
+			securePages: '' // comma separated list of relative links that should be secure
 		}
 	});
 
-	var blurTime,status,secure = win.location.origin === settings.secureDomain,links,href,interval;
+	var blurTime,status,secure = win.location.origin === settings.secureDomain,links,href,interval,makeSecure;
+	settings.securePages = settings.securePages.split(',');
 
-	if (settings.securePayments === true) {
-		if (selector.find('[name="Amount"]').length > 0 && secure === false) {
-			win.location.href = settings.secureDomain+settings.pageAddress;
-		}
+	if (secure === false) {
+		if (settings.securePayments === true && selector.find('[name="Amount"]').length > 0) makeSecure = true;
+		else if (settings.securePages !== '' && settings.securePages.indexOf(settings.pageAddress) > 0) makeSecure = true;
+
+		if (makeSecure === true) win.location.href = settings.secureDomain+settings.pageAddress;
 	}
 	if (settings.onSessionEnd !== '' || settings.sessionEndRedirect !== '') {
 		if(settings.user.isLoggedIn === true) {
@@ -33,7 +37,6 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 		}
 	}
 	if (settings.unsecureLinks === true) unsecureLinks();
-
 	if (settings.logoutPage !== '') {
 		body.find('a').filter(function(){
 			return this.href.toLowerCase().indexOf('/logoutprocess.aspx') > -1 ;
@@ -47,17 +50,19 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			});
 		});
 	}
-
 	if (settings.detectUser === true) {
 		if (bcpie.globals.user.isLoggedIn) {
 			updateCookie('firstname',globals.user.firstname);
 		}
 	}
+	if (settings.memberProcessRedirect !== '' && bcpie.globals.path === '/memberprocess.aspx') {
+		if (settings.memberProcessRedirect === 'same') win.location.href = doc.referrer;
+		else win.location.href = settings.memberProcessRedirect;
+	}
 
 	function updateCookie(property,value) {
 		Cookies(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
-
 	function unsecureLinks () {
 		if (secure === true) {
 			links = selector.find('a').not('[href^="mailto:"]').not('[href="/LogOutProcess.aspx"]');
@@ -77,7 +82,10 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			success: function(response) {
 				if ($(response).filter('[data-isloggedin]').data('isloggedin') === 0) {
 					if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
-					if (settings.onSessionEnd !== '') executeCallback(window[settings.onSessionEnd]);
+					if (settings.onSessionEnd !== '') bcpie.utils.executeCallback({
+						selector: selector,
+						callback: settings.onSessionEnd
+					});
 					clearInterval(interval);
 				}
 			}
@@ -88,12 +96,5 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 		$(win).on('focus',function(){
 			sessionBehavior();
 		});
-	}
-	function executeCallback(callback){
-		if(typeof callback === 'function') {
-			var deferred = $.Deferred();
-			deferred.resolve(callback());
-			return deferred.promise();
-		}
 	}
 };

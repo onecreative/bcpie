@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.09.16',
+		version: '2015.10.08',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -86,8 +86,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 
 			targets = settings.target.split(',');
 			for (var i=0; i<targets.length; i++) {
-				if (targets[i] === 'text' && selector.is('input')) targets[i] = 'value';
+				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
+				if (selector.is('input,textarea')) selector.change().trigger('change.date');
 			}
 		}
 	}

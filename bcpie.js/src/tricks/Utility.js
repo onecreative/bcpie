@@ -38,7 +38,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.value[i]+'"]').attr('checked','checked').prop('checked',true);
 			}
 		}
-		selector.change();
+		selector.trigger('change.utility');
 	}
 	if (settings.list !== '') {
 		var list='';

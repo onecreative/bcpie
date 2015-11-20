@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2015.09.16',
+		sdk: '2015.11.12',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -54,16 +54,16 @@ win.bcpie = {
 				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
 					options.method = 'PUT';
 					options.contentType = 'application/octet-stream';
+					options.processData = false;
 					if (typeof data.content.upload !== 'undefined' || typeof data.content.type !== 'undefined') {
-						options.processData = false;
 						options.url.replace('?version='+data.version,'');
 						options.data = data.content;
-					}else options.data = JSON.stringify(data.content);
+					}else if (typeof data.content === 'string') options.data = data.content;
+					else options.data = JSON.stringify(data.content);
 				}else {
 					options.method = 'POST';
 					options.contentType = false;
 					options.cache = false;
-					options.processData = false;
 					options.data = new FormData();
 					options.data.append('file', data.content);
 				}
@@ -199,6 +199,7 @@ win.bcpie = {
 									newData.fields[key] = options.data[key];
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
 										newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
+										if (fieldTypes.fields[key] === 'DataSource' && newData.fields[key] === 0) newData.fields[key] = null;
 										if (newData.fields[key] === NaN) delete newData.fields[key];
 									}else if (fieldTypes.fields[key] === 'Boolean') {
 										newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
@@ -486,20 +487,22 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = {},boolFalse;
+			var o = {},boolFalse,a;
 			if (object instanceof jQuery) {
-				var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
-				var boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
+				if (object.is('form')) a = object.serializeArray();
+				else if (object.is('select,textarea,input')) a = object.serializeArray(); // [{name:object.attr('name'),value:object.val()}];
+				else a = object.find('input,select,textarea').serializeArray();
+				boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
 				for (var i = 0; i < boolFalse.length; i++) {
 					a.push({name: $(boolFalse[i]).attr('name'), value:null});
 				}
 			}else if ($.isArray(object) && typeof object[0].name !== 'undefined' && typeof object[0].value !== 'undefined') {
-				var a = object;
+				a = object;
 			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
-				var a = [object];
+				a = [object];
 			}else {
 				console.log('Malformed object passed to bcpie.utils.serializeObject method.');
-				var a = [];
+				a = [];
 			}
 			for (var i=0; i<a.length; i++) {
 				if (o[a[i].name] !== undefined) {
@@ -510,18 +513,34 @@ win.bcpie = {
 			}
 			return o;
 		},
-		closestChildren: function(selector,match,findAll,results) {
-			/* the results parameter is used internally by the function */
-			var $children = (selector instanceof jQuery) ? selector.children() : $(selector).children();
-			if ($children.length === 0) {
-				if (typeof results === 'object') return results;
+		closestChildren: function(data,depricatedMatch,depricatedFindAll) {
+			if (data instanceof jQuery) { var depricatedSelector = data;} // for backwards compatibility
+
+			data = {
+				selector: data.selector || depricatedSelector || null,
+				match: data.match || depricatedMatch || null,
+				findAll: data.findAll || depricatedFindAll || false,
+				results: data.results || null // the results property is used internally by the method
+			};
+
+			var children = (data.selector instanceof jQuery) ? data.selector.children() : $(data.selector).children();
+			if (children.length === 0) {
+				if (data.results !== null) return data.results;
 				else return $();
 			}
-			if (typeof results === 'object') results = results.add($children.filter(match));
-			else results = $children.filter(match);
+			if (data.results !== null) data.results = data.results.add(children.filter(data.match));
+			else data.results = children.filter(data.match);
 
-			if (findAll !== true) return (results.length > 0) ? results : $children.closestChildren(match);
-			else return bcpie.utils.closestChildren($children.not(results),match,findAll,results);
+			if (data.findAll !== true) return (data.results.length > 0) ? data.results : bcpie.utils.closestChildren({
+				selector: children,
+				match: data.match
+			});
+			else return bcpie.utils.closestChildren({
+				selector: children.not(data.results),
+				match: data.match,
+				findAll: data.findAll,
+				results: data.results
+			});
 		},
 		searchArray: function(array,value) {
 			// Best for large arrays. For tiny arrays, use indexOf.
@@ -590,19 +609,29 @@ win.bcpie = {
 			}
 			return output.toLowerCase();
 		},
-		executeCallback: function(selector, callback, data, textStatus, xhr){
-			if (typeof callback === 'function') {
-				function parameter(selector, callback, data, textStatus, xhr){
+		executeCallback: function(data, depricatedCallback, depricatedData, depricatedStatus, depricatedXhr) {
+			if (data instanceof jQuery) var depricatedSelector = data;
+			data = {
+				selector: data.selector || depricatedSelector || null,
+				callback: data.callback || depricatedCallback || null,
+				content: data.content || depricatedData || null,
+				status: data.status || depricatedStatus || null,
+				xhr: data.xhr || depricatedXhr || null
+			};
+			if (typeof data.callback === 'string') data.callback = win[data.callback];
+			if (typeof data.callback === 'function') {
+				function parameter(selector, callback, data, status, xhr) {
 					var deferred = $.Deferred();
-					if (typeof data === 'undefined') deferred.resolve(callback(selector));
-					else if (typeof textStatus === 'undefined') deferred.resolve(callback(selector, data));
-					else if (typeof xhr === 'undefined') deferred.resolve(callback(selector, data, textStatus));
-					else deferred.resolve(callback(selector, data, textStatus, xhr));
-
+					deferred.resolve(callback({
+						selector: selector || null,
+						content: data || null,
+						status: status || null,
+						xhr: xhr || null
+					}));
 					return deferred.promise();
 				}
 
-				return $.when(parameter(selector, callback, data, textStatus, xhr));
+				return $.when(parameter(data.selector, data.callback, data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {

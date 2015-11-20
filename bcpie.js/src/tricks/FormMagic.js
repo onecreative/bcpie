@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.30',
+		version: '2015.11.12',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -30,7 +30,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
-			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response
+			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
 			'steps' : '', // multistep container selectors, separated by comma
@@ -451,7 +451,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}else customFlag = false;
 		}
 		if (customFlag === true && settings.customError !== '') {
-			$.when(executeCallback(win[settings.customError],required)).then(function(value) {
+			$.when(bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.customError,
+				content: required
+			})).then(function(value) {
 				required.message = (typeof value === 'undefined') ? '' : value;
 			});
 		}else {
@@ -518,12 +522,31 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function submitForm(submitCount) {
 		if (submitCount===0) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
+			var otherURL,
+				thisURL = selector.attr('action'),
+				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('[name=Username]').length > 0 && selector.find('[name=Password]').length > 0) ? true : false;
+			if (loggingIn === true) {
+				thisURL = thisURL.replace(bcpie.globals.secureDomain,'').replace(bcpie.globals.primaryDomain,'');
+				otherURL = (bcpie.globals.currentDomain === bcpie.globals.secureDomain) ? bcpie.globals.currentDomain : bcpie.globals.secureDomain;
+				otherURL += thisURL+'&callback=?';
+			}
 			if (settings.mode === 'ajax') {
 				$.ajax({
 					type: 'POST',
-					url: selector.attr('action'),
+					url: thisURL,
 					data: selector.serialize(),
 					success: function(response,status,xhr) {
+						if (loggingIn === true) {
+							$.ajax({
+								url: otherURL,
+								method:'POST',
+								dataType:'jsonp',
+								data: {
+									Username: selector.find('[name=Username]').val(),
+									Password: selector.find('[name=Password]').val()
+								}
+							});
+						}
 						var messageClass = '';
 						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
 						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
@@ -537,15 +560,40 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							showSuccess(selector,successMessage);
 						}
 
-						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response,status,xhr);
-						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
+						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
+							if (settings.ajaxSuccess === 'refresh') win.location.reload();
+							else bcpie.utils.executeCallback({
+									selector: selector,
+									callback: settings.ajaxSuccess,
+									content: response,
+									status: status,
+									xhr: xhr
+								});
+						}else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
+								selector: selector,
+								callback: window[settings.ajaxError],
+								content: error,
+								status: status,
+								xhr: xhr
+							});
 					},
-					error: function(xhr,status) {
-						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
+					error: function(xhr,status,error) {
+						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
+								selector: selector,
+								callback: settings.ajaxError,
+								content: error,
+								status: status,
+								xhr: xhr
+							});
 						return false;
 					},
 					complete: function(xhr,status) {
-						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],xhr,status);
+						if (settings.ajaxComplete !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							callback: settings.ajaxComplete,
+							status: status,
+							xhr: xhr
+						});
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
@@ -562,25 +610,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function executeCallback(callback,param1,param2,param3){
-		if (typeof callback === 'function') {
-			var deferred = $.Deferred();
-			if (param3) deferred.resolve(callback(selector,param1,param2,param3));
-			else if (param2) deferred.resolve(callback(selector,param1,param2));
-			else if (param1) deferred.resolve(callback(selector,param1));
-			else deferred.resolve(callback(selector));
-
-			return deferred.promise();
-		}
-	}
 	function showSuccess(selector,successMessage) {
 		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
 		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
 
-		if (settings.messageBox === 'replace') selector.html(successMessage).fadeIn();
-		else if (settings.messageBox !== 'off') {
+		if (settings.messageBox === 'replace') {
+			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
+			else if (typeof settings.afterAjax !== 'undefined' && settings.afterAjax === 'hide' || settings.messageMode === 'prepend') selector.before(successMessage); // for backwards compatibility
+			else selector.html(successMessage).fadeIn();
+		}else if (settings.messageBox !== 'off') {
 			body.find(settings.messageBox).html(successMessage);
 			if (settings.afterAjax === 'remove') selector.remove();
 		}
@@ -657,8 +697,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// show next step
 		selector.find(multistep.containers).removeClass('activeContainer').hide();
 		selector.find(multistep.containers[multistep.step]).addClass('activeContainer').show();
-		selector.get(0).scrollIntoView();
-
+		if (index !== 0) selector.get(0).scrollIntoView();
 	}
 
 	buttonSubmitBehaviour(settings.buttonOnLoad);
@@ -735,13 +774,19 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}
 		if (errorCount === 0) {
 			if (settings.validationSuccess !== null) {
-				$.when(executeCallback(win[settings.validationSuccess])).then(function(value) {
+				$.when(bcpie.utils.executeCallback({
+					selector: selector,
+					callback: settings.validationSuccess
+				})).then(function(value) {
 					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
 				});
 			}else if (settings.noSubmit === false) submitForm(submitCount);
 		}
 		else
-			if (settings.validationError !== null) executeCallback(window[settings.validationError]);
+			if (settings.validationError !== null) bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.validationError
+			});
 		// Now that submission has been attempted, allow active field validation.
 		if (settings.validateMode === 'inline' && onChangeBinding !== true) {
 			activeValidation(selector);

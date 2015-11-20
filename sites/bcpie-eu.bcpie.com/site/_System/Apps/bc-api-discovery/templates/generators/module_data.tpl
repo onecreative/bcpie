@@ -1,1 +1,0 @@
-<api-code-panel snippet="snippet" resource-descriptor="resourceDescriptor" highlighter="moduleDataHighlighter"></api-code-panel>

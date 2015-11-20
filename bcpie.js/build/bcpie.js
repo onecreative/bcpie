@@ -11171,7 +11171,7 @@ var Parser = (function (scope) {
 ;var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2015.09.16',
+		sdk: '2015.11.12',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -11224,16 +11224,16 @@ win.bcpie = {
 				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
 					options.method = 'PUT';
 					options.contentType = 'application/octet-stream';
+					options.processData = false;
 					if (typeof data.content.upload !== 'undefined' || typeof data.content.type !== 'undefined') {
-						options.processData = false;
 						options.url.replace('?version='+data.version,'');
 						options.data = data.content;
-					}else options.data = JSON.stringify(data.content);
+					}else if (typeof data.content === 'string') options.data = data.content;
+					else options.data = JSON.stringify(data.content);
 				}else {
 					options.method = 'POST';
 					options.contentType = false;
 					options.cache = false;
-					options.processData = false;
 					options.data = new FormData();
 					options.data.append('file', data.content);
 				}
@@ -11369,6 +11369,7 @@ win.bcpie = {
 									newData.fields[key] = options.data[key];
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
 										newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
+										if (fieldTypes.fields[key] === 'DataSource' && newData.fields[key] === 0) newData.fields[key] = null;
 										if (newData.fields[key] === NaN) delete newData.fields[key];
 									}else if (fieldTypes.fields[key] === 'Boolean') {
 										newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
@@ -11656,20 +11657,22 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = {},boolFalse;
+			var o = {},boolFalse,a;
 			if (object instanceof jQuery) {
-				var a = (object.is('form')) ? object.serializeArray() : $('<div/>').append(object.clone(true)).find('input,select,textarea').serializeArray();
-				var boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
+				if (object.is('form')) a = object.serializeArray();
+				else if (object.is('select,textarea,input')) a = object.serializeArray(); // [{name:object.attr('name'),value:object.val()}];
+				else a = object.find('input,select,textarea').serializeArray();
+				boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
 				for (var i = 0; i < boolFalse.length; i++) {
 					a.push({name: $(boolFalse[i]).attr('name'), value:null});
 				}
 			}else if ($.isArray(object) && typeof object[0].name !== 'undefined' && typeof object[0].value !== 'undefined') {
-				var a = object;
+				a = object;
 			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
-				var a = [object];
+				a = [object];
 			}else {
 				console.log('Malformed object passed to bcpie.utils.serializeObject method.');
-				var a = [];
+				a = [];
 			}
 			for (var i=0; i<a.length; i++) {
 				if (o[a[i].name] !== undefined) {
@@ -11680,18 +11683,34 @@ win.bcpie = {
 			}
 			return o;
 		},
-		closestChildren: function(selector,match,findAll,results) {
-			/* the results parameter is used internally by the function */
-			var $children = (selector instanceof jQuery) ? selector.children() : $(selector).children();
-			if ($children.length === 0) {
-				if (typeof results === 'object') return results;
+		closestChildren: function(data,depricatedMatch,depricatedFindAll) {
+			if (data instanceof jQuery) { var depricatedSelector = data;} // for backwards compatibility
+
+			data = {
+				selector: data.selector || depricatedSelector || null,
+				match: data.match || depricatedMatch || null,
+				findAll: data.findAll || depricatedFindAll || false,
+				results: data.results || null // the results property is used internally by the method
+			};
+
+			var children = (data.selector instanceof jQuery) ? data.selector.children() : $(data.selector).children();
+			if (children.length === 0) {
+				if (data.results !== null) return data.results;
 				else return $();
 			}
-			if (typeof results === 'object') results = results.add($children.filter(match));
-			else results = $children.filter(match);
+			if (data.results !== null) data.results = data.results.add(children.filter(data.match));
+			else data.results = children.filter(data.match);
 
-			if (findAll !== true) return (results.length > 0) ? results : $children.closestChildren(match);
-			else return bcpie.utils.closestChildren($children.not(results),match,findAll,results);
+			if (data.findAll !== true) return (data.results.length > 0) ? data.results : bcpie.utils.closestChildren({
+				selector: children,
+				match: data.match
+			});
+			else return bcpie.utils.closestChildren({
+				selector: children.not(data.results),
+				match: data.match,
+				findAll: data.findAll,
+				results: data.results
+			});
 		},
 		searchArray: function(array,value) {
 			// Best for large arrays. For tiny arrays, use indexOf.
@@ -11760,19 +11779,29 @@ win.bcpie = {
 			}
 			return output.toLowerCase();
 		},
-		executeCallback: function(selector, callback, data, textStatus, xhr){
-			if (typeof callback === 'function') {
-				function parameter(selector, callback, data, textStatus, xhr){
+		executeCallback: function(data, depricatedCallback, depricatedData, depricatedStatus, depricatedXhr) {
+			if (data instanceof jQuery) var depricatedSelector = data;
+			data = {
+				selector: data.selector || depricatedSelector || null,
+				callback: data.callback || depricatedCallback || null,
+				content: data.content || depricatedData || null,
+				status: data.status || depricatedStatus || null,
+				xhr: data.xhr || depricatedXhr || null
+			};
+			if (typeof data.callback === 'string') data.callback = win[data.callback];
+			if (typeof data.callback === 'function') {
+				function parameter(selector, callback, data, status, xhr) {
 					var deferred = $.Deferred();
-					if (typeof data === 'undefined') deferred.resolve(callback(selector));
-					else if (typeof textStatus === 'undefined') deferred.resolve(callback(selector, data));
-					else if (typeof xhr === 'undefined') deferred.resolve(callback(selector, data, textStatus));
-					else deferred.resolve(callback(selector, data, textStatus, xhr));
-
+					deferred.resolve(callback({
+						selector: selector || null,
+						content: data || null,
+						status: status || null,
+						xhr: xhr || null
+					}));
 					return deferred.promise();
 				}
 
-				return $.when(parameter(selector, callback, data, textStatus, xhr));
+				return $.when(parameter(data.selector, data.callback, data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {
@@ -11879,7 +11908,7 @@ $(function() {
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.08.18',
+		version: '2015.11.12',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -12089,7 +12118,11 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	first = $(selector);
 	if (settings.level > 1) {
 		for (var i = settings.level - 1; i > 0; i--) {
-			first = bcpie.utils.closestChildren(first,'li', true);
+			first = bcpie.utils.closestChildren({
+				selector: first,
+				match: 'li',
+				findAll: true
+			});
 		}
 	}
 
@@ -12097,13 +12130,21 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	if (settings.lastLevel > 0) {
 		last = $(selector);
 		for (var i = settings.lastLevel; i > 0; i--) {
-			last = bcpie.utils.closestChildren(last,'li', true);
+			last = bcpie.utils.closestChildren({
+				selector: last,
+				match: 'li',
+				findAll: true
+			});
 		}
 	}else last = 0;
 
 	$(last).parent('ul').addClass(settings.lastLevelClass.names);
 	if (last !== 0 && settings.removeHidden === true) {
-		bcpie.utils.closestChildren(selector.find(settings.lastLevelClass.selector),'ul', true).remove();
+		bcpie.utils.closestChildren({
+			selector: selector.find(settings.lastLevelClass.selector),
+			match: 'ul',
+			findAll: true
+		}).remove();
 	}
 
 	initActiveNav();
@@ -12250,7 +12291,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.09.16',
+		version: '2015.10.08',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -12328,8 +12369,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 
 			targets = settings.target.split(',');
 			for (var i=0; i<targets.length; i++) {
-				if (targets[i] === 'text' && selector.is('input')) targets[i] = 'value';
+				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
+				if (selector.is('input,textarea')) selector.change().trigger('change.date');
 			}
 		}
 	}
@@ -12363,7 +12405,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.09.30',
+		version: '2015.11.12',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -12385,7 +12427,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
-			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response
+			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
 			'steps' : '', // multistep container selectors, separated by comma
@@ -12806,7 +12848,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}else customFlag = false;
 		}
 		if (customFlag === true && settings.customError !== '') {
-			$.when(executeCallback(win[settings.customError],required)).then(function(value) {
+			$.when(bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.customError,
+				content: required
+			})).then(function(value) {
 				required.message = (typeof value === 'undefined') ? '' : value;
 			});
 		}else {
@@ -12873,12 +12919,31 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function submitForm(submitCount) {
 		if (submitCount===0) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
+			var otherURL,
+				thisURL = selector.attr('action'),
+				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('[name=Username]').length > 0 && selector.find('[name=Password]').length > 0) ? true : false;
+			if (loggingIn === true) {
+				thisURL = thisURL.replace(bcpie.globals.secureDomain,'').replace(bcpie.globals.primaryDomain,'');
+				otherURL = (bcpie.globals.currentDomain === bcpie.globals.secureDomain) ? bcpie.globals.currentDomain : bcpie.globals.secureDomain;
+				otherURL += thisURL+'&callback=?';
+			}
 			if (settings.mode === 'ajax') {
 				$.ajax({
 					type: 'POST',
-					url: selector.attr('action'),
+					url: thisURL,
 					data: selector.serialize(),
 					success: function(response,status,xhr) {
+						if (loggingIn === true) {
+							$.ajax({
+								url: otherURL,
+								method:'POST',
+								dataType:'jsonp',
+								data: {
+									Username: selector.find('[name=Username]').val(),
+									Password: selector.find('[name=Password]').val()
+								}
+							});
+						}
 						var messageClass = '';
 						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
 						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
@@ -12892,15 +12957,40 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							showSuccess(selector,successMessage);
 						}
 
-						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) executeCallback(window[settings.ajaxSuccess],response,status,xhr);
-						else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
+						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
+							if (settings.ajaxSuccess === 'refresh') win.location.reload();
+							else bcpie.utils.executeCallback({
+									selector: selector,
+									callback: settings.ajaxSuccess,
+									content: response,
+									status: status,
+									xhr: xhr
+								});
+						}else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
+								selector: selector,
+								callback: window[settings.ajaxError],
+								content: error,
+								status: status,
+								xhr: xhr
+							});
 					},
-					error: function(xhr,status) {
-						if (settings.ajaxError !== null) executeCallback(window[settings.ajaxError],xhr,status,error);
+					error: function(xhr,status,error) {
+						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
+								selector: selector,
+								callback: settings.ajaxError,
+								content: error,
+								status: status,
+								xhr: xhr
+							});
 						return false;
 					},
 					complete: function(xhr,status) {
-						if (settings.ajaxComplete !== null) executeCallback(window[settings.ajaxComplete],xhr,status);
+						if (settings.ajaxComplete !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							callback: settings.ajaxComplete,
+							status: status,
+							xhr: xhr
+						});
 						buttonSubmitBehaviour(settings.buttonAfterSubmit);
 					}
 				});
@@ -12917,25 +13007,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function executeCallback(callback,param1,param2,param3){
-		if (typeof callback === 'function') {
-			var deferred = $.Deferred();
-			if (param3) deferred.resolve(callback(selector,param1,param2,param3));
-			else if (param2) deferred.resolve(callback(selector,param1,param2));
-			else if (param1) deferred.resolve(callback(selector,param1));
-			else deferred.resolve(callback(selector));
-
-			return deferred.promise();
-		}
-	}
 	function showSuccess(selector,successMessage) {
 		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
 		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
 
-		if (settings.messageBox === 'replace') selector.html(successMessage).fadeIn();
-		else if (settings.messageBox !== 'off') {
+		if (settings.messageBox === 'replace') {
+			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
+			else if (typeof settings.afterAjax !== 'undefined' && settings.afterAjax === 'hide' || settings.messageMode === 'prepend') selector.before(successMessage); // for backwards compatibility
+			else selector.html(successMessage).fadeIn();
+		}else if (settings.messageBox !== 'off') {
 			body.find(settings.messageBox).html(successMessage);
 			if (settings.afterAjax === 'remove') selector.remove();
 		}
@@ -13012,8 +13094,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// show next step
 		selector.find(multistep.containers).removeClass('activeContainer').hide();
 		selector.find(multistep.containers[multistep.step]).addClass('activeContainer').show();
-		selector.get(0).scrollIntoView();
-
+		if (index !== 0) selector.get(0).scrollIntoView();
 	}
 
 	buttonSubmitBehaviour(settings.buttonOnLoad);
@@ -13090,13 +13171,19 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}
 		if (errorCount === 0) {
 			if (settings.validationSuccess !== null) {
-				$.when(executeCallback(win[settings.validationSuccess])).then(function(value) {
+				$.when(bcpie.utils.executeCallback({
+					selector: selector,
+					callback: settings.validationSuccess
+				})).then(function(value) {
 					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
 				});
 			}else if (settings.noSubmit === false) submitForm(submitCount);
 		}
 		else
-			if (settings.validationError !== null) executeCallback(window[settings.validationError]);
+			if (settings.validationError !== null) bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.validationError
+			});
 		// Now that submission has been attempted, allow active field validation.
 		if (settings.validateMode === 'inline' && onChangeBinding !== true) {
 			activeValidation(selector);
@@ -13172,7 +13259,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false,
-			convert: null // 'slug' will change the string to an appropriate url path
+			convert: null // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
 		}
 	});
 
@@ -13211,7 +13298,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
 
-		if (settings.convert !== null) {
+		if (settings.convert !== null && typeof value !== 'undefined') {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
@@ -13226,20 +13313,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
-			selector.trigger(settings.event+'.sameAs').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+			selector.trigger(settings.event+'.sameas').trigger(settings.event);
+			if (settings.event !== 'change') selector.trigger('change').trigger('change.sameas'); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+'.sameAs',function() {
+			$(copyFields[i]).on(settings.event+'.sameas',function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+'.sameAs',function(){
+			selector.on(settings.event+'.sameas',function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -13257,13 +13344,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+'.sameAs');
+				copyFields[i].off(settings.event+'.sameas');
 			}
-			selector.off(settings.event+'.sameAs');
+			selector.off(settings.event+'.sameas');
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {
-				selector.trigger(settings.event+'.sameAs').trigger(settings.event);
+				selector.trigger(settings.event+'.sameas').trigger(settings.event);
 				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
 				selector.data('sameAsLastVal',selector.val());
 			}
@@ -13320,31 +13407,31 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (checkbox.length || altCheckbox.length) {
 		if(checkbox.length){
 			checkboxChange(checkbox,selector,copyFields);
-			checkbox.on(settings.event+'.sameAs',function(){
+			checkbox.on(settings.event+'.sameas',function(){
 				checkboxChange(checkbox,selector,copyFields);
 			});
 			if (settings.breakOnChange !== false) {
 				selector.on('change',function() {
-					checkbox.off(settings.event+'.sameAs');
+					checkbox.off(settings.event+'.sameas');
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+'.sameAs');
+						copyFields[i].off(settings.event+'.sameas');
 					}
-					selector.off(settings.event+'.sameAs');
+					selector.off(settings.event+'.sameas');
 				});
 			}
 		}
 		if(altCheckbox.length){
 			checkboxChange(altCheckbox,selector,altCopyFields);
-			altCheckbox.on(settings.event+'.sameAs',function(){
+			altCheckbox.on(settings.event+'.sameas',function(){
 				checkboxChange(altCheckbox,selector,altCopyFields);
 			});
 			if (settings.breakOnChange !== false) {
 				selector.on('change',function() {
-					altCheckbox.off(settings.event+'.sameAs');
+					altCheckbox.off(settings.event+'.sameas');
 					for (var i = altCopyFields.length - 1; i >= 0; i--) {
-						altCopyFields[i].off(settings.event+'.sameAs');
+						altCopyFields[i].off(settings.event+'.sameas');
 					}
-					selector.off(settings.event+'.sameAs');
+					selector.off(settings.event+'.sameas');
 				});
 			}
 		}
@@ -13354,9 +13441,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.breakOnChange !== false) {
 			selector.on('change',function() {
 				for (var i = copyFields.length - 1; i >= 0; i--) {
-					copyFields[i].off(settings.event+'.sameAs');
+					copyFields[i].off(settings.event+'.sameas');
 				}
-				selector.off(settings.event+'.sameAs');
+				selector.off(settings.event+'.sameas');
 			});
 		}
 	}
@@ -13370,23 +13457,27 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.08.18',
+		version: '2015.11.12',
 		defaults: {
 			unsecureLinks: true,
-			onSessionEnd: '',
-			sessionEndRedirect: '',
-			securePayments: true,
-			logoutPage: '',
-			detectUser: false
+			onSessionEnd: '', // callback function to call when a session ends.
+			sessionEndRedirect: '', // site relative url of a page to redirect to when a session ends.
+			memberProcessRedirect: '', // site relative url of a page to redirect to after a user updates their profile. 'same' points it back to the page where submission occurred.
+			securePayments: true, // forces a non-secure page to reload on the secure domain if it has an Amount field.
+			logoutPage: '', // site relative url or 'same' to indicate where to redirect to after a logout link is clicked.
+			detectUser: false, // creates a cookie that remembers a user's first name.
+			securePages: '' // comma separated list of relative links that should be secure
 		}
 	});
 
-	var blurTime,status,secure = win.location.origin === settings.secureDomain,links,href,interval;
+	var blurTime,status,secure = win.location.origin === settings.secureDomain,links,href,interval,makeSecure;
+	settings.securePages = settings.securePages.split(',');
 
-	if (settings.securePayments === true) {
-		if (selector.find('[name="Amount"]').length > 0 && secure === false) {
-			win.location.href = settings.secureDomain+settings.pageAddress;
-		}
+	if (secure === false) {
+		if (settings.securePayments === true && selector.find('[name="Amount"]').length > 0) makeSecure = true;
+		else if (settings.securePages !== '' && settings.securePages.indexOf(settings.pageAddress) > 0) makeSecure = true;
+
+		if (makeSecure === true) win.location.href = settings.secureDomain+settings.pageAddress;
 	}
 	if (settings.onSessionEnd !== '' || settings.sessionEndRedirect !== '') {
 		if(settings.user.isLoggedIn === true) {
@@ -13395,7 +13486,6 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 		}
 	}
 	if (settings.unsecureLinks === true) unsecureLinks();
-
 	if (settings.logoutPage !== '') {
 		body.find('a').filter(function(){
 			return this.href.toLowerCase().indexOf('/logoutprocess.aspx') > -1 ;
@@ -13409,17 +13499,19 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			});
 		});
 	}
-
 	if (settings.detectUser === true) {
 		if (bcpie.globals.user.isLoggedIn) {
 			updateCookie('firstname',globals.user.firstname);
 		}
 	}
+	if (settings.memberProcessRedirect !== '' && bcpie.globals.path === '/memberprocess.aspx') {
+		if (settings.memberProcessRedirect === 'same') win.location.href = doc.referrer;
+		else win.location.href = settings.memberProcessRedirect;
+	}
 
 	function updateCookie(property,value) {
 		Cookies(bcpie.globals.site.host+'-'+property,value,{expires: 365,path: '/'});
 	}
-
 	function unsecureLinks () {
 		if (secure === true) {
 			links = selector.find('a').not('[href^="mailto:"]').not('[href="/LogOutProcess.aspx"]');
@@ -13439,7 +13531,10 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 			success: function(response) {
 				if ($(response).filter('[data-isloggedin]').data('isloggedin') === 0) {
 					if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
-					if (settings.onSessionEnd !== '') executeCallback(window[settings.onSessionEnd]);
+					if (settings.onSessionEnd !== '') bcpie.utils.executeCallback({
+						selector: selector,
+						callback: settings.onSessionEnd
+					});
 					clearInterval(interval);
 				}
 			}
@@ -13450,13 +13545,6 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 		$(win).on('focus',function(){
 			sessionBehavior();
 		});
-	}
-	function executeCallback(callback){
-		if(typeof callback === 'function') {
-			var deferred = $.Deferred();
-			deferred.resolve(callback());
-			return deferred.promise();
-		}
 	}
 };;/*
  * ThemeClean
@@ -13486,15 +13574,18 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.09.17',
+		version: '2015.11.12',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
-			triggerValue: '', // value to be used in change event. Separate multiple values with commas.
+			scope: body, // specify the parent element to search within for a trigger.
+			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
+			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
-			onClass: '', // css class to be applied
-			offClass: '', // css class to be applied
-			toggle: false, // if true, class will be toggled on events
+			state: 'class', // beginning state of the trigger. Options are 'on', 'off', 'class', and 'value'. 'class' and 'value' automatically determine the state by whether the onClass/offClass or onValue/offValue is applied to the element.
+			onClass: '', // css class(es) to be applied. Separate multiples with a space.
+			offClass: '', // css class(es) to be applied. Separate multiples with a space.
+			toggle: true, // if true, on and off states will be toggled on events. Otherwise, only the on state will occur.
 			onCallback: '', // on callback
 			offCallback: '', // off callback
 			onValue: null, // specify default value when trigger is on
@@ -13502,69 +13593,81 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	});
 
-	var triggerEl = (settings.trigger === 'self') ? selector : $(settings.trigger);
+	settings.trigger = (settings.trigger === 'self') ? selector : $(settings.scope).find(settings.trigger);
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
 		settings.triggerValue = settings.triggerValue.split(',');
 
+	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);
+	if (settings.offClass !== '') settings.offClass = bcpie.utils.classObject(settings.offClass);
+
+	if (settings.state === 'class') {
+		if (selector.is(settings.onClass.selector)) settings.state = 'on';
+		else settings.state = 'off';
+	}else if (settings.state === 'value') {
+		if (selector.val() === settings.onValue || selector.text() === settings.onValue) settings.state = 'on';
+		else settings.state = 'off';
+	}
+	selector.data('bcpie-trigger-state',settings.state);
+
 	// specified special event change, else a generic event of class application and callbacks will be applied
-	switch(settings.event){
-		case 'change':
-			changeTrigger();
-			triggerEl.on(settings.event,changeTrigger); break;
-		default:
-			triggerEl.on(settings.event,triggerEvent);
+	if (settings.event === 'change') {
+		changeTrigger();
+		settings.trigger.on(settings.event,changeTrigger);
+	}else {
+		executeTrigger(settings.state);
+		settings.trigger.on(settings.event,function(){
+			if (selector.data('bcpie-trigger-state') === 'off') {
+				selector.data('bcpie-trigger-state','on');
+				settings.state = selector.data('bcpie-trigger-state');
+			}else if (settings.toggle === true) {
+				selector.data('bcpie-trigger-state','off');
+				settings.state = selector.data('bcpie-trigger-state');
+			}
+			executeTrigger(settings.state);
+		});
 	}
 
-
-	// Generic event for all events
-	function triggerEvent(){
-		if(settings.toggle === true) {
-			if(selector.hasClass(settings.onClass) && settings.onClass !== '') {
-				selector.removeClass(settings.onClass);
-				changeValue('off');
-				executeCallback(settings.offCallback);
-			}else {
-				selector.addClass(settings.onClass);
-				changeValue('on');
-				executeCallback(settings.onCallback);
-			}
-			if(selector.hasClass(settings.offClass) && settings.offClass !== '') {
-				selector.removeClass(settings.offClass);
-				changeValue('on');
-				executeCallback(settings.onCallback);
-			}else {
-				selector.addClass(settings.offClass);
-				changeValue('off');
-				executeCallback(settings.offCallback);
-			}
-		}else {
-			selector.addClass(settings.onClass);
-			changeValue('on');
-			executeCallback(settings.onCallback);
+	function executeTrigger(state) {
+		if (state === 'on') {
+			if (settings.onClass !== '') selector.addClass(settings.onClass.names);
+			if (settings.offClass !== '') selector.removeClass(settings.offClass.names);
+			bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.onCallback,
+			});
+			changeValue(settings.state);
+		}else if (settings.toggle === true) {
+			if (settings.onClass !== '') selector.removeClass(settings.onClass.names);
+			if (settings.offClass !== '') selector.addClass(settings.offClass.names);
+			bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.offCallback,
+			});
+			changeValue(settings.state);
 		}
 	}
 	function changeValue(state) {
 		if (state === 'off') state = settings.offValue;
 		else if (state === 'on') state = settings.onValue;
 		if (state !== null) {
-			if (selector.is('input,select,textarea')) selector.val(state);
+			if (selector.is('input,select,textarea')) selector.val(state).change().trigger('change.trigger');
 			else selector.text(state);
 		}
 	}
 	function changeTrigger(){
-			var found = 0;
+		var matchedValues;
+		for (var e = 0; e < settings.trigger.length; e++) {
+			matchedValues = 0;
 			for (var i=0; i<settings.triggerValue.length; i++) {
-				if(GetValue(triggerEl) == settings.triggerValue[i]) found ++;
+				if (settings.triggerValue[i] === 'boolean' && $(settings.trigger[e]).is(':checked')) matchedValues ++;
+				else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
 			}
-			if(found > 0){
-				selector.removeClass(settings.offClass).addClass(settings.onClass);
-				changeValue('on');
-				executeCallback(settings.onCallback);
-			}else{
-				selector.removeClass(settings.onClass).addClass(settings.offClass);
-				changeValue('off');
-				executeCallback(settings.offCallback);
-			}
+		}
+		if (settings.triggerMode === 'or' && matchedValues > 0) settings.state = 'on';
+		else if (settings.triggerMode === 'and' && matchedValues === settings.trigger.length) settings.state = 'on';
+		else settings.state = 'off';
+
+		executeTrigger(settings.state);
 	}
 	function GetValue(triggerElement) {
 		var value;
@@ -13585,17 +13688,6 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 		if (typeof value === 'undefined') value = '';
 		return value.trim();
-	}
-	function executeCallback(callbackName){
-		if(callbackName.length > 0){
-			var callback = window[callbackName];
-			if(typeof callback === 'function') {
-				var deferred = $.Deferred();
-				deferred.resolve(callback());
-				return deferred.promise();
-			}
-		}
-
 	}
 };;/*
  * "Utility". An awesome trick for BC Pie.
@@ -13637,7 +13729,7 @@ bcpie.extensions.tricks.Utility = function(selector,options) {
 				selector.closest('form').find('[name="'+selector.attr('name')+'"]').filter('[value="'+settings.value[i]+'"]').attr('checked','checked').prop('checked',true);
 			}
 		}
-		selector.change();
+		selector.trigger('change.utility');
 	}
 	if (settings.list !== '') {
 		var list='';

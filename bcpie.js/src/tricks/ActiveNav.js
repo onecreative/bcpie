@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.08.18',
+		version: '2015.11.12',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -218,7 +218,11 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	first = $(selector);
 	if (settings.level > 1) {
 		for (var i = settings.level - 1; i > 0; i--) {
-			first = bcpie.utils.closestChildren(first,'li', true);
+			first = bcpie.utils.closestChildren({
+				selector: first,
+				match: 'li',
+				findAll: true
+			});
 		}
 	}
 
@@ -226,13 +230,21 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	if (settings.lastLevel > 0) {
 		last = $(selector);
 		for (var i = settings.lastLevel; i > 0; i--) {
-			last = bcpie.utils.closestChildren(last,'li', true);
+			last = bcpie.utils.closestChildren({
+				selector: last,
+				match: 'li',
+				findAll: true
+			});
 		}
 	}else last = 0;
 
 	$(last).parent('ul').addClass(settings.lastLevelClass.names);
 	if (last !== 0 && settings.removeHidden === true) {
-		bcpie.utils.closestChildren(selector.find(settings.lastLevelClass.selector),'ul', true).remove();
+		bcpie.utils.closestChildren({
+			selector: selector.find(settings.lastLevelClass.selector),
+			match: 'ul',
+			findAll: true
+		}).remove();
 	}
 
 	initActiveNav();
