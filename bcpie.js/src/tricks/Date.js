@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.10.08',
+		version: '2015.11.30',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -20,7 +20,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
 			event: 'load', // specify the window event that triggers Date's behavior
-			locale: 'off' // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
+			locale: 'off', // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
+			triggeredEvent: 'change', // specify an event to trigger when the trick is finished.
+			eventNamespace: 'date' // specify a suffix to add to triggeredEvent (event.suffix).
 		}
 	});
 
@@ -35,10 +37,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	function initLangSupport() {
 		if (moment.localeData('es') !== null) { // check for the existence of language data other than 'en'
 			moment.locale(settings.locale);
-			runDate();
-		}else {
-			setTimeout(initLangSupport, 100);
-		}
+		}else setTimeout(initLangSupport, 100);
 	}
 	function runDate() {
 		// determine the reference
@@ -88,7 +87,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			for (var i=0; i<targets.length; i++) {
 				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
-				if (selector.is('input,textarea')) selector.change().trigger('change.date');
+				selector.trigger(settings.triggeredEvent+'.'+settings.eventNamespace);
 			}
 		}
 	}
@@ -104,12 +103,12 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
 		}
 		initLangSupport();
-	}else runDate();
+	}
 
 	if (settings.event !== 'load') {
 		body.on(settings.event, selector, function() {
 			runDate();
 		});
-	}
+	}else runDate();
 
 };

@@ -487,7 +487,7 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = {},boolFalse,a;
+			var o = '',boolFalse,a;
 			if (object instanceof jQuery) {
 				if (object.is('form')) a = object.serializeArray();
 				else if (object.is('select,textarea,input')) a = object.serializeArray(); // [{name:object.attr('name'),value:object.val()}];
@@ -500,16 +500,21 @@ win.bcpie = {
 				a = object;
 			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
 				a = [object];
+			}else if ($.isPlainObject(object)) {
+				o = object;
 			}else {
 				console.log('Malformed object passed to bcpie.utils.serializeObject method.');
 				a = [];
 			}
-			for (var i=0; i<a.length; i++) {
-				if (o[a[i].name] !== undefined) {
-					if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
-					o[a[i].name].push(a[i].value || '');
+			if (o === '') {
+				o = {};
+				for (var i=0; i<a.length; i++) {
+					if (o[a[i].name] !== undefined) {
+						if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
+						o[a[i].name].push(a[i].value || '');
+					}
+					else o[a[i].name] = a[i].value || '';
 				}
-				else o[a[i].name] = a[i].value || '';
 			}
 			return o;
 		},

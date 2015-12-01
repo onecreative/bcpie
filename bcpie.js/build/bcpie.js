@@ -11657,7 +11657,7 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = {},boolFalse,a;
+			var o = '',boolFalse,a;
 			if (object instanceof jQuery) {
 				if (object.is('form')) a = object.serializeArray();
 				else if (object.is('select,textarea,input')) a = object.serializeArray(); // [{name:object.attr('name'),value:object.val()}];
@@ -11670,16 +11670,21 @@ win.bcpie = {
 				a = object;
 			}else if ($.isPlainObject(object) && typeof object.name !== 'undefined' && typeof object.value !== 'undefined') {
 				a = [object];
+			}else if ($.isPlainObject(object)) {
+				o = object;
 			}else {
 				console.log('Malformed object passed to bcpie.utils.serializeObject method.');
 				a = [];
 			}
-			for (var i=0; i<a.length; i++) {
-				if (o[a[i].name] !== undefined) {
-					if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
-					o[a[i].name].push(a[i].value || '');
+			if (o === '') {
+				o = {};
+				for (var i=0; i<a.length; i++) {
+					if (o[a[i].name] !== undefined) {
+						if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
+						o[a[i].name].push(a[i].value || '');
+					}
+					else o[a[i].name] = a[i].value || '';
 				}
-				else o[a[i].name] = a[i].value || '';
 			}
 			return o;
 		},
@@ -12291,7 +12296,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.10.08',
+		version: '2015.11.30',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -12303,7 +12308,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
 			event: 'load', // specify the window event that triggers Date's behavior
-			locale: 'off' // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
+			locale: 'off', // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
+			triggeredEvent: 'change', // specify an event to trigger when the trick is finished.
+			eventNamespace: 'date' // specify a suffix to add to triggeredEvent (event.suffix).
 		}
 	});
 
@@ -12318,10 +12325,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	function initLangSupport() {
 		if (moment.localeData('es') !== null) { // check for the existence of language data other than 'en'
 			moment.locale(settings.locale);
-			runDate();
-		}else {
-			setTimeout(initLangSupport, 100);
-		}
+		}else setTimeout(initLangSupport, 100);
 	}
 	function runDate() {
 		// determine the reference
@@ -12371,7 +12375,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			for (var i=0; i<targets.length; i++) {
 				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
-				if (selector.is('input,textarea')) selector.change().trigger('change.date');
+				selector.trigger(settings.triggeredEvent+'.'+settings.eventNamespace);
 			}
 		}
 	}
@@ -12387,13 +12391,13 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
 		}
 		initLangSupport();
-	}else runDate();
+	}
 
 	if (settings.event !== 'load') {
 		body.on(settings.event, selector, function() {
 			runDate();
 		});
-	}
+	}else runDate();
 
 };;/*
  * "FormMagic". An awesome trick for BC Pie.
@@ -13240,7 +13244,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.09.01',
+		version: '2015.11.30',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -13256,6 +13260,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
+			eventNamespace: 'sameas', // specify an event to trigger when the trick is finished.
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false,
@@ -13264,18 +13269,69 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	});
 
 	// Setup our variables
-	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope),
-		copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
-		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
+	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope);
 
-	if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
+	if (copyGroup.length > 0) {
+		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
+			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
 
-	if(settings.copyType=="simple"){
-		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
-		copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
-	}else{
-		settings.bothWays = false;
-		GetFieldsExpression(true);
+		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
+		if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
+
+		selector.data('sameAsLastVal',selector.val());
+
+		if(settings.copyType=="simple"){
+			settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
+			copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
+		}else{
+			settings.bothWays = false;
+			GetFieldsExpression(true);
+		}
+
+		// Choose which method to use
+		if (checkbox.length || altCheckbox.length) {
+			if (checkbox.length) {
+				checkboxChange(checkbox,selector,copyFields);
+				checkbox.on(settings.event+settings.eventNamespace,function(){
+					checkboxChange(checkbox,selector,copyFields);
+				});
+				if (settings.breakOnChange !== false) {
+					selector.on(settings.event+settings.eventNamespace,function() {
+						checkbox.off(settings.event+settings.eventNamespace);
+						for (var i = copyFields.length - 1; i >= 0; i--) {
+							copyFields[i].off(settings.event+settings.eventNamespace);
+						}
+						selector.off(settings.event+settings.eventNamespace);
+					});
+				}
+			}
+			if (altCheckbox.length) {
+				checkboxChange(altCheckbox,selector,altCopyFields);
+				altCheckbox.on(settings.event+settings.eventNamespace,function(){
+					checkboxChange(altCheckbox,selector,altCopyFields);
+				});
+				if (settings.breakOnChange !== false) {
+					selector.on(settings.event+settings.eventNamespace,function() {
+						altCheckbox.off(settings.event+settings.eventNamespace);
+						for (var i = altCopyFields.length - 1; i >= 0; i--) {
+							altCopyFields[i].off(settings.event+settings.eventNamespace);
+						}
+						selector.off(settings.event+settings.eventNamespace);
+					});
+				}
+			}
+		}else {
+			copyVal(selector,copyFields);
+			inputChange(selector,copyFields);
+			if (settings.breakOnChange !== false) {
+				selector.on(settings.event+settings.eventNamespace,function() {
+					for (var i = copyFields.length - 1; i >= 0; i--) {
+						copyFields[i].off(settings.event+settings.eventNamespace);
+					}
+					selector.off(settings.event+settings.eventNamespace);
+				});
+			}
+		}
 	}
 
 	function copyVal(selector,copyFields) {
@@ -13313,20 +13369,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
-			selector.trigger(settings.event+'.sameas').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change').trigger('change.sameas'); // restores the selector's native change behavior
+			selector.trigger(settings.event+settings.eventNamespace);
+			if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+'.sameas',function() {
+			$(copyFields[i]).on(settings.event+settings.eventNamespace,function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+'.sameas',function(){
+			selector.on(settings.event+settings.eventNamespace,function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -13344,14 +13400,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+'.sameas');
+				copyFields[i].off(settings.event+settings.eventNamespace);
 			}
-			selector.off(settings.event+'.sameas');
+			selector.off(settings.event+settings.eventNamespace);
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {
-				selector.trigger(settings.event+'.sameas').trigger(settings.event);
-				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+				selector.trigger(settings.event+settings.eventNamespace);
+				if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 				selector.data('sameAsLastVal',selector.val());
 			}
 		}
@@ -13398,53 +13454,6 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 
 			return str;
-		}
-	}
-
-	selector.data('sameAsLastVal',selector.val());
-
-	// Choose which method to use
-	if (checkbox.length || altCheckbox.length) {
-		if(checkbox.length){
-			checkboxChange(checkbox,selector,copyFields);
-			checkbox.on(settings.event+'.sameas',function(){
-				checkboxChange(checkbox,selector,copyFields);
-			});
-			if (settings.breakOnChange !== false) {
-				selector.on('change',function() {
-					checkbox.off(settings.event+'.sameas');
-					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+'.sameas');
-					}
-					selector.off(settings.event+'.sameas');
-				});
-			}
-		}
-		if(altCheckbox.length){
-			checkboxChange(altCheckbox,selector,altCopyFields);
-			altCheckbox.on(settings.event+'.sameas',function(){
-				checkboxChange(altCheckbox,selector,altCopyFields);
-			});
-			if (settings.breakOnChange !== false) {
-				selector.on('change',function() {
-					altCheckbox.off(settings.event+'.sameas');
-					for (var i = altCopyFields.length - 1; i >= 0; i--) {
-						altCopyFields[i].off(settings.event+'.sameas');
-					}
-					selector.off(settings.event+'.sameas');
-				});
-			}
-		}
-	}else {
-		copyVal(selector,copyFields);
-		inputChange(selector,copyFields);
-		if (settings.breakOnChange !== false) {
-			selector.on('change',function() {
-				for (var i = copyFields.length - 1; i >= 0; i--) {
-					copyFields[i].off(settings.event+'.sameas');
-				}
-				selector.off(settings.event+'.sameas');
-			});
 		}
 	}
 };;/*

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.09.01',
+		version: '2015.11.30',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -24,6 +24,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
 			event : 'change', // specify the event that triggers the copy
+			eventNamespace: 'sameas', // specify an event to trigger when the trick is finished.
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false,
@@ -32,18 +33,69 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	});
 
 	// Setup our variables
-	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope),
-		copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
-		copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
+	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope);
 
-	if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
+	if (copyGroup.length > 0) {
+		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
+			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
 
-	if(settings.copyType=="simple"){
-		settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
-		copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
-	}else{
-		settings.bothWays = false;
-		GetFieldsExpression(true);
+		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
+		if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
+
+		selector.data('sameAsLastVal',selector.val());
+
+		if(settings.copyType=="simple"){
+			settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
+			copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
+		}else{
+			settings.bothWays = false;
+			GetFieldsExpression(true);
+		}
+
+		// Choose which method to use
+		if (checkbox.length || altCheckbox.length) {
+			if (checkbox.length) {
+				checkboxChange(checkbox,selector,copyFields);
+				checkbox.on(settings.event+settings.eventNamespace,function(){
+					checkboxChange(checkbox,selector,copyFields);
+				});
+				if (settings.breakOnChange !== false) {
+					selector.on(settings.event+settings.eventNamespace,function() {
+						checkbox.off(settings.event+settings.eventNamespace);
+						for (var i = copyFields.length - 1; i >= 0; i--) {
+							copyFields[i].off(settings.event+settings.eventNamespace);
+						}
+						selector.off(settings.event+settings.eventNamespace);
+					});
+				}
+			}
+			if (altCheckbox.length) {
+				checkboxChange(altCheckbox,selector,altCopyFields);
+				altCheckbox.on(settings.event+settings.eventNamespace,function(){
+					checkboxChange(altCheckbox,selector,altCopyFields);
+				});
+				if (settings.breakOnChange !== false) {
+					selector.on(settings.event+settings.eventNamespace,function() {
+						altCheckbox.off(settings.event+settings.eventNamespace);
+						for (var i = altCopyFields.length - 1; i >= 0; i--) {
+							altCopyFields[i].off(settings.event+settings.eventNamespace);
+						}
+						selector.off(settings.event+settings.eventNamespace);
+					});
+				}
+			}
+		}else {
+			copyVal(selector,copyFields);
+			inputChange(selector,copyFields);
+			if (settings.breakOnChange !== false) {
+				selector.on(settings.event+settings.eventNamespace,function() {
+					for (var i = copyFields.length - 1; i >= 0; i--) {
+						copyFields[i].off(settings.event+settings.eventNamespace);
+					}
+					selector.off(settings.event+settings.eventNamespace);
+				});
+			}
+		}
 	}
 
 	function copyVal(selector,copyFields) {
@@ -81,20 +133,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
-			selector.trigger(settings.event+'.sameas').trigger(settings.event);
-			if (settings.event !== 'change') selector.trigger('change').trigger('change.sameas'); // restores the selector's native change behavior
+			selector.trigger(settings.event+settings.eventNamespace);
+			if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+'.sameas',function() {
+			$(copyFields[i]).on(settings.event+settings.eventNamespace,function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+'.sameas',function(){
+			selector.on(settings.event+settings.eventNamespace,function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -112,14 +164,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+'.sameas');
+				copyFields[i].off(settings.event+settings.eventNamespace);
 			}
-			selector.off(settings.event+'.sameas');
+			selector.off(settings.event+settings.eventNamespace);
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {
-				selector.trigger(settings.event+'.sameas').trigger(settings.event);
-				if (settings.event !== 'change') selector.trigger('change'); // restores the selector's native change behavior
+				selector.trigger(settings.event+settings.eventNamespace);
+				if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 				selector.data('sameAsLastVal',selector.val());
 			}
 		}
@@ -166,53 +218,6 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 
 			return str;
-		}
-	}
-
-	selector.data('sameAsLastVal',selector.val());
-
-	// Choose which method to use
-	if (checkbox.length || altCheckbox.length) {
-		if(checkbox.length){
-			checkboxChange(checkbox,selector,copyFields);
-			checkbox.on(settings.event+'.sameas',function(){
-				checkboxChange(checkbox,selector,copyFields);
-			});
-			if (settings.breakOnChange !== false) {
-				selector.on('change',function() {
-					checkbox.off(settings.event+'.sameas');
-					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+'.sameas');
-					}
-					selector.off(settings.event+'.sameas');
-				});
-			}
-		}
-		if(altCheckbox.length){
-			checkboxChange(altCheckbox,selector,altCopyFields);
-			altCheckbox.on(settings.event+'.sameas',function(){
-				checkboxChange(altCheckbox,selector,altCopyFields);
-			});
-			if (settings.breakOnChange !== false) {
-				selector.on('change',function() {
-					altCheckbox.off(settings.event+'.sameas');
-					for (var i = altCopyFields.length - 1; i >= 0; i--) {
-						altCopyFields[i].off(settings.event+'.sameas');
-					}
-					selector.off(settings.event+'.sameas');
-				});
-			}
-		}
-	}else {
-		copyVal(selector,copyFields);
-		inputChange(selector,copyFields);
-		if (settings.breakOnChange !== false) {
-			selector.on('change',function() {
-				for (var i = copyFields.length - 1; i >= 0; i--) {
-					copyFields[i].off(settings.event+'.sameas');
-				}
-				selector.off(settings.event+'.sameas');
-			});
 		}
 	}
 };
