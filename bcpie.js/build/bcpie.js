@@ -11171,7 +11171,7 @@ var Parser = (function (scope) {
 ;var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2015.11.12',
+		sdk: '2015.12.01',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -11320,7 +11320,7 @@ win.bcpie = {
 						options.headers = {Authorization: bcpie.ajax.token()};
 
 						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
-							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:'US', fields:{}},
+							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:bcpie.globals.site.countryCode, fields:{}},
 							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}},
 							field, result, fields;
 
@@ -11336,7 +11336,7 @@ win.bcpie = {
 						fields = bcpie.ajax.webapp.item.save[data.webapp].responseJSON;
 						if (data.item !== null) {
 							options.method = 'PUT';
-							delete newData.releaseDate;
+							newData = {fields:{}};
 						}else options.url = options.url.replace('/'+data.item,'');
 
 						// Add custom fields to newData object
@@ -12296,7 +12296,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.11.30',
+		version: '2015.12.02',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -12394,7 +12394,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	}
 
 	if (settings.event !== 'load') {
-		body.on(settings.event, selector, function() {
+		selector.on(settings.event, function() {
 			runDate();
 		});
 	}else runDate();
