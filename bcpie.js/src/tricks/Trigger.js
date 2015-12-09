@@ -120,7 +120,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		else {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
-		if (typeof value === 'undefined') value = '';
+		if (typeof value === 'undefined' || value === null) value = '';
 		return value.trim();
 	}
 };

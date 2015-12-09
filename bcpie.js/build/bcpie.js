@@ -12409,14 +12409,14 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.11.12',
+		version: '2015.12.08',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
 			'errorGroupClass' : 'error-group',
 			'errorMessageElement' : 'small',
 			'errorClass' : 'error',
-			'messageBox' : 'replace', // 'replace' replaces the form with the message, and 'off' returns no message. Otherwise, a CSS selector indicates where to put the message.
+			'messageBox' : 'replace', // 'replace' replaces the form with the message, 'off' returns no message, and 'alert' displays the message in an alert box. Otherwise, a CSS selector indicates where to put the message.
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false, // deprecated in favor of 'mode'
@@ -12424,6 +12424,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
+			'successMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemMessageClass'. Otherwise, text in this option will be used for the success message, and shown in an Alertify notification.
+			'errorMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemErrorMessageClass'. Otherwise, text in this option will be used for the error message, and shown in an Alertify notification.
 			'successClass' : 'success',
 			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
 			'submitEvent' : null,
@@ -12854,6 +12856,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (customFlag === true && settings.customError !== '') {
 			$.when(bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.customError,
 				content: required
 			})).then(function(value) {
@@ -12948,23 +12951,28 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								}
 							});
 						}
-						var messageClass = '';
-						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
-						else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
+						if (settings.successMessage !== null) {
+							alertify.success(settings.successMessage);
+						}else {
+							var messageClass = '';
+							if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
+							else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
 
-						if (messageClass !== '') msg = $(response).find('.'+messageClass);
-						else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
+							if (messageClass !== '') msg = $(response).find('.'+messageClass);
+							else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
 
-						if ($(msg).size() > 0) successMessage = msg;
-						else if (messageClass !== '') {
-							successMessage = $(response).filter('.'+messageClass);
-							showSuccess(selector,successMessage);
+							if ($(msg).size() > 0) successMessage = msg;
+							else if (messageClass !== '') {
+								successMessage = $(response).filter('.'+messageClass);
+								showSuccess(selector,successMessage);
+							}
 						}
 
 						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
 							if (settings.ajaxSuccess === 'refresh') win.location.reload();
 							else bcpie.utils.executeCallback({
 									selector: selector,
+									settings: settings,
 									callback: settings.ajaxSuccess,
 									content: response,
 									status: status,
@@ -12972,6 +12980,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								});
 						}else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
 								selector: selector,
+								settings: settings,
 								callback: window[settings.ajaxError],
 								content: error,
 								status: status,
@@ -12979,8 +12988,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							});
 					},
 					error: function(xhr,status,error) {
+						if (settings.successMessage !== null) alertify.error(settings.errorMessage);
 						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
 								selector: selector,
+								settings: settings,
 								callback: settings.ajaxError,
 								content: error,
 								status: status,
@@ -12991,6 +13002,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					complete: function(xhr,status) {
 						if (settings.ajaxComplete !== null) bcpie.utils.executeCallback({
 							selector: selector,
+							settings: settings,
 							callback: settings.ajaxComplete,
 							status: status,
 							xhr: xhr
@@ -12999,10 +13011,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					}
 				});
 			}else if (settings.mode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
-				settings.mode.data = {};
-				settings.mode.data.webapp = settings.webapp;
-				if (typeof settings.item !== 'undefined') settings.mode.data.item = settings.item;
-				bcpie.ajax.webapp.item.save(settings.mode.data);
+				var data = {};
+				data.webapp = settings.webapp;
+				if (typeof settings.item !== 'undefined') data.item = settings.item;
+				data.content = selector;
+				bcpie.ajax.webapp.item.save(data);
 			}else selector.off('submit').submit();
 
 			return submitCount++;
@@ -13177,6 +13190,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			if (settings.validationSuccess !== null) {
 				$.when(bcpie.utils.executeCallback({
 					selector: selector,
+					settings: settings,
 					callback: settings.validationSuccess
 				})).then(function(value) {
 					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
@@ -13186,6 +13200,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		else
 			if (settings.validationError !== null) bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.validationError
 			});
 		// Now that submission has been attempted, allow active field validation.
@@ -13695,7 +13710,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		else {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
-		if (typeof value === 'undefined') value = '';
+		if (typeof value === 'undefined' || value === null) value = '';
 		return value.trim();
 	}
 };;/*
