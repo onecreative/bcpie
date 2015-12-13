@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.11.30',
+		version: '2015.12.11',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -134,7 +134,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
 			selector.trigger(settings.event+settings.eventNamespace);
-			if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}

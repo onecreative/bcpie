@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.08',
+		version: '2015.12.09',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -614,7 +614,34 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				data.webapp = settings.webapp;
 				if (typeof settings.item !== 'undefined') data.item = settings.item;
 				data.content = selector;
-				bcpie.ajax.webapp.item.save(data);
+				bcpie.ajax.webapp.item.save(data).always(function(data, status, xhr){
+					if (typeof xhr.status === 'undefined') xhr = data;
+					if (xhr.status.toString().indexOf('20') === 0) {
+						if (settings.ajaxSuccess !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							settings: settings,
+							callback: settings.ajaxSuccess,
+							status: status,
+							xhr: xhr
+						});
+					}else {
+						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							settings: settings,
+							callback: settings.ajaxError,
+							status: status,
+							xhr: xhr
+						});
+					}
+					if (settings.ajaxComplete !== null) bcpie.utils.executeCallback({
+						selector: selector,
+						settings: settings,
+						callback: settings.ajaxComplete,
+						status: status,
+						xhr: xhr
+					});
+					buttonSubmitBehaviour(settings.buttonAfterSubmit);
+				});
 			}else selector.off('submit').submit();
 
 			return submitCount++;

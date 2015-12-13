@@ -8,10 +8,11 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.11.12',
+		version: '2015.12.11',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
+			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
@@ -33,6 +34,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);
 	if (settings.offClass !== '') settings.offClass = bcpie.utils.classObject(settings.offClass);
+
+	if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
 
 	if (settings.state === 'class') {
 		if (selector.is(settings.onClass.selector)) settings.state = 'on';
@@ -67,6 +70,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (settings.offClass !== '') selector.removeClass(settings.offClass.names);
 			bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.onCallback,
 			});
 			changeValue(settings.state);
@@ -75,6 +79,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (settings.offClass !== '') selector.addClass(settings.offClass.names);
 			bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.offCallback,
 			});
 			changeValue(settings.state);
@@ -84,8 +89,11 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		if (state === 'off') state = settings.offValue;
 		else if (state === 'on') state = settings.onValue;
 		if (state !== null) {
-			if (selector.is('input,select,textarea')) selector.val(state).change().trigger('change.trigger');
+			if (selector.is('input,select,textarea')) selector.val(state)
 			else selector.text(state);
+
+			selector.trigger(settings.event+settings.eventNamespace);
+			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 		}
 	}
 	function changeTrigger(){

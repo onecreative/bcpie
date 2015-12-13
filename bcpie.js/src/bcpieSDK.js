@@ -151,7 +151,7 @@ win.bcpie = {
 
 						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
 							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:bcpie.globals.site.countryCode, fields:{}},
-							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}},
+							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:bcpie.globals.visitor.country,fields:{}},
 							field, result, fields;
 
 						options.data = bcpie.utils.serializeObject(data.content);
@@ -193,8 +193,7 @@ win.bcpie = {
 										newData[key] = bcpie.utils.validation.dateTime(key,newData[key]);
 									}
 								}
-							}
-							else if (typeof newData.fields[key] !== 'undefined') {
+							}else if (typeof newData.fields[key] !== 'undefined') {
 								if (options.data[key] !== 'undefined') {
 									newData.fields[key] = options.data[key];
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
@@ -211,7 +210,7 @@ win.bcpie = {
 								}else delete newData.fields[key];
 							}
 						}
-
+						if (typeof options.data['country'] === 'undefined') newData['country'] = allFields['country'];
 						options.data = JSON.stringify(newData);
 					}else {
 						if (data.item === null) options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OTYPE=1';
@@ -618,6 +617,7 @@ win.bcpie = {
 			if (data instanceof jQuery) var depricatedSelector = data;
 			data = {
 				selector: data.selector || depricatedSelector || null,
+				settings: data.settings || null,
 				callback: data.callback || depricatedCallback || null,
 				content: data.content || depricatedData || null,
 				status: data.status || depricatedStatus || null,
@@ -625,10 +625,11 @@ win.bcpie = {
 			};
 			if (typeof data.callback === 'string') data.callback = win[data.callback];
 			if (typeof data.callback === 'function') {
-				function parameter(selector, callback, data, status, xhr) {
+				function parameter(selector, settings, callback, data, status, xhr) {
 					var deferred = $.Deferred();
 					deferred.resolve(callback({
 						selector: selector || null,
+						settings: settings || null,
 						content: data || null,
 						status: status || null,
 						xhr: xhr || null
@@ -636,7 +637,7 @@ win.bcpie = {
 					return deferred.promise();
 				}
 
-				return $.when(parameter(data.selector, data.callback, data.content, data.status, data.xhr));
+				return $.when(parameter(data.selector, data.settings, data.callback, data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {

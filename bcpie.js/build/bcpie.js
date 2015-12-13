@@ -11321,7 +11321,7 @@ win.bcpie = {
 
 						var fieldTypes = {name:'String', weight:'Number', releaseDate:'DateTime', expiryDate:'String', enabled:'Boolean', slug:'String', description:'String', roleId:'Number', submittedBy:'Number', templateId:'Number', address:'String', city:'String', state:'String', zipCode:'String', country:'String',fields:{}},
 							newData = {name:'', releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, country:bcpie.globals.site.countryCode, fields:{}},
-							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:'',fields:{}},
+							allFields = {name:'', weight:0, releaseDate:moment().subtract(12,'hour').format('YYYY-MM-DD'), expiryDate:'9999-01-01', enabled:true, slug:'', description:'', roleId:null, submittedBy:-1, templateId:-1, address:'', city:'', state:'', zipCode:'', country:bcpie.globals.visitor.country,fields:{}},
 							field, result, fields;
 
 						options.data = bcpie.utils.serializeObject(data.content);
@@ -11363,8 +11363,7 @@ win.bcpie = {
 										newData[key] = bcpie.utils.validation.dateTime(key,newData[key]);
 									}
 								}
-							}
-							else if (typeof newData.fields[key] !== 'undefined') {
+							}else if (typeof newData.fields[key] !== 'undefined') {
 								if (options.data[key] !== 'undefined') {
 									newData.fields[key] = options.data[key];
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
@@ -11381,7 +11380,7 @@ win.bcpie = {
 								}else delete newData.fields[key];
 							}
 						}
-
+						if (typeof options.data['country'] === 'undefined') newData['country'] = allFields['country'];
 						options.data = JSON.stringify(newData);
 					}else {
 						if (data.item === null) options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OTYPE=1';
@@ -11788,6 +11787,7 @@ win.bcpie = {
 			if (data instanceof jQuery) var depricatedSelector = data;
 			data = {
 				selector: data.selector || depricatedSelector || null,
+				settings: data.settings || null,
 				callback: data.callback || depricatedCallback || null,
 				content: data.content || depricatedData || null,
 				status: data.status || depricatedStatus || null,
@@ -11795,10 +11795,11 @@ win.bcpie = {
 			};
 			if (typeof data.callback === 'string') data.callback = win[data.callback];
 			if (typeof data.callback === 'function') {
-				function parameter(selector, callback, data, status, xhr) {
+				function parameter(selector, settings, callback, data, status, xhr) {
 					var deferred = $.Deferred();
 					deferred.resolve(callback({
 						selector: selector || null,
+						settings: settings || null,
 						content: data || null,
 						status: status || null,
 						xhr: xhr || null
@@ -11806,7 +11807,7 @@ win.bcpie = {
 					return deferred.promise();
 				}
 
-				return $.when(parameter(data.selector, data.callback, data.content, data.status, data.xhr));
+				return $.when(parameter(data.selector, data.settings, data.callback, data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {
@@ -12296,7 +12297,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.12.02',
+		version: '2015.12.13',
 		defaults: {
 			format: 'YYYY',
 			add: '',
@@ -12367,8 +12368,13 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			value = value.add(settings.add).subtract(settings.subtract);
 
 			if (settings.toZone !== '') {
-				if (settings.toZone === 'local' || settings.toZone === '') value = value.utc().local().format(settings.format);
-				else value = value.utc().tz(settings.toZone).format(settings.format);
+				if (settings.toZone === 'local' || settings.toZone === '') {
+					// Temporary method for finding the user's time zone automatically. 0.5.0 of Moment Timezone will replace the need for this script.
+					/*! jstz - v1.0.4 - 2012-12-12 */
+					(function(e){var t=function(){"use strict";var e="s",n=function(e){var t=-e.getTimezoneOffset();return t!==null?t:0},r=function(e,t,n){var r=new Date;return e!==undefined&&r.setFullYear(e),r.setDate(n),r.setMonth(t),r},i=function(e){return n(r(e,0,2))},s=function(e){return n(r(e,5,2))},o=function(e){var t=e.getMonth()>7?s(e.getFullYear()):i(e.getFullYear()),r=n(e);return t-r!==0},u=function(){var t=i(),n=s(),r=i()-s();return r<0?t+",1":r>0?n+",1,"+e:t+",0"},a=function(){var e=u();return new t.TimeZone(t.olson.timezones[e])};return{determine:a,date_is_dst:o}}();t.TimeZone=function(e){"use strict";var n=null,r=function(){return n},i=function(){var e=t.olson.ambiguity_list[n],r=e.length,i=0,s=e[0];for(;i<r;i+=1){s=e[i];if(t.date_is_dst(t.olson.dst_start_dates[s])){n=s;return}}},s=function(){return typeof t.olson.ambiguity_list[n]!="undefined"};return n=e,s()&&i(),{name:r}},t.olson={},t.olson.timezones={"-720,0":"Etc/GMT+12","-660,0":"Pacific/Pago_Pago","-600,1":"America/Adak","-600,0":"Pacific/Honolulu","-570,0":"Pacific/Marquesas","-540,0":"Pacific/Gambier","-540,1":"America/Anchorage","-480,1":"America/Los_Angeles","-480,0":"Pacific/Pitcairn","-420,0":"America/Phoenix","-420,1":"America/Denver","-360,0":"America/Guatemala","-360,1":"America/Chicago","-360,1,s":"Pacific/Easter","-300,0":"America/Bogota","-300,1":"America/New_York","-270,0":"America/Caracas","-240,1":"America/Halifax","-240,0":"America/Santo_Domingo","-240,1,s":"America/Santiago","-210,1":"America/St_Johns","-180,1":"America/Godthab","-180,0":"America/Argentina/Buenos_Aires","-180,1,s":"America/Montevideo","-120,0":"Etc/GMT+2","-120,1":"Etc/GMT+2","-60,1":"Atlantic/Azores","-60,0":"Atlantic/Cape_Verde","0,0":"Etc/UTC","0,1":"Europe/London","60,1":"Europe/Berlin","60,0":"Africa/Lagos","60,1,s":"Africa/Windhoek","120,1":"Asia/Beirut","120,0":"Africa/Johannesburg","180,0":"Asia/Baghdad","180,1":"Europe/Moscow","210,1":"Asia/Tehran","240,0":"Asia/Dubai","240,1":"Asia/Baku","270,0":"Asia/Kabul","300,1":"Asia/Yekaterinburg","300,0":"Asia/Karachi","330,0":"Asia/Kolkata","345,0":"Asia/Kathmandu","360,0":"Asia/Dhaka","360,1":"Asia/Omsk","390,0":"Asia/Rangoon","420,1":"Asia/Krasnoyarsk","420,0":"Asia/Jakarta","480,0":"Asia/Shanghai","480,1":"Asia/Irkutsk","525,0":"Australia/Eucla","525,1,s":"Australia/Eucla","540,1":"Asia/Yakutsk","540,0":"Asia/Tokyo","570,0":"Australia/Darwin","570,1,s":"Australia/Adelaide","600,0":"Australia/Brisbane","600,1":"Asia/Vladivostok","600,1,s":"Australia/Sydney","630,1,s":"Australia/Lord_Howe","660,1":"Asia/Kamchatka","660,0":"Pacific/Noumea","690,0":"Pacific/Norfolk","720,1,s":"Pacific/Auckland","720,0":"Pacific/Tarawa","765,1,s":"Pacific/Chatham","780,0":"Pacific/Tongatapu","780,1,s":"Pacific/Apia","840,0":"Pacific/Kiritimati"},t.olson.dst_start_dates=function(){"use strict";var e=new Date(2010,6,15,1,0,0,0);return{"America/Denver":new Date(2011,2,13,3,0,0,0),"America/Mazatlan":new Date(2011,3,3,3,0,0,0),"America/Chicago":new Date(2011,2,13,3,0,0,0),"America/Mexico_City":new Date(2011,3,3,3,0,0,0),"America/Asuncion":new Date(2012,9,7,3,0,0,0),"America/Santiago":new Date(2012,9,3,3,0,0,0),"America/Campo_Grande":new Date(2012,9,21,5,0,0,0),"America/Montevideo":new Date(2011,9,2,3,0,0,0),"America/Sao_Paulo":new Date(2011,9,16,5,0,0,0),"America/Los_Angeles":new Date(2011,2,13,8,0,0,0),"America/Santa_Isabel":new Date(2011,3,5,8,0,0,0),"America/Havana":new Date(2012,2,10,2,0,0,0),"America/New_York":new Date(2012,2,10,7,0,0,0),"Asia/Beirut":new Date(2011,2,27,1,0,0,0),"Europe/Helsinki":new Date(2011,2,27,4,0,0,0),"Europe/Istanbul":new Date(2011,2,28,5,0,0,0),"Asia/Damascus":new Date(2011,3,1,2,0,0,0),"Asia/Jerusalem":new Date(2011,3,1,6,0,0,0),"Asia/Gaza":new Date(2009,2,28,0,30,0,0),"Africa/Cairo":new Date(2009,3,25,0,30,0,0),"Pacific/Auckland":new Date(2011,8,26,7,0,0,0),"Pacific/Fiji":new Date(2010,11,29,23,0,0,0),"America/Halifax":new Date(2011,2,13,6,0,0,0),"America/Goose_Bay":new Date(2011,2,13,2,1,0,0),"America/Miquelon":new Date(2011,2,13,5,0,0,0),"America/Godthab":new Date(2011,2,27,1,0,0,0),"Europe/Moscow":e,"Asia/Yekaterinburg":e,"Asia/Omsk":e,"Asia/Krasnoyarsk":e,"Asia/Irkutsk":e,"Asia/Yakutsk":e,"Asia/Vladivostok":e,"Asia/Kamchatka":e,"Europe/Minsk":e,"Australia/Perth":new Date(2008,10,1,1,0,0,0)}}(),t.olson.ambiguity_list={"America/Denver":["America/Denver","America/Mazatlan"],"America/Chicago":["America/Chicago","America/Mexico_City"],"America/Santiago":["America/Santiago","America/Asuncion","America/Campo_Grande"],"America/Montevideo":["America/Montevideo","America/Sao_Paulo"],"Asia/Beirut":["Asia/Beirut","Europe/Helsinki","Europe/Istanbul","Asia/Damascus","Asia/Jerusalem","Asia/Gaza"],"Pacific/Auckland":["Pacific/Auckland","Pacific/Fiji"],"America/Los_Angeles":["America/Los_Angeles","America/Santa_Isabel"],"America/New_York":["America/Havana","America/New_York"],"America/Halifax":["America/Goose_Bay","America/Halifax"],"America/Godthab":["America/Miquelon","America/Godthab"],"Asia/Dubai":["Europe/Moscow"],"Asia/Dhaka":["Asia/Yekaterinburg"],"Asia/Jakarta":["Asia/Omsk"],"Asia/Shanghai":["Asia/Krasnoyarsk","Australia/Perth"],"Asia/Tokyo":["Asia/Irkutsk"],"Australia/Brisbane":["Asia/Yakutsk"],"Pacific/Noumea":["Asia/Vladivostok"],"Pacific/Tarawa":["Asia/Kamchatka"],"Africa/Johannesburg":["Asia/Gaza","Africa/Cairo"],"Asia/Baghdad":["Europe/Minsk"]},typeof exports!="undefined"?exports.jstz=t:e.jstz=t})(this);
+
+					value = value.tz(jstz.determine().name()).format(settings.format);
+				}else value = value.tz(settings.toZone).format(settings.format);
 			}else value = value.format(settings.format);
 
 			targets = settings.target.split(',');
@@ -12409,7 +12415,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.08',
+		version: '2015.12.09',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -13015,7 +13021,34 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				data.webapp = settings.webapp;
 				if (typeof settings.item !== 'undefined') data.item = settings.item;
 				data.content = selector;
-				bcpie.ajax.webapp.item.save(data);
+				bcpie.ajax.webapp.item.save(data).always(function(data, status, xhr){
+					if (typeof xhr.status === 'undefined') xhr = data;
+					if (xhr.status.toString().indexOf('20') === 0) {
+						if (settings.ajaxSuccess !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							settings: settings,
+							callback: settings.ajaxSuccess,
+							status: status,
+							xhr: xhr
+						});
+					}else {
+						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
+							selector: selector,
+							settings: settings,
+							callback: settings.ajaxError,
+							status: status,
+							xhr: xhr
+						});
+					}
+					if (settings.ajaxComplete !== null) bcpie.utils.executeCallback({
+						selector: selector,
+						settings: settings,
+						callback: settings.ajaxComplete,
+						status: status,
+						xhr: xhr
+					});
+					buttonSubmitBehaviour(settings.buttonAfterSubmit);
+				});
 			}else selector.off('submit').submit();
 
 			return submitCount++;
@@ -13259,7 +13292,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.11.30',
+		version: '2015.12.11',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -13385,7 +13418,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		if (selector.data('sameAsLastVal') !== selector.val()) {
 			selector.trigger(settings.event+settings.eventNamespace);
-			if (settings.event !== 'change') selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
 		}
 	}
@@ -13598,10 +13631,11 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.11.12',
+		version: '2015.12.11',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
+			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
@@ -13623,6 +13657,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);
 	if (settings.offClass !== '') settings.offClass = bcpie.utils.classObject(settings.offClass);
+
+	if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
 
 	if (settings.state === 'class') {
 		if (selector.is(settings.onClass.selector)) settings.state = 'on';
@@ -13657,6 +13693,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (settings.offClass !== '') selector.removeClass(settings.offClass.names);
 			bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.onCallback,
 			});
 			changeValue(settings.state);
@@ -13665,6 +13702,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (settings.offClass !== '') selector.addClass(settings.offClass.names);
 			bcpie.utils.executeCallback({
 				selector: selector,
+				settings: settings,
 				callback: settings.offCallback,
 			});
 			changeValue(settings.state);
@@ -13674,8 +13712,11 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		if (state === 'off') state = settings.offValue;
 		else if (state === 'on') state = settings.onValue;
 		if (state !== null) {
-			if (selector.is('input,select,textarea')) selector.val(state).change().trigger('change.trigger');
+			if (selector.is('input,select,textarea')) selector.val(state)
 			else selector.text(state);
+
+			selector.trigger(settings.event+settings.eventNamespace);
+			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 		}
 	}
 	function changeTrigger(){
