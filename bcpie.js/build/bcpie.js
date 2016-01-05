@@ -1,5 +1,5 @@
 /*!
- * JavaScript Cookie v2.0.3
+ * JavaScript Cookie v2.1.0
  * https://github.com/js-cookie/js-cookie
  *
  * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
@@ -12,7 +12,7 @@
 		module.exports = factory();
 	} else {
 		var _OldCookies = window.Cookies;
-		var api = window.Cookies = factory(window.jQuery);
+		var api = window.Cookies = factory();
 		api.noConflict = function () {
 			window.Cookies = _OldCookies;
 			return api;
@@ -55,8 +55,12 @@
 					}
 				} catch (e) {}
 
-				value = encodeURIComponent(String(value));
-				value = value.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+				if (!converter.write) {
+					value = encodeURIComponent(String(value))
+						.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+				} else {
+					value = converter.write(value, key);
+				}
 
 				key = encodeURIComponent(String(key));
 				key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
@@ -94,7 +98,9 @@
 				}
 
 				try {
-					cookie = converter && converter(cookie, name) || cookie.replace(rdecode, decodeURIComponent);
+					cookie = converter.read ?
+						converter.read(cookie, name) : converter(cookie, name) ||
+						cookie.replace(rdecode, decodeURIComponent);
 
 					if (this.json) {
 						try {
@@ -135,10 +141,10 @@
 		return api;
 	}
 
-	return init();
+	return init(function () {});
 }));
 ;/**
- * alertifyjs 1.5.0 http://alertifyjs.com
+ * alertifyjs 1.6.0 http://alertifyjs.com
  * AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.
  * Copyright 2015 Mohammad Younes <Mohammad@alertifyjs.com> (http://alertifyjs.com) 
  * Licensed under MIT <http://opensource.org/licenses/mit-license.php>*/
@@ -166,6 +172,7 @@
         basic:false,
         frameless:false,
         movable:true,
+        moveBounded:false,
         resizable:true,
         closable:true,
         closableByDimmer:true,
@@ -275,58 +282,58 @@
      * @return {Object} The extended prototype.
      */
     function copy(src) {
-        if(null === src)
-          return src;
-        
+        if(null === src){
+            return src;
+        }
+        var cpy;
         if(Array.isArray(src)){
-          var cpy = [];  
-          for(var x=0;x<src.length;x+=1){
-            cpy.push(copy(src[x]));
-          }
-          return cpy;          
+            cpy = [];
+            for(var x=0;x<src.length;x+=1){
+                cpy.push(copy(src[x]));
+            }
+            return cpy;
         }
       
         if(src instanceof Date){
-          return new Date(src.getTime());
+            return new Date(src.getTime());
         }
       
         if(src instanceof RegExp){
-          var cpy = new RegExp(src.source);
-          cpy.global = src.global;
-          cpy.ignoreCase = src.ignoreCase;
-          cpy.multiline = src.multiline;
-          cpy.lastIndex = src.lastIndex;
-          return cpy;
+            cpy = new RegExp(src.source);
+            cpy.global = src.global;
+            cpy.ignoreCase = src.ignoreCase;
+            cpy.multiline = src.multiline;
+            cpy.lastIndex = src.lastIndex;
+            return cpy;
         }
         
         if(typeof src === 'object'){
-          var cpy = {};
-          // copy dialog pototype over definition.
-          for (var prop in src) {
-              if (src.hasOwnProperty(prop)) {
-                  cpy[prop] = copy(src[prop]);
-              }
-          }
-          return cpy;
+            cpy = {};
+            // copy dialog pototype over definition.
+            for (var prop in src) {
+                if (src.hasOwnProperty(prop)) {
+                    cpy[prop] = copy(src[prop]);
+                }
+            }
+            return cpy;
         }
-      
-        return src;        
+        return src;
     }
     /**
       * Helper: destruct the dialog
       *
       */
     function destruct(instance, initialize){
-      //delete the dom and it's references.
-      var root = instance.elements.root;
-      root.parentNode.removeChild(root);
-      delete instance.elements;
-      //copy back initial settings.
-      instance.settings = copy(instance.__settings);
-      //re-reference init function.
-      instance.__init = initialize;
-      //delete __internal variable to allow re-initialization. 
-      delete instance.__internal;
+        //delete the dom and it's references.
+        var root = instance.elements.root;
+        root.parentNode.removeChild(root);
+        delete instance.elements;
+        //copy back initial settings.
+        instance.settings = copy(instance.__settings);
+        //re-reference init function.
+        instance.__init = initialize;
+        //delete __internal variable to allow re-initialization.
+        delete instance.__internal;
     }
 
     /**
@@ -517,9 +524,9 @@
                 delete instance.__init;
               
                 //keep a copy of initial dialog settings
-                if(!this.__settings)
-                  this.__settings = copy(this.settings);
-				
+                if(!instance.__settings){
+                    instance.__settings = copy(instance.settings);
+                }
                 //in case the script was included before body.
                 //after first dialog gets initialized, it won't be null anymore!				
                 if(null === reflow){
@@ -592,6 +599,7 @@
                         frameless:undefined,
                         pinned: undefined,
                         movable: undefined,
+                        moveBounded:undefined,
                         resizable: undefined,
                         autoReset: undefined,
                         closable: undefined,
@@ -719,6 +727,7 @@
                 instance.set('frameless', setup.options.frameless === undefined ? alertify.defaults.frameless : setup.options.frameless);
 							
                 instance.set('movable', setup.options.movable === undefined ? alertify.defaults.movable : setup.options.movable);
+                instance.set('moveBounded', setup.options.moveBounded === undefined ? alertify.defaults.moveBounded : setup.options.moveBounded);
                 instance.set('resizable', setup.options.resizable === undefined ? alertify.defaults.resizable : setup.options.resizable);
                 instance.set('autoReset', setup.options.autoReset === undefined ? alertify.defaults.autoReset : setup.options.autoReset);
 				
@@ -1584,7 +1593,7 @@
             
             //destory the instance
             if (typeof instance.__internal.destroy === 'function') {
-              instance.__internal.destroy.apply(instance);
+                instance.__internal.destroy.apply(instance);
             }
         }
         /* Controls moving a dialog around */
@@ -1595,7 +1604,10 @@
             //holds the current Y offset when move starts
             offsetY = 0,
             xProp = 'pageX',
-            yProp = 'pageY'
+            yProp = 'pageY',
+            bounds = null,
+            refreshTop = false,
+            moveDelegate = null
         ;
 
         /**
@@ -1607,9 +1619,41 @@
          * @return {undefined}
          */
         function moveElement(event, element) {
-            element.style.left = (event[xProp] - offsetX) + 'px';
-            element.style.top = (event[yProp] - offsetY) + 'px';
+            var left = (event[xProp] - offsetX),
+                top  = (event[yProp] - offsetY);
+
+            if(refreshTop){
+                top -= document.body.scrollTop;
+            }
+           
+            element.style.left = left + 'px';
+            element.style.top = top + 'px';
+           
         }
+        /**
+         * Helper: sets the element top/left coordinates within screen bounds
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Node} element The element being moved.
+         * 
+         * @return {undefined}
+         */
+        function moveElementBounded(event, element) {
+            var left = (event[xProp] - offsetX),
+                top  = (event[yProp] - offsetY);
+
+            if(refreshTop){
+                top -= document.body.scrollTop;
+            }
+            
+            element.style.left = Math.min(bounds.maxLeft, Math.max(bounds.minLeft, left)) + 'px';
+            if(refreshTop){
+                element.style.top = Math.min(bounds.maxTop, Math.max(bounds.minTop, top)) + 'px';
+            }else{
+                element.style.top = Math.max(bounds.minTop, top) + 'px';
+            }
+        }
+            
 
         /**
          * Triggers the start of a move event, attached to the header element mouse down event.
@@ -1622,7 +1666,7 @@
          */
         function beginMove(event, instance) {
             if (resizable === null && !instance.isMaximized() && instance.get('movable')) {
-                var eventSrc;
+                var eventSrc, left=0, top=0;
                 if (event.type === 'touchstart') {
                     event.preventDefault();
                     eventSrc = event.targetTouches[0];
@@ -1634,22 +1678,52 @@
 
                 if (eventSrc) {
 
-                    movable = instance;
-                    offsetX = eventSrc[xProp];
-                    offsetY = eventSrc[yProp];
-
                     var element = instance.elements.dialog;
                     addClass(element, classes.capture);
 
                     if (element.style.left) {
-                        offsetX -= parseInt(element.style.left, 10);
+                        left = parseInt(element.style.left, 10);
                     }
 
                     if (element.style.top) {
-                        offsetY -= parseInt(element.style.top, 10);
+                        top = parseInt(element.style.top, 10);
                     }
-                    moveElement(eventSrc, element);
+                    
+                    offsetX = eventSrc[xProp] - left;
+                    offsetY = eventSrc[yProp] - top;
 
+                    if(instance.isModal()){
+                        offsetY += instance.elements.modal.scrollTop;
+                    }else if(instance.isPinned()){
+                        offsetY -= document.body.scrollTop;
+                    }
+                    
+                    if(instance.get('moveBounded')){
+                        var current = element,
+                            offsetLeft = -left,
+                            offsetTop = -top;
+                        
+                        //calc offset
+                        do {
+                            offsetLeft += current.offsetLeft;
+                            offsetTop += current.offsetTop;
+                        } while (current = current.offsetParent);
+                        
+                        bounds = {
+                            maxLeft : offsetLeft,
+                            minLeft : -offsetLeft,
+                            maxTop  : document.documentElement.clientHeight - element.clientHeight - offsetTop,
+                            minTop  : -offsetTop
+                        };
+                        moveDelegate = moveElementBounded;
+                    }else{
+                        bounds = null;
+                        moveDelegate = moveElement;
+                    }
+                    
+                    refreshTop = !instance.isModal() && instance.isPinned();
+                    movable = instance;
+                    moveDelegate(eventSrc, element);
                     addClass(document.body, classes.noSelection);
                     return false;
                 }
@@ -1673,7 +1747,7 @@
                     eventSrc = event;
                 }
                 if (eventSrc) {
-                    moveElement(eventSrc, movable.elements.dialog);
+                    moveDelegate(eventSrc, movable.elements.dialog);
                 }
             }
         }
@@ -1687,7 +1761,7 @@
         function endMove() {
             if (movable) {
                 var element = movable.elements.dialog;
-                movable = null;
+                movable = bounds = null;
                 removeClass(document.body, classes.noSelection);
                 removeClass(element, classes.capture);
             }
@@ -2191,6 +2265,10 @@
                 }
                 return this;
             },
+            bringToFront:function(){
+                bringToFront(null, this);
+                return this;
+            },
             /**
              * Move the dialog to a specific x/y coordinates
              *
@@ -2513,17 +2591,17 @@
              * @return {undefined}
              */
             destroy:function(){
-              if (this.__internal.isOpen ) {
-                //mark dialog for destruction, this will be called on tranistionOut event.
-                this.__internal.destroy = function(){
-                  destruct(this, initialize);
+                if (this.__internal.isOpen ) {
+                    //mark dialog for destruction, this will be called on tranistionOut event.
+                    this.__internal.destroy = function(){
+                        destruct(this, initialize);
+                    };
+                    //close the dialog to unbind all events.
+                    this.close();
+                }else{
+                    destruct(this, initialize);
                 }
-                //close the dialog to unbind all events.
-                this.close();
-              }else{
-                destruct(this, initialize);
-              }
-              return this;
+                return this;
             },
         };
 	} () );
@@ -6770,7 +6848,7 @@
     return _moment;
 
 }));;//! moment-timezone.js
-//! version : 0.4.0
+//! version : 0.5.0
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -6781,7 +6859,7 @@
 	/*global define*/
 	if (typeof define === 'function' && define.amd) {
 		define(['moment'], factory);                 // AMD
-	} else if (typeof exports === 'object') {
+	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory(require('moment')); // Node
 	} else {
 		factory(root.moment);                        // Browser
@@ -6795,10 +6873,12 @@
 		return moment;
 	}
 
-	var VERSION = "0.4.0",
+	var VERSION = "0.5.0",
 		zones = {},
 		links = {},
 		names = {},
+		guesses = {},
+		cachedGuess,
 
 		momentVersion = moment.version.split('.'),
 		major = +momentVersion[0],
@@ -6891,10 +6971,11 @@
 		intToUntil(untils, indices.length);
 
 		return {
-			name    : data[0],
-			abbrs   : mapIndices(data[1].split(' '), indices),
-			offsets : mapIndices(offsets, indices),
-			untils  : untils
+			name       : data[0],
+			abbrs      : mapIndices(data[1].split(' '), indices),
+			offsets    : mapIndices(offsets, indices),
+			untils     : untils,
+			population : data[5] | 0
 		};
 	}
 
@@ -6910,10 +6991,11 @@
 
 	Zone.prototype = {
 		_set : function (unpacked) {
-			this.name    = unpacked.name;
-			this.abbrs   = unpacked.abbrs;
-			this.untils  = unpacked.untils;
-			this.offsets = unpacked.offsets;
+			this.name       = unpacked.name;
+			this.abbrs      = unpacked.abbrs;
+			this.untils     = unpacked.untils;
+			this.offsets    = unpacked.offsets;
+			this.population = unpacked.population;
 		},
 
 		_index : function (timestamp) {
@@ -6964,6 +7046,154 @@
 	};
 
 	/************************************
+		Current Timezone
+	************************************/
+
+	function OffsetAt(at) {
+		var timeString = at.toTimeString();
+		var abbr = timeString.match(/\(.+\)/);
+		if (abbr && abbr[0]) {
+			// 17:56:31 GMT-0600 (CST)
+			// 17:56:31 GMT-0600 (Central Standard Time)
+			abbr = abbr[0].match(/[A-Z]/g).join('');
+		} else {
+			// 17:56:31 CST
+			abbr = timeString.match(/[A-Z]{3,5}/g)[0];
+		}
+
+		if (abbr === 'GMT') {
+			abbr = undefined;
+		}
+
+		this.at = +at;
+		this.abbr = abbr;
+		this.offset = at.getTimezoneOffset();
+	}
+
+	function ZoneScore(zone) {
+		this.zone = zone;
+		this.offsetScore = 0;
+		this.abbrScore = 0;
+	}
+
+	ZoneScore.prototype.scoreOffsetAt = function (offsetAt) {
+		this.offsetScore += Math.abs(this.zone.offset(offsetAt.at) - offsetAt.offset);
+		if (this.zone.abbr(offsetAt.at).match(/[A-Z]/g).join('') !== offsetAt.abbr) {
+			this.abbrScore++;
+		}
+	};
+
+	function findChange(low, high) {
+		var mid, diff;
+
+		while ((diff = ((high.at - low.at) / 12e4 | 0) * 6e4)) {
+			mid = new OffsetAt(new Date(low.at + diff));
+			if (mid.offset === low.offset) {
+				low = mid;
+			} else {
+				high = mid;
+			}
+		}
+
+		return low;
+	}
+
+	function userOffsets() {
+		var startYear = new Date().getFullYear() - 2,
+			last = new OffsetAt(new Date(startYear, 0, 1)),
+			offsets = [last],
+			change, next, i;
+
+		for (i = 1; i < 48; i++) {
+			next = new OffsetAt(new Date(startYear, i, 1));
+			if (next.offset !== last.offset) {
+				change = findChange(last, next);
+				offsets.push(change);
+				offsets.push(new OffsetAt(new Date(change.at + 6e4)));
+			}
+			last = next;
+		}
+
+		for (i = 0; i < 4; i++) {
+			offsets.push(new OffsetAt(new Date(startYear + i, 0, 1)));
+			offsets.push(new OffsetAt(new Date(startYear + i, 6, 1)));
+		}
+
+		return offsets;
+	}
+
+	function sortZoneScores (a, b) {
+		if (a.offsetScore !== b.offsetScore) {
+			return a.offsetScore - b.offsetScore;
+		}
+		if (a.abbrScore !== b.abbrScore) {
+			return a.abbrScore - b.abbrScore;
+		}
+		return b.zone.population - a.zone.population;
+	}
+
+	function addToGuesses (name, offsets) {
+		var i, offset;
+		arrayToInt(offsets);
+		for (i = 0; i < offsets.length; i++) {
+			offset = offsets[i];
+			guesses[offset] = guesses[offset] || {};
+			guesses[offset][name] = true;
+		}
+	}
+
+	function guessesForUserOffsets (offsets) {
+		var offsetsLength = offsets.length,
+			filteredGuesses = {},
+			out = [],
+			i, j, guessesOffset;
+
+		for (i = 0; i < offsetsLength; i++) {
+			guessesOffset = guesses[offsets[i].offset] || {};
+			for (j in guessesOffset) {
+				if (guessesOffset.hasOwnProperty(j)) {
+					filteredGuesses[j] = true;
+				}
+			}
+		}
+
+		for (i in filteredGuesses) {
+			if (filteredGuesses.hasOwnProperty(i)) {
+				out.push(names[i]);
+			}
+		}
+
+		return out;
+	}
+
+	function rebuildGuess () {
+		var offsets = userOffsets(),
+			offsetsLength = offsets.length,
+			guesses = guessesForUserOffsets(offsets),
+			zoneScores = [],
+			zoneScore, i, j;
+
+		for (i = 0; i < guesses.length; i++) {
+			zoneScore = new ZoneScore(getZone(guesses[i]), offsetsLength);
+			for (j = 0; j < offsetsLength; j++) {
+				zoneScore.scoreOffsetAt(offsets[j]);
+			}
+			zoneScores.push(zoneScore);
+		}
+
+		zoneScores.sort(sortZoneScores);
+
+		return zoneScores.length > 0 ? zoneScores[0].zone.name : undefined;
+	}
+
+	function guess (ignoreCache) {
+		if (!cachedGuess || ignoreCache) {
+			cachedGuess = rebuildGuess();
+		}
+		return cachedGuess;
+	}
+
+	/************************************
 		Global Methods
 	************************************/
 
@@ -6972,17 +7202,21 @@
 	}
 
 	function addZone (packed) {
-		var i, name, normalized;
+		var i, name, split, normalized;
 
 		if (typeof packed === "string") {
 			packed = [packed];
 		}
 
 		for (i = 0; i < packed.length; i++) {
-			name = packed[i].split('|')[0];
+			split = packed[i].split('|');
+			name = split[0];
 			normalized = normalizeName(name);
 			zones[normalized] = packed[i];
 			names[normalized] = name;
+			if (split[5]) {
+				addToGuesses(normalized, split[2].split(' '));
+			}
 		}
 	}
 
@@ -6991,7 +7225,7 @@
 
 		var zone = zones[name];
 		var link;
-		
+
 		if (zone instanceof Zone) {
 			return zone;
 		}
@@ -7099,6 +7333,7 @@
 	tz.load         = loadData;
 	tz.zone         = getZone;
 	tz.zoneExists   = zoneExists; // deprecated in 0.1.0
+	tz.guess        = guess;
 	tz.names        = getNames;
 	tz.Zone         = Zone;
 	tz.unpack       = unpack;
@@ -7192,151 +7427,154 @@
 	}
 
 	loadData({
-		"version": "2015d",
+		"version": "2015g",
 		"zones": [
-			"Africa/Abidjan|GMT|0|0|",
-			"Africa/Addis_Ababa|EAT|-30|0|",
-			"Africa/Algiers|CET|-10|0|",
-			"Africa/Bangui|WAT|-10|0|",
-			"Africa/Blantyre|CAT|-20|0|",
-			"Africa/Cairo|EET EEST|-20 -30|010101010|1Cby0 Fb0 c10 8n0 8Nd0 gL0 e10 mn0",
-			"Africa/Casablanca|WET WEST|0 -10|01010101010101010101010101010101010101010|1Cco0 Db0 1zd0 Lz0 1Nf0 wM0 co0 go0 1o00 s00 dA0 vc0 11A0 A00 e00 y00 11A0 uo0 e00 DA0 11A0 rA0 e00 Jc0 WM0 m00 gM0 M00 WM0 jc0 e00 RA0 11A0 dA0 e00 Uo0 11A0 800 gM0 Xc0",
-			"Africa/Ceuta|CET CEST|-10 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Africa/Johannesburg|SAST|-20|0|",
-			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00",
-			"Africa/Windhoek|WAST WAT|-20 -10|01010101010101010101010|1C1c0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0",
-			"America/Adak|HST HDT|a0 90|01010101010101010101010|1BR00 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1BQX0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Anguilla|AST|40|0|",
-			"America/Araguaina|BRT BRST|30 20|010|1IdD0 Lz0",
+			"Africa/Abidjan|GMT|0|0||48e5",
+			"Africa/Khartoum|EAT|-30|0||51e5",
+			"Africa/Algiers|CET|-10|0||26e5",
+			"Africa/Lagos|WAT|-10|0||17e6",
+			"Africa/Maputo|CAT|-20|0||26e5",
+			"Africa/Cairo|EET EEST|-20 -30|010101010|1Cby0 Fb0 c10 8n0 8Nd0 gL0 e10 mn0|15e6",
+			"Africa/Casablanca|WET WEST|0 -10|01010101010101010101010101010101010101010|1Cco0 Db0 1zd0 Lz0 1Nf0 wM0 co0 go0 1o00 s00 dA0 vc0 11A0 A00 e00 y00 11A0 uM0 e00 Dc0 11A0 s00 e00 IM0 WM0 mo0 gM0 LA0 WM0 jA0 e00 Rc0 11A0 e00 e00 U00 11A0 8o0 e00 11A0|32e5",
+			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6",
+			"Africa/Johannesburg|SAST|-20|0||84e5",
+			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00|11e5",
+			"Africa/Windhoek|WAST WAT|-20 -10|01010101010101010101010|1C1c0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0|32e4",
+			"America/Adak|HST HDT|a0 90|01010101010101010101010|1BR00 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|326",
+			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1BQX0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|30e4",
+			"America/Santo_Domingo|AST|40|0||29e5",
+			"America/Araguaina|BRT BRST|30 20|010|1IdD0 Lz0|14e4",
 			"America/Argentina/Buenos_Aires|ART|30|0|",
-			"America/Asuncion|PYST PYT|30 40|01010101010101010101010|1C430 1a10 1fz0 1a10 1fz0 1cN0 17b0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0",
-			"America/Atikokan|EST|50|0|",
-			"America/Bahia|BRT BRST|30 20|010|1FJf0 Rb0",
-			"America/Bahia_Banderas|MST CDT CST|70 50 60|01212121212121212121212|1C1l0 1nW0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
-			"America/Belem|BRT|30|0|",
-			"America/Belize|CST|60|0|",
-			"America/Boa_Vista|AMT|40|0|",
-			"America/Bogota|COT|50|0|",
-			"America/Boise|MST MDT|70 60|01010101010101010101010|1BQV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Campo_Grande|AMST AMT|30 40|01010101010101010101010|1BIr0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10",
-			"America/Cancun|CST CDT EST|60 50 50|010101010102|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 Dd0",
-			"America/Caracas|VET|4u|0|",
-			"America/Cayenne|GFT|30|0|",
-			"America/Chicago|CST CDT|60 50|01010101010101010101010|1BQU0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Chihuahua|MST MDT|70 60|01010101010101010101010|1C1l0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
-			"America/Creston|MST|70|0|",
-			"America/Dawson|PST PDT|80 70|01010101010101010101010|1BQW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Detroit|EST EDT|50 40|01010101010101010101010|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Eirunepe|AMT ACT|40 50|01|1KLE0",
-			"America/Glace_Bay|AST ADT|40 30|01010101010101010101010|1BQS0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Godthab|WGT WGST|30 20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"America/Goose_Bay|AST ADT|40 30|01010101010101010101010|1BQQ1 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Grand_Turk|EST EDT AST|50 40 40|0101010101012|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Guayaquil|ECT|50|0|",
-			"America/Guyana|GYT|40|0|",
-			"America/Havana|CST CDT|50 40|01010101010101010101010|1BQR0 1wo0 U00 1zc0 U00 1qM0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0",
-			"America/La_Paz|BOT|40|0|",
-			"America/Lima|PET|50|0|",
-			"America/Merida|CST CDT|60 50|01010101010101010101010|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
-			"America/Metlakatla|PST|80|0|",
-			"America/Miquelon|PMST PMDT|30 20|01010101010101010101010|1BQR0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Montevideo|UYST UYT|20 30|01010101010101010101010|1BQQ0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 14n0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10",
-			"America/Noronha|FNT|20|0|",
+			"America/Asuncion|PYST PYT|30 40|01010101010101010101010|1C430 1a10 1fz0 1a10 1fz0 1cN0 17b0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0|28e5",
+			"America/Panama|EST|50|0||15e5",
+			"America/Bahia|BRT BRST|30 20|010|1FJf0 Rb0|27e5",
+			"America/Bahia_Banderas|MST CDT CST|70 50 60|01212121212121212121212|1C1l0 1nW0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|84e3",
+			"America/Fortaleza|BRT|30|0||34e5",
+			"America/Managua|CST|60|0||22e5",
+			"America/Manaus|AMT|40|0||19e5",
+			"America/Bogota|COT|50|0||90e5",
+			"America/Denver|MST MDT|70 60|01010101010101010101010|1BQV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|26e5",
+			"America/Campo_Grande|AMST AMT|30 40|01010101010101010101010|1BIr0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10|77e4",
+			"America/Cancun|CST CDT EST|60 50 50|010101010102|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 Dd0|63e4",
+			"America/Caracas|VET|4u|0||29e5",
+			"America/Cayenne|GFT|30|0||58e3",
+			"America/Cayman|EST EDT|50 40|01010101010|1Qtj0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|58e3",
+			"America/Chicago|CST CDT|60 50|01010101010101010101010|1BQU0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
+			"America/Chihuahua|MST MDT|70 60|01010101010101010101010|1C1l0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|81e4",
+			"America/Phoenix|MST|70|0||42e5",
+			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1BQW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|15e6",
+			"America/New_York|EST EDT|50 40|01010101010101010101010|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
+			"America/Rio_Branco|AMT ACT|40 50|01|1KLE0|31e4",
+			"America/Fort_Nelson|PST PDT MST|80 70 70|010101010102|1BQW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0|39e2",
+			"America/Halifax|AST ADT|40 30|01010101010101010101010|1BQS0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|39e4",
+			"America/Godthab|WGT WGST|30 20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|17e3",
+			"America/Goose_Bay|AST ADT|40 30|01010101010101010101010|1BQQ1 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|76e2",
+			"America/Grand_Turk|EST EDT AST|50 40 40|0101010101012|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|37e2",
+			"America/Guayaquil|ECT|50|0||27e5",
+			"America/Guyana|GYT|40|0||80e4",
+			"America/Havana|CST CDT|50 40|01010101010101010101010|1BQR0 1wo0 U00 1zc0 U00 1qM0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0|21e5",
+			"America/La_Paz|BOT|40|0||19e5",
+			"America/Lima|PET|50|0||11e6",
+			"America/Mexico_City|CST CDT|60 50|01010101010101010101010|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|20e6",
+			"America/Metlakatla|PST|80|0||14e2",
+			"America/Miquelon|PMST PMDT|30 20|01010101010101010101010|1BQR0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|61e2",
+			"America/Montevideo|UYST UYT|20 30|010101010101|1BQQ0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10 11z0|17e5",
+			"America/Noronha|FNT|20|0||30e2",
 			"America/North_Dakota/Beulah|MST MDT CST CDT|70 60 60 50|01232323232323232323232|1BQV0 1zb0 Oo0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Paramaribo|SRT|30|0|",
-			"America/Port-au-Prince|EST EDT|50 40|0101010101010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"America/Santa_Isabel|PST PDT|80 70|01010101010101010101010|1C1m0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0",
-			"America/Santiago|CLST CLT CLT|30 40 30|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0",
-			"America/Sao_Paulo|BRST BRT|20 30|01010101010101010101010|1BIq0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10",
-			"America/Scoresbysund|EGT EGST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1BQPv 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
-			"Antarctica/Casey|CAST AWST|-b0 -80|0101|1BN30 40P0 KL0",
-			"Antarctica/Davis|DAVT DAVT|-50 -70|0101|1BPw0 3Wn0 KN0",
-			"Antarctica/DumontDUrville|DDUT|-a0|0|",
-			"Antarctica/Macquarie|AEDT MIST|-b0 -b0|01|1C140",
-			"Antarctica/Mawson|MAWT|-50|0|",
-			"Antarctica/McMurdo|NZDT NZST|-d0 -c0|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00",
-			"Antarctica/Rothera|ROTT|30|0|",
-			"Antarctica/Syowa|SYOT|-30|0|",
-			"Antarctica/Troll|UTC CEST|0 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Antarctica/Vostok|VOST|-60|0|",
-			"Asia/Aden|AST|-30|0|",
-			"Asia/Almaty|ALMT|-60|0|",
-			"Asia/Amman|EET EEST|-20 -30|010101010101010101010|1BVy0 1qM0 11A0 1o00 11A0 4bX0 Dd0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0",
-			"Asia/Anadyr|ANAT ANAST ANAT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0",
-			"Asia/Aqtau|AQTT|-50|0|",
-			"Asia/Ashgabat|TMT|-50|0|",
-			"Asia/Baku|AZT AZST|-40 -50|01010101010101010101010|1BWo0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Asia/Bangkok|ICT|-70|0|",
-			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1BWm0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0",
-			"Asia/Bishkek|KGT|-60|0|",
-			"Asia/Brunei|BNT|-80|0|",
-			"Asia/Calcutta|IST|-5u|0|",
-			"Asia/Chita|YAKT YAKST YAKT IRKT|-90 -a0 -a0 -80|01023|1BWh0 1qM0 WM0 8Hz0",
-			"Asia/Choibalsan|CHOT CHOST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0",
-			"Asia/Chongqing|CST|-80|0|",
-			"Asia/Dacca|BDT|-60|0|",
-			"Asia/Damascus|EET EEST|-20 -30|01010101010101010101010|1C0m0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0",
-			"Asia/Dili|TLT|-90|0|",
-			"Asia/Dubai|GST|-40|0|",
-			"Asia/Dushanbe|TJT|-50|0|",
-			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1BVW1 SKX 1xd1 MKX 1AN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1210 1nz0 14N0 1nz0 1210 1nz0 1210 1nz0 1210 1nz0",
-			"Asia/Hebron|EET EEST|-20 -30|0101010101010101010101010|1BVy0 Tb0 1xd1 MKX bB0 cn0 1cN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1210 1nz0 14N0 1nz0 1210 1nz0 1210 1nz0 1210 1nz0",
-			"Asia/Hong_Kong|HKT|-80|0|",
-			"Asia/Hovd|HOVT HOVST|-70 -80|0101010101010|1O8H0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0",
-			"Asia/Irkutsk|IRKT IRKST IRKT|-80 -90 -90|01020|1BWi0 1qM0 WM0 8Hz0",
-			"Asia/Istanbul|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 Xc0 1qo0 WM0 1qM0 11A0 1o00 1200 1nA0 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Asia/Jakarta|WIB|-70|0|",
-			"Asia/Jayapura|WIT|-90|0|",
-			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1BVA0 17X0 1kp0 1dz0 1c10 1aL0 1eN0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0",
-			"Asia/Kabul|AFT|-4u|0|",
-			"Asia/Kamchatka|PETT PETST PETT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0",
-			"Asia/Karachi|PKT|-50|0|",
-			"Asia/Kashgar|XJT|-60|0|",
-			"Asia/Kathmandu|NPT|-5J|0|",
-			"Asia/Khandyga|VLAT VLAST VLAT YAKT YAKT|-a0 -b0 -b0 -a0 -90|010234|1BWg0 1qM0 WM0 17V0 7zD0",
-			"Asia/Krasnoyarsk|KRAT KRAST KRAT|-70 -80 -80|01020|1BWj0 1qM0 WM0 8Hz0",
-			"Asia/Kuala_Lumpur|MYT|-80|0|",
-			"Asia/Magadan|MAGT MAGST MAGT MAGT|-b0 -c0 -c0 -a0|01023|1BWf0 1qM0 WM0 8Hz0",
-			"Asia/Makassar|WITA|-80|0|",
-			"Asia/Manila|PHT|-80|0|",
-			"Asia/Nicosia|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Asia/Novokuznetsk|KRAT NOVST NOVT NOVT|-70 -70 -60 -70|01230|1BWj0 1qN0 WM0 8Hz0",
-			"Asia/Novosibirsk|NOVT NOVST NOVT|-60 -70 -70|01020|1BWk0 1qM0 WM0 8Hz0",
-			"Asia/Omsk|OMST OMSST OMST|-60 -70 -70|01020|1BWk0 1qM0 WM0 8Hz0",
-			"Asia/Oral|ORAT|-50|0|",
-			"Asia/Pyongyang|KST|-90|0|",
-			"Asia/Qyzylorda|QYZT|-60|0|",
-			"Asia/Rangoon|MMT|-6u|0|",
-			"Asia/Sakhalin|SAKT SAKST SAKT|-a0 -b0 -b0|01020|1BWg0 1qM0 WM0 8Hz0",
-			"Asia/Samarkand|UZT|-50|0|",
-			"Asia/Singapore|SGT|-80|0|",
-			"Asia/Srednekolymsk|MAGT MAGST MAGT SRET|-b0 -c0 -c0 -b0|01023|1BWf0 1qM0 WM0 8Hz0",
-			"Asia/Tbilisi|GET|-40|0|",
-			"Asia/Tehran|IRST IRDT|-3u -4u|01010101010101010101010|1BTUu 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0",
-			"Asia/Thimbu|BTT|-60|0|",
-			"Asia/Tokyo|JST|-90|0|",
-			"Asia/Ulaanbaatar|ULAT ULAST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0",
-			"Asia/Ust-Nera|MAGT MAGST MAGT VLAT VLAT|-b0 -c0 -c0 -b0 -a0|010234|1BWf0 1qM0 WM0 17V0 7zD0",
-			"Asia/Vladivostok|VLAT VLAST VLAT|-a0 -b0 -b0|01020|1BWg0 1qM0 WM0 8Hz0",
-			"Asia/Yakutsk|YAKT YAKST YAKT|-90 -a0 -a0|01020|1BWh0 1qM0 WM0 8Hz0",
-			"Asia/Yekaterinburg|YEKT YEKST YEKT|-50 -60 -60|01020|1BWl0 1qM0 WM0 8Hz0",
-			"Asia/Yerevan|AMT AMST|-40 -50|01010|1BWm0 1qM0 WM0 1qM0",
-			"Atlantic/Azores|AZOT AZOST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Atlantic/Canary|WET WEST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Atlantic/Cape_Verde|CVT|10|0|",
-			"Atlantic/South_Georgia|GST|20|0|",
-			"Atlantic/Stanley|FKST FKT|30 40|010|1C6R0 U10",
-			"Australia/ACT|AEDT AEST|-b0 -a0|01010101010101010101010|1C140 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0",
-			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1C14u 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0",
-			"Australia/Brisbane|AEST|-a0|0|",
-			"Australia/Darwin|ACST|-9u|0|",
-			"Australia/Eucla|ACWST|-8J|0|",
-			"Australia/LHI|LHDT LHST|-b0 -au|01010101010101010101010|1C130 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu",
-			"Australia/Perth|AWST|-80|0|",
-			"Chile/EasterIsland|EASST EAST EAST|50 60 50|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0",
-			"Eire|GMT IST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
+			"America/Paramaribo|SRT|30|0||24e4",
+			"America/Port-au-Prince|EST EDT|50 40|0101010101010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|23e5",
+			"America/Santa_Isabel|PST PDT|80 70|01010101010101010101010|1C1m0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|23e3",
+			"America/Santiago|CLST CLT CLT|30 40 30|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0|62e5",
+			"America/Sao_Paulo|BRST BRT|20 30|01010101010101010101010|1BIq0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10|20e6",
+			"America/Scoresbysund|EGT EGST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|452",
+			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1BQPv 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|11e4",
+			"Antarctica/Casey|CAST AWST|-b0 -80|0101|1BN30 40P0 KL0|10",
+			"Antarctica/Davis|DAVT DAVT|-50 -70|0101|1BPw0 3Wn0 KN0|70",
+			"Antarctica/DumontDUrville|DDUT|-a0|0||80",
+			"Antarctica/Macquarie|AEDT MIST|-b0 -b0|01|1C140|1",
+			"Antarctica/Mawson|MAWT|-50|0||60",
+			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|14e5",
+			"Antarctica/Rothera|ROTT|30|0||130",
+			"Antarctica/Syowa|SYOT|-30|0||20",
+			"Antarctica/Troll|UTC CEST|0 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|40",
+			"Antarctica/Vostok|VOST|-60|0||25",
+			"Asia/Baghdad|AST|-30|0||66e5",
+			"Asia/Almaty|ALMT|-60|0||15e5",
+			"Asia/Amman|EET EEST|-20 -30|010101010101010101010|1BVy0 1qM0 11A0 1o00 11A0 4bX0 Dd0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0|25e5",
+			"Asia/Anadyr|ANAT ANAST ANAT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0|13e3",
+			"Asia/Aqtobe|AQTT|-50|0||27e4",
+			"Asia/Ashgabat|TMT|-50|0||41e4",
+			"Asia/Baku|AZT AZST|-40 -50|01010101010101010101010|1BWo0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|27e5",
+			"Asia/Bangkok|ICT|-70|0||15e6",
+			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1BWm0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0|22e5",
+			"Asia/Bishkek|KGT|-60|0||87e4",
+			"Asia/Brunei|BNT|-80|0||42e4",
+			"Asia/Kolkata|IST|-5u|0||15e6",
+			"Asia/Chita|YAKT YAKST YAKT IRKT|-90 -a0 -a0 -80|01023|1BWh0 1qM0 WM0 8Hz0|33e4",
+			"Asia/Choibalsan|CHOT CHOST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|38e3",
+			"Asia/Shanghai|CST|-80|0||23e6",
+			"Asia/Dhaka|BDT|-60|0||16e6",
+			"Asia/Damascus|EET EEST|-20 -30|01010101010101010101010|1C0m0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0|26e5",
+			"Asia/Dili|TLT|-90|0||19e4",
+			"Asia/Dubai|GST|-40|0||39e5",
+			"Asia/Dushanbe|TJT|-50|0||76e4",
+			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1BVW1 SKX 1xd1 MKX 1AN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1210 1nz0 14N0 1nz0 1210 1nz0 1210 1nz0 1210 1nz0|18e5",
+			"Asia/Hebron|EET EEST|-20 -30|0101010101010101010101010|1BVy0 Tb0 1xd1 MKX bB0 cn0 1cN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1210 1nz0 14N0 1nz0 1210 1nz0 1210 1nz0 1210 1nz0|25e4",
+			"Asia/Hong_Kong|HKT|-80|0||73e5",
+			"Asia/Hovd|HOVT HOVST|-70 -80|0101010101010|1O8H0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|81e3",
+			"Asia/Irkutsk|IRKT IRKST IRKT|-80 -90 -90|01020|1BWi0 1qM0 WM0 8Hz0|60e4",
+			"Europe/Istanbul|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 Xc0 1qo0 WM0 1qM0 11A0 1o00 1200 1nA0 11A0 1tA0 U00 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|13e6",
+			"Asia/Jakarta|WIB|-70|0||31e6",
+			"Asia/Jayapura|WIT|-90|0||26e4",
+			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1BVA0 17X0 1kp0 1dz0 1c10 1aL0 1eN0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0|81e4",
+			"Asia/Kabul|AFT|-4u|0||46e5",
+			"Asia/Kamchatka|PETT PETST PETT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0|18e4",
+			"Asia/Karachi|PKT|-50|0||24e6",
+			"Asia/Urumqi|XJT|-60|0||32e5",
+			"Asia/Kathmandu|NPT|-5J|0||12e5",
+			"Asia/Khandyga|VLAT VLAST VLAT YAKT YAKT|-a0 -b0 -b0 -a0 -90|010234|1BWg0 1qM0 WM0 17V0 7zD0|66e2",
+			"Asia/Krasnoyarsk|KRAT KRAST KRAT|-70 -80 -80|01020|1BWj0 1qM0 WM0 8Hz0|10e5",
+			"Asia/Kuala_Lumpur|MYT|-80|0||71e5",
+			"Asia/Magadan|MAGT MAGST MAGT MAGT|-b0 -c0 -c0 -a0|01023|1BWf0 1qM0 WM0 8Hz0|95e3",
+			"Asia/Makassar|WITA|-80|0||15e5",
+			"Asia/Manila|PHT|-80|0||24e6",
+			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|35e5",
+			"Asia/Novokuznetsk|KRAT NOVST NOVT NOVT|-70 -70 -60 -70|01230|1BWj0 1qN0 WM0 8Hz0|55e4",
+			"Asia/Novosibirsk|NOVT NOVST NOVT|-60 -70 -70|01020|1BWk0 1qM0 WM0 8Hz0|15e5",
+			"Asia/Omsk|OMST OMSST OMST|-60 -70 -70|01020|1BWk0 1qM0 WM0 8Hz0|12e5",
+			"Asia/Oral|ORAT|-50|0||27e4",
+			"Asia/Pyongyang|KST KST|-90 -8u|01|1P4D0|29e5",
+			"Asia/Qyzylorda|QYZT|-60|0||73e4",
+			"Asia/Rangoon|MMT|-6u|0||48e5",
+			"Asia/Sakhalin|SAKT SAKST SAKT|-a0 -b0 -b0|01020|1BWg0 1qM0 WM0 8Hz0|58e4",
+			"Asia/Tashkent|UZT|-50|0||23e5",
+			"Asia/Seoul|KST|-90|0||23e6",
+			"Asia/Singapore|SGT|-80|0||56e5",
+			"Asia/Srednekolymsk|MAGT MAGST MAGT SRET|-b0 -c0 -c0 -b0|01023|1BWf0 1qM0 WM0 8Hz0|35e2",
+			"Asia/Tbilisi|GET|-40|0||11e5",
+			"Asia/Tehran|IRST IRDT|-3u -4u|01010101010101010101010|1BTUu 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0|14e6",
+			"Asia/Thimphu|BTT|-60|0||79e3",
+			"Asia/Tokyo|JST|-90|0||38e6",
+			"Asia/Ulaanbaatar|ULAT ULAST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|12e5",
+			"Asia/Ust-Nera|MAGT MAGST MAGT VLAT VLAT|-b0 -c0 -c0 -b0 -a0|010234|1BWf0 1qM0 WM0 17V0 7zD0|65e2",
+			"Asia/Vladivostok|VLAT VLAST VLAT|-a0 -b0 -b0|01020|1BWg0 1qM0 WM0 8Hz0|60e4",
+			"Asia/Yakutsk|YAKT YAKST YAKT|-90 -a0 -a0|01020|1BWh0 1qM0 WM0 8Hz0|28e4",
+			"Asia/Yekaterinburg|YEKT YEKST YEKT|-50 -60 -60|01020|1BWl0 1qM0 WM0 8Hz0|14e5",
+			"Asia/Yerevan|AMT AMST|-40 -50|01010|1BWm0 1qM0 WM0 1qM0|13e5",
+			"Atlantic/Azores|AZOT AZOST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|25e4",
+			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|27e5",
+			"Atlantic/Cape_Verde|CVT|10|0||50e4",
+			"Atlantic/South_Georgia|GST|20|0||30",
+			"Atlantic/Stanley|FKST FKT|30 40|010|1C6R0 U10|21e2",
+			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|1C140 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0|40e5",
+			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1C14u 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0|11e5",
+			"Australia/Brisbane|AEST|-a0|0||20e5",
+			"Australia/Darwin|ACST|-9u|0||12e4",
+			"Australia/Eucla|ACWST|-8J|0||368",
+			"Australia/Lord_Howe|LHDT LHST|-b0 -au|01010101010101010101010|1C130 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu|347",
+			"Australia/Perth|AWST|-80|0||18e5",
+			"Pacific/Easter|EASST EAST EAST|50 60 50|010101010102|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 1wn0|30e2",
+			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|12e5",
 			"Etc/GMT+1|GMT+1|10|0|",
 			"Etc/GMT+10|GMT+10|a0|0|",
 			"Etc/GMT+11|GMT+11|b0|0|",
@@ -7365,53 +7603,54 @@
 			"Etc/GMT-9|GMT-9|-90|0|",
 			"Etc/UCT|UCT|0|0|",
 			"Etc/UTC|UTC|0|0|",
-			"Europe/Belfast|GMT BST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"Europe/Kaliningrad|EET EEST FET|-20 -30 -30|01020|1BWo0 1qM0 WM0 8Hz0",
-			"Europe/Minsk|EET EEST FET MSK|-20 -30 -30 -30|01023|1BWo0 1qM0 WM0 8Hy0",
-			"Europe/Moscow|MSK MSD MSK|-30 -40 -40|01020|1BWn0 1qM0 WM0 8Hz0",
-			"Europe/Samara|SAMT SAMST SAMT|-40 -40 -30|0120|1BWm0 1qN0 WM0",
-			"Europe/Simferopol|EET EEST MSK MSK|-20 -30 -40 -30|01010101023|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11z0 1nW0",
-			"HST|HST|a0|0|",
-			"Indian/Chagos|IOT|-60|0|",
-			"Indian/Christmas|CXT|-70|0|",
-			"Indian/Cocos|CCT|-6u|0|",
-			"Indian/Kerguelen|TFT|-50|0|",
-			"Indian/Mahe|SCT|-40|0|",
-			"Indian/Maldives|MVT|-50|0|",
-			"Indian/Mauritius|MUT|-40|0|",
-			"Indian/Reunion|RET|-40|0|",
-			"Kwajalein|MHT|-c0|0|",
+			"Europe/London|GMT BST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|10e6",
+			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|1BWo0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|67e4",
+			"Europe/Kaliningrad|EET EEST FET|-20 -30 -30|01020|1BWo0 1qM0 WM0 8Hz0|44e4",
+			"Europe/Minsk|EET EEST FET MSK|-20 -30 -30 -30|01023|1BWo0 1qM0 WM0 8Hy0|19e5",
+			"Europe/Moscow|MSK MSD MSK|-30 -40 -40|01020|1BWn0 1qM0 WM0 8Hz0|16e6",
+			"Europe/Samara|SAMT SAMST SAMT|-40 -40 -30|0120|1BWm0 1qN0 WM0|12e5",
+			"Europe/Simferopol|EET EEST MSK MSK|-20 -30 -40 -30|01010101023|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11z0 1nW0|33e4",
+			"Pacific/Honolulu|HST|a0|0||37e4",
+			"Indian/Chagos|IOT|-60|0||30e2",
+			"Indian/Christmas|CXT|-70|0||21e2",
+			"Indian/Cocos|CCT|-6u|0||596",
+			"Indian/Kerguelen|TFT|-50|0||130",
+			"Indian/Mahe|SCT|-40|0||79e3",
+			"Indian/Maldives|MVT|-50|0||35e4",
+			"Indian/Mauritius|MUT|-40|0||15e4",
+			"Indian/Reunion|RET|-40|0||84e4",
+			"Pacific/Majuro|MHT|-c0|0||28e3",
 			"MET|MET MEST|-10 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
-			"NZ-CHAT|CHADT CHAST|-dJ -cJ|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00",
-			"Pacific/Apia|SST SDT WSDT WSST|b0 a0 -e0 -d0|01012323232323232323232|1Dbn0 1ff0 1a00 CI0 AQ0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00",
-			"Pacific/Bougainville|PGT BST|-a0 -b0|01|1NwE0",
-			"Pacific/Chuuk|CHUT|-a0|0|",
-			"Pacific/Efate|VUT|-b0|0|",
-			"Pacific/Enderbury|PHOT|-d0|0|",
-			"Pacific/Fakaofo|TKT TKT|b0 -d0|01|1Gfn0",
-			"Pacific/Fiji|FJST FJT|-d0 -c0|01010101010101010101010|1BWe0 1o00 Rc0 1wo0 Ao0 1Nc0 Ao0 1Q00 xz0 1SN0 uM0 1SM0 xA0 1SM0 uM0 1SM0 uM0 1SM0 uM0 1SM0 uM0 1SM0",
-			"Pacific/Funafuti|TVT|-c0|0|",
-			"Pacific/Galapagos|GALT|60|0|",
-			"Pacific/Gambier|GAMT|90|0|",
-			"Pacific/Guadalcanal|SBT|-b0|0|",
-			"Pacific/Guam|ChST|-a0|0|",
-			"Pacific/Kiritimati|LINT|-e0|0|",
-			"Pacific/Kosrae|KOST|-b0|0|",
-			"Pacific/Marquesas|MART|9u|0|",
-			"Pacific/Midway|SST|b0|0|",
-			"Pacific/Nauru|NRT|-c0|0|",
-			"Pacific/Niue|NUT|b0|0|",
-			"Pacific/Norfolk|NFT|-bu|0|",
-			"Pacific/Noumea|NCT|-b0|0|",
-			"Pacific/Palau|PWT|-90|0|",
-			"Pacific/Pohnpei|PONT|-b0|0|",
-			"Pacific/Port_Moresby|PGT|-a0|0|",
-			"Pacific/Rarotonga|CKT|a0|0|",
-			"Pacific/Tahiti|TAHT|a0|0|",
-			"Pacific/Tarawa|GILT|-c0|0|",
-			"Pacific/Tongatapu|TOT|-d0|0|",
-			"Pacific/Wake|WAKT|-c0|0|",
-			"Pacific/Wallis|WFT|-c0|0|"
+			"Pacific/Chatham|CHADT CHAST|-dJ -cJ|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|600",
+			"Pacific/Apia|SST SDT WSDT WSST|b0 a0 -e0 -d0|01012323232323232323232|1Dbn0 1ff0 1a00 CI0 AQ0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|37e3",
+			"Pacific/Bougainville|PGT BST|-a0 -b0|01|1NwE0|18e4",
+			"Pacific/Chuuk|CHUT|-a0|0||49e3",
+			"Pacific/Efate|VUT|-b0|0||66e3",
+			"Pacific/Enderbury|PHOT|-d0|0||1",
+			"Pacific/Fakaofo|TKT TKT|b0 -d0|01|1Gfn0|483",
+			"Pacific/Fiji|FJST FJT|-d0 -c0|01010101010101010101010|1BWe0 1o00 Rc0 1wo0 Ao0 1Nc0 Ao0 1Q00 xz0 1SN0 uM0 1SM0 uM0 1VA0 s00 1VA0 uM0 1SM0 uM0 1SM0 uM0 1SM0|88e4",
+			"Pacific/Funafuti|TVT|-c0|0||45e2",
+			"Pacific/Galapagos|GALT|60|0||25e3",
+			"Pacific/Gambier|GAMT|90|0||125",
+			"Pacific/Guadalcanal|SBT|-b0|0||11e4",
+			"Pacific/Guam|ChST|-a0|0||17e4",
+			"Pacific/Kiritimati|LINT|-e0|0||51e2",
+			"Pacific/Kosrae|KOST|-b0|0||66e2",
+			"Pacific/Marquesas|MART|9u|0||86e2",
+			"Pacific/Pago_Pago|SST|b0|0||37e2",
+			"Pacific/Nauru|NRT|-c0|0||10e3",
+			"Pacific/Niue|NUT|b0|0||12e2",
+			"Pacific/Norfolk|NFT NFT|-bu -b0|01|1PoCu|25e4",
+			"Pacific/Noumea|NCT|-b0|0||98e3",
+			"Pacific/Palau|PWT|-90|0||21e3",
+			"Pacific/Pohnpei|PONT|-b0|0||34e3",
+			"Pacific/Port_Moresby|PGT|-a0|0||25e4",
+			"Pacific/Rarotonga|CKT|a0|0||13e3",
+			"Pacific/Tahiti|TAHT|a0|0||18e4",
+			"Pacific/Tarawa|GILT|-c0|0||29e3",
+			"Pacific/Tongatapu|TOT|-d0|0||75e3",
+			"Pacific/Wake|WAKT|-c0|0||16e3",
+			"Pacific/Wallis|WFT|-c0|0||94"
 		],
 		"links": [
 			"Africa/Abidjan|Africa/Accra",
@@ -7441,75 +7680,40 @@
 			"Africa/Abidjan|GMT0",
 			"Africa/Abidjan|Greenwich",
 			"Africa/Abidjan|Iceland",
-			"Africa/Addis_Ababa|Africa/Asmara",
-			"Africa/Addis_Ababa|Africa/Asmera",
-			"Africa/Addis_Ababa|Africa/Dar_es_Salaam",
-			"Africa/Addis_Ababa|Africa/Djibouti",
-			"Africa/Addis_Ababa|Africa/Juba",
-			"Africa/Addis_Ababa|Africa/Kampala",
-			"Africa/Addis_Ababa|Africa/Khartoum",
-			"Africa/Addis_Ababa|Africa/Mogadishu",
-			"Africa/Addis_Ababa|Africa/Nairobi",
-			"Africa/Addis_Ababa|Indian/Antananarivo",
-			"Africa/Addis_Ababa|Indian/Comoro",
-			"Africa/Addis_Ababa|Indian/Mayotte",
 			"Africa/Algiers|Africa/Tunis",
-			"Africa/Bangui|Africa/Brazzaville",
-			"Africa/Bangui|Africa/Douala",
-			"Africa/Bangui|Africa/Kinshasa",
-			"Africa/Bangui|Africa/Lagos",
-			"Africa/Bangui|Africa/Libreville",
-			"Africa/Bangui|Africa/Luanda",
-			"Africa/Bangui|Africa/Malabo",
-			"Africa/Bangui|Africa/Ndjamena",
-			"Africa/Bangui|Africa/Niamey",
-			"Africa/Bangui|Africa/Porto-Novo",
-			"Africa/Blantyre|Africa/Bujumbura",
-			"Africa/Blantyre|Africa/Gaborone",
-			"Africa/Blantyre|Africa/Harare",
-			"Africa/Blantyre|Africa/Kigali",
-			"Africa/Blantyre|Africa/Lubumbashi",
-			"Africa/Blantyre|Africa/Lusaka",
-			"Africa/Blantyre|Africa/Maputo",
 			"Africa/Cairo|Egypt",
 			"Africa/Casablanca|Africa/El_Aaiun",
-			"Africa/Ceuta|Arctic/Longyearbyen",
-			"Africa/Ceuta|Atlantic/Jan_Mayen",
-			"Africa/Ceuta|CET",
-			"Africa/Ceuta|Europe/Amsterdam",
-			"Africa/Ceuta|Europe/Andorra",
-			"Africa/Ceuta|Europe/Belgrade",
-			"Africa/Ceuta|Europe/Berlin",
-			"Africa/Ceuta|Europe/Bratislava",
-			"Africa/Ceuta|Europe/Brussels",
-			"Africa/Ceuta|Europe/Budapest",
-			"Africa/Ceuta|Europe/Busingen",
-			"Africa/Ceuta|Europe/Copenhagen",
-			"Africa/Ceuta|Europe/Gibraltar",
-			"Africa/Ceuta|Europe/Ljubljana",
-			"Africa/Ceuta|Europe/Luxembourg",
-			"Africa/Ceuta|Europe/Madrid",
-			"Africa/Ceuta|Europe/Malta",
-			"Africa/Ceuta|Europe/Monaco",
-			"Africa/Ceuta|Europe/Oslo",
-			"Africa/Ceuta|Europe/Paris",
-			"Africa/Ceuta|Europe/Podgorica",
-			"Africa/Ceuta|Europe/Prague",
-			"Africa/Ceuta|Europe/Rome",
-			"Africa/Ceuta|Europe/San_Marino",
-			"Africa/Ceuta|Europe/Sarajevo",
-			"Africa/Ceuta|Europe/Skopje",
-			"Africa/Ceuta|Europe/Stockholm",
-			"Africa/Ceuta|Europe/Tirane",
-			"Africa/Ceuta|Europe/Vaduz",
-			"Africa/Ceuta|Europe/Vatican",
-			"Africa/Ceuta|Europe/Vienna",
-			"Africa/Ceuta|Europe/Warsaw",
-			"Africa/Ceuta|Europe/Zagreb",
-			"Africa/Ceuta|Europe/Zurich",
-			"Africa/Ceuta|Poland",
 			"Africa/Johannesburg|Africa/Maseru",
 			"Africa/Johannesburg|Africa/Mbabane",
+			"Africa/Khartoum|Africa/Addis_Ababa",
+			"Africa/Khartoum|Africa/Asmara",
+			"Africa/Khartoum|Africa/Asmera",
+			"Africa/Khartoum|Africa/Dar_es_Salaam",
+			"Africa/Khartoum|Africa/Djibouti",
+			"Africa/Khartoum|Africa/Juba",
+			"Africa/Khartoum|Africa/Kampala",
+			"Africa/Khartoum|Africa/Mogadishu",
+			"Africa/Khartoum|Africa/Nairobi",
+			"Africa/Khartoum|Indian/Antananarivo",
+			"Africa/Khartoum|Indian/Comoro",
+			"Africa/Khartoum|Indian/Mayotte",
+			"Africa/Lagos|Africa/Bangui",
+			"Africa/Lagos|Africa/Brazzaville",
+			"Africa/Lagos|Africa/Douala",
+			"Africa/Lagos|Africa/Kinshasa",
+			"Africa/Lagos|Africa/Libreville",
+			"Africa/Lagos|Africa/Luanda",
+			"Africa/Lagos|Africa/Malabo",
+			"Africa/Lagos|Africa/Ndjamena",
+			"Africa/Lagos|Africa/Niamey",
+			"Africa/Lagos|Africa/Porto-Novo",
+			"Africa/Maputo|Africa/Blantyre",
+			"Africa/Maputo|Africa/Bujumbura",
+			"Africa/Maputo|Africa/Gaborone",
+			"Africa/Maputo|Africa/Harare",
+			"Africa/Maputo|Africa/Kigali",
+			"Africa/Maputo|Africa/Lubumbashi",
+			"Africa/Maputo|Africa/Lusaka",
 			"Africa/Tripoli|Libya",
 			"America/Adak|America/Atka",
 			"America/Adak|US/Aleutian",
@@ -7518,29 +7722,6 @@
 			"America/Anchorage|America/Sitka",
 			"America/Anchorage|America/Yakutat",
 			"America/Anchorage|US/Alaska",
-			"America/Anguilla|America/Antigua",
-			"America/Anguilla|America/Aruba",
-			"America/Anguilla|America/Barbados",
-			"America/Anguilla|America/Blanc-Sablon",
-			"America/Anguilla|America/Curacao",
-			"America/Anguilla|America/Dominica",
-			"America/Anguilla|America/Grenada",
-			"America/Anguilla|America/Guadeloupe",
-			"America/Anguilla|America/Kralendijk",
-			"America/Anguilla|America/Lower_Princes",
-			"America/Anguilla|America/Marigot",
-			"America/Anguilla|America/Martinique",
-			"America/Anguilla|America/Montserrat",
-			"America/Anguilla|America/Port_of_Spain",
-			"America/Anguilla|America/Puerto_Rico",
-			"America/Anguilla|America/Santo_Domingo",
-			"America/Anguilla|America/St_Barthelemy",
-			"America/Anguilla|America/St_Kitts",
-			"America/Anguilla|America/St_Lucia",
-			"America/Anguilla|America/St_Thomas",
-			"America/Anguilla|America/St_Vincent",
-			"America/Anguilla|America/Tortola",
-			"America/Anguilla|America/Virgin",
 			"America/Argentina/Buenos_Aires|America/Argentina/Catamarca",
 			"America/Argentina/Buenos_Aires|America/Argentina/ComodRivadavia",
 			"America/Argentina/Buenos_Aires|America/Argentina/Cordoba",
@@ -7559,39 +7740,6 @@
 			"America/Argentina/Buenos_Aires|America/Jujuy",
 			"America/Argentina/Buenos_Aires|America/Mendoza",
 			"America/Argentina/Buenos_Aires|America/Rosario",
-			"America/Atikokan|America/Cayman",
-			"America/Atikokan|America/Coral_Harbour",
-			"America/Atikokan|America/Jamaica",
-			"America/Atikokan|America/Panama",
-			"America/Atikokan|EST",
-			"America/Atikokan|Jamaica",
-			"America/Belem|America/Fortaleza",
-			"America/Belem|America/Maceio",
-			"America/Belem|America/Recife",
-			"America/Belem|America/Santarem",
-			"America/Belize|America/Costa_Rica",
-			"America/Belize|America/El_Salvador",
-			"America/Belize|America/Guatemala",
-			"America/Belize|America/Managua",
-			"America/Belize|America/Regina",
-			"America/Belize|America/Swift_Current",
-			"America/Belize|America/Tegucigalpa",
-			"America/Belize|Canada/East-Saskatchewan",
-			"America/Belize|Canada/Saskatchewan",
-			"America/Boa_Vista|America/Manaus",
-			"America/Boa_Vista|America/Porto_Velho",
-			"America/Boa_Vista|Brazil/West",
-			"America/Boise|America/Cambridge_Bay",
-			"America/Boise|America/Denver",
-			"America/Boise|America/Edmonton",
-			"America/Boise|America/Inuvik",
-			"America/Boise|America/Ojinaga",
-			"America/Boise|America/Shiprock",
-			"America/Boise|America/Yellowknife",
-			"America/Boise|Canada/Mountain",
-			"America/Boise|MST7MDT",
-			"America/Boise|Navajo",
-			"America/Boise|US/Mountain",
 			"America/Campo_Grande|America/Cuiaba",
 			"America/Chicago|America/Indiana/Knox",
 			"America/Chicago|America/Indiana/Tell_City",
@@ -7610,173 +7758,261 @@
 			"America/Chicago|US/Indiana-Starke",
 			"America/Chihuahua|America/Mazatlan",
 			"America/Chihuahua|Mexico/BajaSur",
-			"America/Creston|America/Dawson_Creek",
-			"America/Creston|America/Hermosillo",
-			"America/Creston|America/Phoenix",
-			"America/Creston|MST",
-			"America/Creston|US/Arizona",
-			"America/Dawson|America/Ensenada",
-			"America/Dawson|America/Los_Angeles",
-			"America/Dawson|America/Tijuana",
-			"America/Dawson|America/Vancouver",
-			"America/Dawson|America/Whitehorse",
-			"America/Dawson|Canada/Pacific",
-			"America/Dawson|Canada/Yukon",
-			"America/Dawson|Mexico/BajaNorte",
-			"America/Dawson|PST8PDT",
-			"America/Dawson|US/Pacific",
-			"America/Dawson|US/Pacific-New",
-			"America/Detroit|America/Fort_Wayne",
-			"America/Detroit|America/Indiana/Indianapolis",
-			"America/Detroit|America/Indiana/Marengo",
-			"America/Detroit|America/Indiana/Petersburg",
-			"America/Detroit|America/Indiana/Vevay",
-			"America/Detroit|America/Indiana/Vincennes",
-			"America/Detroit|America/Indiana/Winamac",
-			"America/Detroit|America/Indianapolis",
-			"America/Detroit|America/Iqaluit",
-			"America/Detroit|America/Kentucky/Louisville",
-			"America/Detroit|America/Kentucky/Monticello",
-			"America/Detroit|America/Louisville",
-			"America/Detroit|America/Montreal",
-			"America/Detroit|America/Nassau",
-			"America/Detroit|America/New_York",
-			"America/Detroit|America/Nipigon",
-			"America/Detroit|America/Pangnirtung",
-			"America/Detroit|America/Thunder_Bay",
-			"America/Detroit|America/Toronto",
-			"America/Detroit|Canada/Eastern",
-			"America/Detroit|EST5EDT",
-			"America/Detroit|US/East-Indiana",
-			"America/Detroit|US/Eastern",
-			"America/Detroit|US/Michigan",
-			"America/Eirunepe|America/Porto_Acre",
-			"America/Eirunepe|America/Rio_Branco",
-			"America/Eirunepe|Brazil/Acre",
-			"America/Glace_Bay|America/Halifax",
-			"America/Glace_Bay|America/Moncton",
-			"America/Glace_Bay|America/Thule",
-			"America/Glace_Bay|Atlantic/Bermuda",
-			"America/Glace_Bay|Canada/Atlantic",
+			"America/Denver|America/Boise",
+			"America/Denver|America/Cambridge_Bay",
+			"America/Denver|America/Edmonton",
+			"America/Denver|America/Inuvik",
+			"America/Denver|America/Ojinaga",
+			"America/Denver|America/Shiprock",
+			"America/Denver|America/Yellowknife",
+			"America/Denver|Canada/Mountain",
+			"America/Denver|MST7MDT",
+			"America/Denver|Navajo",
+			"America/Denver|US/Mountain",
+			"America/Fortaleza|America/Belem",
+			"America/Fortaleza|America/Maceio",
+			"America/Fortaleza|America/Recife",
+			"America/Fortaleza|America/Santarem",
+			"America/Halifax|America/Glace_Bay",
+			"America/Halifax|America/Moncton",
+			"America/Halifax|America/Thule",
+			"America/Halifax|Atlantic/Bermuda",
+			"America/Halifax|Canada/Atlantic",
 			"America/Havana|Cuba",
-			"America/Merida|America/Mexico_City",
-			"America/Merida|America/Monterrey",
-			"America/Merida|Mexico/General",
+			"America/Los_Angeles|America/Dawson",
+			"America/Los_Angeles|America/Ensenada",
+			"America/Los_Angeles|America/Tijuana",
+			"America/Los_Angeles|America/Vancouver",
+			"America/Los_Angeles|America/Whitehorse",
+			"America/Los_Angeles|Canada/Pacific",
+			"America/Los_Angeles|Canada/Yukon",
+			"America/Los_Angeles|Mexico/BajaNorte",
+			"America/Los_Angeles|PST8PDT",
+			"America/Los_Angeles|US/Pacific",
+			"America/Los_Angeles|US/Pacific-New",
+			"America/Managua|America/Belize",
+			"America/Managua|America/Costa_Rica",
+			"America/Managua|America/El_Salvador",
+			"America/Managua|America/Guatemala",
+			"America/Managua|America/Regina",
+			"America/Managua|America/Swift_Current",
+			"America/Managua|America/Tegucigalpa",
+			"America/Managua|Canada/East-Saskatchewan",
+			"America/Managua|Canada/Saskatchewan",
+			"America/Manaus|America/Boa_Vista",
+			"America/Manaus|America/Porto_Velho",
+			"America/Manaus|Brazil/West",
 			"America/Metlakatla|Pacific/Pitcairn",
+			"America/Mexico_City|America/Merida",
+			"America/Mexico_City|America/Monterrey",
+			"America/Mexico_City|Mexico/General",
+			"America/New_York|America/Detroit",
+			"America/New_York|America/Fort_Wayne",
+			"America/New_York|America/Indiana/Indianapolis",
+			"America/New_York|America/Indiana/Marengo",
+			"America/New_York|America/Indiana/Petersburg",
+			"America/New_York|America/Indiana/Vevay",
+			"America/New_York|America/Indiana/Vincennes",
+			"America/New_York|America/Indiana/Winamac",
+			"America/New_York|America/Indianapolis",
+			"America/New_York|America/Iqaluit",
+			"America/New_York|America/Kentucky/Louisville",
+			"America/New_York|America/Kentucky/Monticello",
+			"America/New_York|America/Louisville",
+			"America/New_York|America/Montreal",
+			"America/New_York|America/Nassau",
+			"America/New_York|America/Nipigon",
+			"America/New_York|America/Pangnirtung",
+			"America/New_York|America/Thunder_Bay",
+			"America/New_York|America/Toronto",
+			"America/New_York|Canada/Eastern",
+			"America/New_York|EST5EDT",
+			"America/New_York|US/East-Indiana",
+			"America/New_York|US/Eastern",
+			"America/New_York|US/Michigan",
 			"America/Noronha|Brazil/DeNoronha",
+			"America/Panama|America/Atikokan",
+			"America/Panama|America/Coral_Harbour",
+			"America/Panama|America/Jamaica",
+			"America/Panama|EST",
+			"America/Panama|Jamaica",
+			"America/Phoenix|America/Creston",
+			"America/Phoenix|America/Dawson_Creek",
+			"America/Phoenix|America/Hermosillo",
+			"America/Phoenix|MST",
+			"America/Phoenix|US/Arizona",
+			"America/Rio_Branco|America/Eirunepe",
+			"America/Rio_Branco|America/Porto_Acre",
+			"America/Rio_Branco|Brazil/Acre",
 			"America/Santiago|Antarctica/Palmer",
 			"America/Santiago|Chile/Continental",
+			"America/Santo_Domingo|America/Anguilla",
+			"America/Santo_Domingo|America/Antigua",
+			"America/Santo_Domingo|America/Aruba",
+			"America/Santo_Domingo|America/Barbados",
+			"America/Santo_Domingo|America/Blanc-Sablon",
+			"America/Santo_Domingo|America/Curacao",
+			"America/Santo_Domingo|America/Dominica",
+			"America/Santo_Domingo|America/Grenada",
+			"America/Santo_Domingo|America/Guadeloupe",
+			"America/Santo_Domingo|America/Kralendijk",
+			"America/Santo_Domingo|America/Lower_Princes",
+			"America/Santo_Domingo|America/Marigot",
+			"America/Santo_Domingo|America/Martinique",
+			"America/Santo_Domingo|America/Montserrat",
+			"America/Santo_Domingo|America/Port_of_Spain",
+			"America/Santo_Domingo|America/Puerto_Rico",
+			"America/Santo_Domingo|America/St_Barthelemy",
+			"America/Santo_Domingo|America/St_Kitts",
+			"America/Santo_Domingo|America/St_Lucia",
+			"America/Santo_Domingo|America/St_Thomas",
+			"America/Santo_Domingo|America/St_Vincent",
+			"America/Santo_Domingo|America/Tortola",
+			"America/Santo_Domingo|America/Virgin",
 			"America/Sao_Paulo|Brazil/East",
 			"America/St_Johns|Canada/Newfoundland",
-			"Antarctica/McMurdo|Antarctica/South_Pole",
-			"Antarctica/McMurdo|NZ",
-			"Antarctica/McMurdo|Pacific/Auckland",
-			"Asia/Aden|Asia/Baghdad",
-			"Asia/Aden|Asia/Bahrain",
-			"Asia/Aden|Asia/Kuwait",
-			"Asia/Aden|Asia/Qatar",
-			"Asia/Aden|Asia/Riyadh",
-			"Asia/Aqtau|Asia/Aqtobe",
+			"Asia/Aqtobe|Asia/Aqtau",
 			"Asia/Ashgabat|Asia/Ashkhabad",
+			"Asia/Baghdad|Asia/Aden",
+			"Asia/Baghdad|Asia/Bahrain",
+			"Asia/Baghdad|Asia/Kuwait",
+			"Asia/Baghdad|Asia/Qatar",
+			"Asia/Baghdad|Asia/Riyadh",
 			"Asia/Bangkok|Asia/Ho_Chi_Minh",
 			"Asia/Bangkok|Asia/Phnom_Penh",
 			"Asia/Bangkok|Asia/Saigon",
 			"Asia/Bangkok|Asia/Vientiane",
-			"Asia/Calcutta|Asia/Colombo",
-			"Asia/Calcutta|Asia/Kolkata",
-			"Asia/Chongqing|Asia/Chungking",
-			"Asia/Chongqing|Asia/Harbin",
-			"Asia/Chongqing|Asia/Macao",
-			"Asia/Chongqing|Asia/Macau",
-			"Asia/Chongqing|Asia/Shanghai",
-			"Asia/Chongqing|Asia/Taipei",
-			"Asia/Chongqing|PRC",
-			"Asia/Chongqing|ROC",
-			"Asia/Dacca|Asia/Dhaka",
+			"Asia/Dhaka|Asia/Dacca",
 			"Asia/Dubai|Asia/Muscat",
 			"Asia/Hong_Kong|Hongkong",
-			"Asia/Istanbul|Europe/Istanbul",
-			"Asia/Istanbul|Turkey",
 			"Asia/Jakarta|Asia/Pontianak",
 			"Asia/Jerusalem|Asia/Tel_Aviv",
 			"Asia/Jerusalem|Israel",
-			"Asia/Kashgar|Asia/Urumqi",
 			"Asia/Kathmandu|Asia/Katmandu",
+			"Asia/Kolkata|Asia/Calcutta",
+			"Asia/Kolkata|Asia/Colombo",
 			"Asia/Kuala_Lumpur|Asia/Kuching",
 			"Asia/Makassar|Asia/Ujung_Pandang",
-			"Asia/Nicosia|EET",
-			"Asia/Nicosia|Europe/Athens",
-			"Asia/Nicosia|Europe/Bucharest",
-			"Asia/Nicosia|Europe/Chisinau",
-			"Asia/Nicosia|Europe/Helsinki",
-			"Asia/Nicosia|Europe/Kiev",
-			"Asia/Nicosia|Europe/Mariehamn",
-			"Asia/Nicosia|Europe/Nicosia",
-			"Asia/Nicosia|Europe/Riga",
-			"Asia/Nicosia|Europe/Sofia",
-			"Asia/Nicosia|Europe/Tallinn",
-			"Asia/Nicosia|Europe/Tiraspol",
-			"Asia/Nicosia|Europe/Uzhgorod",
-			"Asia/Nicosia|Europe/Vilnius",
-			"Asia/Nicosia|Europe/Zaporozhye",
-			"Asia/Pyongyang|Asia/Seoul",
-			"Asia/Pyongyang|ROK",
-			"Asia/Samarkand|Asia/Tashkent",
+			"Asia/Seoul|ROK",
+			"Asia/Shanghai|Asia/Chongqing",
+			"Asia/Shanghai|Asia/Chungking",
+			"Asia/Shanghai|Asia/Harbin",
+			"Asia/Shanghai|Asia/Macao",
+			"Asia/Shanghai|Asia/Macau",
+			"Asia/Shanghai|Asia/Taipei",
+			"Asia/Shanghai|PRC",
+			"Asia/Shanghai|ROC",
 			"Asia/Singapore|Singapore",
+			"Asia/Tashkent|Asia/Samarkand",
 			"Asia/Tehran|Iran",
-			"Asia/Thimbu|Asia/Thimphu",
+			"Asia/Thimphu|Asia/Thimbu",
 			"Asia/Tokyo|Japan",
 			"Asia/Ulaanbaatar|Asia/Ulan_Bator",
-			"Atlantic/Canary|Atlantic/Faeroe",
-			"Atlantic/Canary|Atlantic/Faroe",
-			"Atlantic/Canary|Atlantic/Madeira",
-			"Atlantic/Canary|Europe/Lisbon",
-			"Atlantic/Canary|Portugal",
-			"Atlantic/Canary|WET",
-			"Australia/ACT|Australia/Canberra",
-			"Australia/ACT|Australia/Currie",
-			"Australia/ACT|Australia/Hobart",
-			"Australia/ACT|Australia/Melbourne",
-			"Australia/ACT|Australia/NSW",
-			"Australia/ACT|Australia/Sydney",
-			"Australia/ACT|Australia/Tasmania",
-			"Australia/ACT|Australia/Victoria",
+			"Asia/Urumqi|Asia/Kashgar",
 			"Australia/Adelaide|Australia/Broken_Hill",
 			"Australia/Adelaide|Australia/South",
 			"Australia/Adelaide|Australia/Yancowinna",
 			"Australia/Brisbane|Australia/Lindeman",
 			"Australia/Brisbane|Australia/Queensland",
 			"Australia/Darwin|Australia/North",
-			"Australia/LHI|Australia/Lord_Howe",
+			"Australia/Lord_Howe|Australia/LHI",
 			"Australia/Perth|Australia/West",
-			"Chile/EasterIsland|Pacific/Easter",
-			"Eire|Europe/Dublin",
+			"Australia/Sydney|Australia/ACT",
+			"Australia/Sydney|Australia/Canberra",
+			"Australia/Sydney|Australia/Currie",
+			"Australia/Sydney|Australia/Hobart",
+			"Australia/Sydney|Australia/Melbourne",
+			"Australia/Sydney|Australia/NSW",
+			"Australia/Sydney|Australia/Tasmania",
+			"Australia/Sydney|Australia/Victoria",
 			"Etc/UCT|UCT",
 			"Etc/UTC|Etc/Universal",
 			"Etc/UTC|Etc/Zulu",
 			"Etc/UTC|UTC",
 			"Etc/UTC|Universal",
 			"Etc/UTC|Zulu",
-			"Europe/Belfast|Europe/Guernsey",
-			"Europe/Belfast|Europe/Isle_of_Man",
-			"Europe/Belfast|Europe/Jersey",
-			"Europe/Belfast|Europe/London",
-			"Europe/Belfast|GB",
-			"Europe/Belfast|GB-Eire",
+			"Europe/Athens|Asia/Nicosia",
+			"Europe/Athens|EET",
+			"Europe/Athens|Europe/Bucharest",
+			"Europe/Athens|Europe/Helsinki",
+			"Europe/Athens|Europe/Kiev",
+			"Europe/Athens|Europe/Mariehamn",
+			"Europe/Athens|Europe/Nicosia",
+			"Europe/Athens|Europe/Riga",
+			"Europe/Athens|Europe/Sofia",
+			"Europe/Athens|Europe/Tallinn",
+			"Europe/Athens|Europe/Uzhgorod",
+			"Europe/Athens|Europe/Vilnius",
+			"Europe/Athens|Europe/Zaporozhye",
+			"Europe/Chisinau|Europe/Tiraspol",
+			"Europe/Dublin|Eire",
+			"Europe/Istanbul|Asia/Istanbul",
+			"Europe/Istanbul|Turkey",
+			"Europe/Lisbon|Atlantic/Canary",
+			"Europe/Lisbon|Atlantic/Faeroe",
+			"Europe/Lisbon|Atlantic/Faroe",
+			"Europe/Lisbon|Atlantic/Madeira",
+			"Europe/Lisbon|Portugal",
+			"Europe/Lisbon|WET",
+			"Europe/London|Europe/Belfast",
+			"Europe/London|Europe/Guernsey",
+			"Europe/London|Europe/Isle_of_Man",
+			"Europe/London|Europe/Jersey",
+			"Europe/London|GB",
+			"Europe/London|GB-Eire",
 			"Europe/Moscow|Europe/Volgograd",
 			"Europe/Moscow|W-SU",
-			"HST|Pacific/Honolulu",
-			"HST|Pacific/Johnston",
-			"HST|US/Hawaii",
-			"Kwajalein|Pacific/Kwajalein",
-			"Kwajalein|Pacific/Majuro",
-			"NZ-CHAT|Pacific/Chatham",
+			"Europe/Paris|Africa/Ceuta",
+			"Europe/Paris|Arctic/Longyearbyen",
+			"Europe/Paris|Atlantic/Jan_Mayen",
+			"Europe/Paris|CET",
+			"Europe/Paris|Europe/Amsterdam",
+			"Europe/Paris|Europe/Andorra",
+			"Europe/Paris|Europe/Belgrade",
+			"Europe/Paris|Europe/Berlin",
+			"Europe/Paris|Europe/Bratislava",
+			"Europe/Paris|Europe/Brussels",
+			"Europe/Paris|Europe/Budapest",
+			"Europe/Paris|Europe/Busingen",
+			"Europe/Paris|Europe/Copenhagen",
+			"Europe/Paris|Europe/Gibraltar",
+			"Europe/Paris|Europe/Ljubljana",
+			"Europe/Paris|Europe/Luxembourg",
+			"Europe/Paris|Europe/Madrid",
+			"Europe/Paris|Europe/Malta",
+			"Europe/Paris|Europe/Monaco",
+			"Europe/Paris|Europe/Oslo",
+			"Europe/Paris|Europe/Podgorica",
+			"Europe/Paris|Europe/Prague",
+			"Europe/Paris|Europe/Rome",
+			"Europe/Paris|Europe/San_Marino",
+			"Europe/Paris|Europe/Sarajevo",
+			"Europe/Paris|Europe/Skopje",
+			"Europe/Paris|Europe/Stockholm",
+			"Europe/Paris|Europe/Tirane",
+			"Europe/Paris|Europe/Vaduz",
+			"Europe/Paris|Europe/Vatican",
+			"Europe/Paris|Europe/Vienna",
+			"Europe/Paris|Europe/Warsaw",
+			"Europe/Paris|Europe/Zagreb",
+			"Europe/Paris|Europe/Zurich",
+			"Europe/Paris|Poland",
+			"Pacific/Auckland|Antarctica/McMurdo",
+			"Pacific/Auckland|Antarctica/South_Pole",
+			"Pacific/Auckland|NZ",
+			"Pacific/Chatham|NZ-CHAT",
 			"Pacific/Chuuk|Pacific/Truk",
 			"Pacific/Chuuk|Pacific/Yap",
+			"Pacific/Easter|Chile/EasterIsland",
 			"Pacific/Guam|Pacific/Saipan",
-			"Pacific/Midway|Pacific/Pago_Pago",
-			"Pacific/Midway|Pacific/Samoa",
-			"Pacific/Midway|US/Samoa",
+			"Pacific/Honolulu|HST",
+			"Pacific/Honolulu|Pacific/Johnston",
+			"Pacific/Honolulu|US/Hawaii",
+			"Pacific/Majuro|Kwajalein",
+			"Pacific/Majuro|Pacific/Kwajalein",
+			"Pacific/Pago_Pago|Pacific/Midway",
+			"Pacific/Pago_Pago|Pacific/Samoa",
+			"Pacific/Pago_Pago|US/Samoa",
 			"Pacific/Pohnpei|Pacific/Ponape"
 		]
 	});
@@ -7785,7 +8021,7 @@
 	return moment;
 }));
 ;//! moment-timezone-utils.js
-//! version : 0.3.1
+//! version : 0.5.0
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -7796,7 +8032,7 @@
 	/*global define*/
 	if (typeof define === 'function' && define.amd) {
 		define(['moment'], factory);                 // AMD
-	} else if (typeof exports === 'object') {
+	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory(require('./'));     // Node
 	} else {
 		factory(root.moment);                        // Browser
@@ -7903,6 +8139,18 @@
 		return abbrs.join(' ') + '|' + offsets.join(' ') + '|' + indices.join('');
 	}
 
+	function packPopulation (number) {
+		if (!number) {
+			return '';
+		}
+		if (number < 1000) {
+			return '|' + number;
+		}
+		var exponent = String(number | 0).length - 2;
+		var precision = Math.round(number / Math.pow(10, exponent));
+		return '|' + precision + 'e' + exponent;
+	}
+
 	function validatePackData (source) {
 		if (!source.name)    { throw new Error("Missing name"); }
 		if (!source.abbrs)   { throw new Error("Missing abbrs"); }
@@ -7918,7 +8166,11 @@
 
 	function pack (source) {
 		validatePackData(source);
-		return source.name + '|' + packAbbrsAndOffsets(source) + '|' + packUntils(source.untils);
+		return [
+			source.name,
+			packAbbrsAndOffsets(source),
+			packUntils(source.untils) + packPopulation(source.population)
+		].join('|');
 	}
 
 	/************************************
@@ -7943,24 +8195,35 @@
 	}
 
 	function findAndCreateLinks (input, output, links) {
-		var i, j, a, b, isUnique;
+		var i, j, a, b, group, foundGroup, groups = [];
 
 		for (i = 0; i < input.length; i++) {
-			isUnique = true;
+			foundGroup = false;
 			a = input[i];
 
-			for (j = 0; j < output.length; j++) {
-				b = output[j];
-
+			for (j = 0; j < groups.length; j++) {
+				group = groups[j];
+				b = group[0];
 				if (zonesAreEqual(a, b)) {
-					links.push(b.name + '|' + a.name);
-					isUnique = false;
-					continue;
+					if (a.population > b.population) {
+						group.unshift(a);
+					} else {
+						group.push(a);
+					}
+					foundGroup = true;
 				}
 			}
 
-			if (isUnique) {
-				output.push(a);
+			if (!foundGroup) {
+				groups.push([a]);
+			}
+		}
+
+		for (i = 0; i < groups.length; i++) {
+			group = groups[i];
+			output.push(group[0]);
+			for (j = 1; j < group.length; j++) {
+				links.push(group[0].name + '|' + group[j].name);
 			}
 		}
 	}
@@ -8026,10 +8289,11 @@
 		untils[untils.length - 1] = null;
 
 		return {
-			name    : source.name,
-			abbrs   : slice.apply(source.abbrs, indices),
-			untils  : untils,
-			offsets : slice.apply(source.offsets, indices)
+			name       : source.name,
+			abbrs      : slice.apply(source.abbrs, indices),
+			untils     : untils,
+			offsets    : slice.apply(source.offsets, indices),
+			population : source.population
 		};
 	}
 
@@ -11485,7 +11749,8 @@ win.bcpie = {
 					webapp: data.webapp || null,
 					formID: data.formID || null,
 					responsePageID: data.responsePageID || null,
-					content: data.content || null
+					content: data.content || null,
+					json: data.json || true
 				}
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
@@ -11495,11 +11760,24 @@ win.bcpie = {
 
 				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
 				else data.responsePageID = '';
-				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID;
+
+				if (data.json === true) data.json = '&json='+data.json;
+				else data.json = '';
+
+				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
 				options.data = $.param(data.content);
 				options.contentType = false;
-				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
-				return (response.children().length > 0) ? response.children() : response.html();
+				options.method = 'POST';
+				return bcpie.utils.ajax(options);
+				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
+				// return (response.children().length > 0) ? response.children() : response.html();
+			},
+			list: function(options) {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/webapps';
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
 			},
 			errors: function(data) {
 				data.errors = [];
@@ -11776,7 +12054,7 @@ win.bcpie = {
 			var output = '',
 				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-			string = string.replace(/ /g, '-');
+			string = string.replace(/ /g, '-').replace().replace(/-{2,}/g, "-");
 
 			for (var i = 0; i < string.length; i++) {
 				if (valid.indexOf(string.charAt(i)) != -1) output += string.charAt(i);
@@ -12415,7 +12693,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.09',
+		version: '2015.12.16',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -12435,7 +12713,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'successClass' : 'success',
 			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
 			'submitEvent' : null,
-			'submitField' : '[type="submit"]',
+			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
+			'beforeValidation' : null, // specify a function to run before validation
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
@@ -12968,10 +13247,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
 
 							if ($(msg).size() > 0) successMessage = msg;
-							else if (messageClass !== '') {
-								successMessage = $(response).filter('.'+messageClass);
-								showSuccess(selector,successMessage);
-							}
+							else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
+
+							showSuccess(selector,successMessage);
 						}
 
 						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
@@ -13062,6 +13340,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
+		else if(successMessage.find('.webappsearchresults').length > 0) successMessage = successMessage.find('.webappsearchresults').html();
 
 		if (settings.messageBox === 'replace') {
 			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
@@ -13209,7 +13488,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	// bind to the submit event of our form
 	selector.on('submit',function(event) {
 		event.preventDefault();
-
+		if (settings.beforeValidation !== null) {
+			bcpie.utils.executeCallback({
+				selector: selector,
+				settings: settings,
+				callback: settings.beforeValidation
+			});
+		}
 		BuildRequiredObjectArray(selector);
 
 		if (lockSubmit) return false;

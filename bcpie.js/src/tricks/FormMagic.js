@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.09',
+		version: '2015.12.16',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -28,7 +28,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'successClass' : 'success',
 			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
 			'submitEvent' : null,
-			'submitField' : '[type="submit"]',
+			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
+			'beforeValidation' : null, // specify a function to run before validation
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
 			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
@@ -561,10 +562,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
 
 							if ($(msg).size() > 0) successMessage = msg;
-							else if (messageClass !== '') {
-								successMessage = $(response).filter('.'+messageClass);
-								showSuccess(selector,successMessage);
-							}
+							else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
+
+							showSuccess(selector,successMessage);
 						}
 
 						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
@@ -655,6 +655,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
+		else if(successMessage.find('.webappsearchresults').length > 0) successMessage = successMessage.find('.webappsearchresults').html();
 
 		if (settings.messageBox === 'replace') {
 			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
@@ -802,7 +803,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	// bind to the submit event of our form
 	selector.on('submit',function(event) {
 		event.preventDefault();
-
+		if (settings.beforeValidation !== null) {
+			bcpie.utils.executeCallback({
+				selector: selector,
+				settings: settings,
+				callback: settings.beforeValidation
+			});
+		}
 		BuildRequiredObjectArray(selector);
 
 		if (lockSubmit) return false;

@@ -18,7 +18,8 @@
   "homepage": "https://github.com/onecreative/bcpie",
   "devDependencies": {
     "bower": "^1.3.12",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
+    "gulp-bower": "0.0.11",
     "gulp-install": "^0.4.0"
   }
 }

@@ -315,7 +315,8 @@ win.bcpie = {
 					webapp: data.webapp || null,
 					formID: data.formID || null,
 					responsePageID: data.responsePageID || null,
-					content: data.content || null
+					content: data.content || null,
+					json: data.json || true
 				}
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
@@ -325,11 +326,24 @@ win.bcpie = {
 
 				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
 				else data.responsePageID = '';
-				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID;
+
+				if (data.json === true) data.json = '&json='+data.json;
+				else data.json = '';
+
+				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
 				options.data = $.param(data.content);
 				options.contentType = false;
-				var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
-				return (response.children().length > 0) ? response.children() : response.html();
+				options.method = 'POST';
+				return bcpie.utils.ajax(options);
+				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
+				// return (response.children().length > 0) ? response.children() : response.html();
+			},
+			list: function(options) {
+				if (typeof options !== 'object') options = {};
+				options.url = '/api/v2/admin/sites/current/webapps';
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
 			},
 			errors: function(data) {
 				data.errors = [];
@@ -606,7 +620,7 @@ win.bcpie = {
 			var output = '',
 				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-			string = string.replace(/ /g, '-');
+			string = string.replace(/ /g, '-').replace().replace(/-{2,}/g, "-");
 
 			for (var i = 0; i < string.length; i++) {
 				if (valid.indexOf(string.charAt(i)) != -1) output += string.charAt(i);
