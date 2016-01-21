@@ -1,7 +1,0 @@
-<!-- See http://www.sublimetext.com/docs/snippets for more information -->
-<snippet>
-    <content><![CDATA[{% elsif $1 -%}]]></content>
-    <tabTrigger>elsif</tabTrigger>
-    <scope>text.html.liquid</scope>
-    <description>elsif</description>
-</snippet>
