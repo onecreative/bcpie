@@ -12142,11 +12142,12 @@ win.bcpie = {
 				return selector.data('bcpie-'+settings.name.toLowerCase()+'-settings');
 			}
 		},
-		engine: function() {
+		engine: function(scope) {
+			if (typeof scope === 'undefined') scope = $(doc);
 			var tricks = bcpie.extensions.tricks,trick,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
 			for (trick in tricks) {
 				arr=[];str="";options={};module = [];functions = {};defaults = {};
-				instances = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
+				instances = scope.find('[data-bcpie-'+trick.toLowerCase()+']');
 				for (var a = 0; a<instances.length; a++) {
 					options = {};instance = $(instances[a]);
 					str = instance.data('bcpie-'+trick.toLowerCase());
@@ -12575,9 +12576,9 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2015.12.13',
+		version: '2016.01.14',
 		defaults: {
-			format: 'YYYY',
+			format: 'YYYY', // use Moment parsing or 'calendar'
 			add: '',
 			subtract: '',
 			moment: 'auto',
@@ -12651,9 +12652,12 @@ bcpie.extensions.tricks.Date = function(selector,options){
 					/*! jstz - v1.0.4 - 2012-12-12 */
 					(function(e){var t=function(){"use strict";var e="s",n=function(e){var t=-e.getTimezoneOffset();return t!==null?t:0},r=function(e,t,n){var r=new Date;return e!==undefined&&r.setFullYear(e),r.setDate(n),r.setMonth(t),r},i=function(e){return n(r(e,0,2))},s=function(e){return n(r(e,5,2))},o=function(e){var t=e.getMonth()>7?s(e.getFullYear()):i(e.getFullYear()),r=n(e);return t-r!==0},u=function(){var t=i(),n=s(),r=i()-s();return r<0?t+",1":r>0?n+",1,"+e:t+",0"},a=function(){var e=u();return new t.TimeZone(t.olson.timezones[e])};return{determine:a,date_is_dst:o}}();t.TimeZone=function(e){"use strict";var n=null,r=function(){return n},i=function(){var e=t.olson.ambiguity_list[n],r=e.length,i=0,s=e[0];for(;i<r;i+=1){s=e[i];if(t.date_is_dst(t.olson.dst_start_dates[s])){n=s;return}}},s=function(){return typeof t.olson.ambiguity_list[n]!="undefined"};return n=e,s()&&i(),{name:r}},t.olson={},t.olson.timezones={"-720,0":"Etc/GMT+12","-660,0":"Pacific/Pago_Pago","-600,1":"America/Adak","-600,0":"Pacific/Honolulu","-570,0":"Pacific/Marquesas","-540,0":"Pacific/Gambier","-540,1":"America/Anchorage","-480,1":"America/Los_Angeles","-480,0":"Pacific/Pitcairn","-420,0":"America/Phoenix","-420,1":"America/Denver","-360,0":"America/Guatemala","-360,1":"America/Chicago","-360,1,s":"Pacific/Easter","-300,0":"America/Bogota","-300,1":"America/New_York","-270,0":"America/Caracas","-240,1":"America/Halifax","-240,0":"America/Santo_Domingo","-240,1,s":"America/Santiago","-210,1":"America/St_Johns","-180,1":"America/Godthab","-180,0":"America/Argentina/Buenos_Aires","-180,1,s":"America/Montevideo","-120,0":"Etc/GMT+2","-120,1":"Etc/GMT+2","-60,1":"Atlantic/Azores","-60,0":"Atlantic/Cape_Verde","0,0":"Etc/UTC","0,1":"Europe/London","60,1":"Europe/Berlin","60,0":"Africa/Lagos","60,1,s":"Africa/Windhoek","120,1":"Asia/Beirut","120,0":"Africa/Johannesburg","180,0":"Asia/Baghdad","180,1":"Europe/Moscow","210,1":"Asia/Tehran","240,0":"Asia/Dubai","240,1":"Asia/Baku","270,0":"Asia/Kabul","300,1":"Asia/Yekaterinburg","300,0":"Asia/Karachi","330,0":"Asia/Kolkata","345,0":"Asia/Kathmandu","360,0":"Asia/Dhaka","360,1":"Asia/Omsk","390,0":"Asia/Rangoon","420,1":"Asia/Krasnoyarsk","420,0":"Asia/Jakarta","480,0":"Asia/Shanghai","480,1":"Asia/Irkutsk","525,0":"Australia/Eucla","525,1,s":"Australia/Eucla","540,1":"Asia/Yakutsk","540,0":"Asia/Tokyo","570,0":"Australia/Darwin","570,1,s":"Australia/Adelaide","600,0":"Australia/Brisbane","600,1":"Asia/Vladivostok","600,1,s":"Australia/Sydney","630,1,s":"Australia/Lord_Howe","660,1":"Asia/Kamchatka","660,0":"Pacific/Noumea","690,0":"Pacific/Norfolk","720,1,s":"Pacific/Auckland","720,0":"Pacific/Tarawa","765,1,s":"Pacific/Chatham","780,0":"Pacific/Tongatapu","780,1,s":"Pacific/Apia","840,0":"Pacific/Kiritimati"},t.olson.dst_start_dates=function(){"use strict";var e=new Date(2010,6,15,1,0,0,0);return{"America/Denver":new Date(2011,2,13,3,0,0,0),"America/Mazatlan":new Date(2011,3,3,3,0,0,0),"America/Chicago":new Date(2011,2,13,3,0,0,0),"America/Mexico_City":new Date(2011,3,3,3,0,0,0),"America/Asuncion":new Date(2012,9,7,3,0,0,0),"America/Santiago":new Date(2012,9,3,3,0,0,0),"America/Campo_Grande":new Date(2012,9,21,5,0,0,0),"America/Montevideo":new Date(2011,9,2,3,0,0,0),"America/Sao_Paulo":new Date(2011,9,16,5,0,0,0),"America/Los_Angeles":new Date(2011,2,13,8,0,0,0),"America/Santa_Isabel":new Date(2011,3,5,8,0,0,0),"America/Havana":new Date(2012,2,10,2,0,0,0),"America/New_York":new Date(2012,2,10,7,0,0,0),"Asia/Beirut":new Date(2011,2,27,1,0,0,0),"Europe/Helsinki":new Date(2011,2,27,4,0,0,0),"Europe/Istanbul":new Date(2011,2,28,5,0,0,0),"Asia/Damascus":new Date(2011,3,1,2,0,0,0),"Asia/Jerusalem":new Date(2011,3,1,6,0,0,0),"Asia/Gaza":new Date(2009,2,28,0,30,0,0),"Africa/Cairo":new Date(2009,3,25,0,30,0,0),"Pacific/Auckland":new Date(2011,8,26,7,0,0,0),"Pacific/Fiji":new Date(2010,11,29,23,0,0,0),"America/Halifax":new Date(2011,2,13,6,0,0,0),"America/Goose_Bay":new Date(2011,2,13,2,1,0,0),"America/Miquelon":new Date(2011,2,13,5,0,0,0),"America/Godthab":new Date(2011,2,27,1,0,0,0),"Europe/Moscow":e,"Asia/Yekaterinburg":e,"Asia/Omsk":e,"Asia/Krasnoyarsk":e,"Asia/Irkutsk":e,"Asia/Yakutsk":e,"Asia/Vladivostok":e,"Asia/Kamchatka":e,"Europe/Minsk":e,"Australia/Perth":new Date(2008,10,1,1,0,0,0)}}(),t.olson.ambiguity_list={"America/Denver":["America/Denver","America/Mazatlan"],"America/Chicago":["America/Chicago","America/Mexico_City"],"America/Santiago":["America/Santiago","America/Asuncion","America/Campo_Grande"],"America/Montevideo":["America/Montevideo","America/Sao_Paulo"],"Asia/Beirut":["Asia/Beirut","Europe/Helsinki","Europe/Istanbul","Asia/Damascus","Asia/Jerusalem","Asia/Gaza"],"Pacific/Auckland":["Pacific/Auckland","Pacific/Fiji"],"America/Los_Angeles":["America/Los_Angeles","America/Santa_Isabel"],"America/New_York":["America/Havana","America/New_York"],"America/Halifax":["America/Goose_Bay","America/Halifax"],"America/Godthab":["America/Miquelon","America/Godthab"],"Asia/Dubai":["Europe/Moscow"],"Asia/Dhaka":["Asia/Yekaterinburg"],"Asia/Jakarta":["Asia/Omsk"],"Asia/Shanghai":["Asia/Krasnoyarsk","Australia/Perth"],"Asia/Tokyo":["Asia/Irkutsk"],"Australia/Brisbane":["Asia/Yakutsk"],"Pacific/Noumea":["Asia/Vladivostok"],"Pacific/Tarawa":["Asia/Kamchatka"],"Africa/Johannesburg":["Asia/Gaza","Africa/Cairo"],"Asia/Baghdad":["Europe/Minsk"]},typeof exports!="undefined"?exports.jstz=t:e.jstz=t})(this);
 
-					value = value.tz(jstz.determine().name()).format(settings.format);
-				}else value = value.tz(settings.toZone).format(settings.format);
-			}else value = value.format(settings.format);
+					value = value.tz(jstz.determine().name());
+				}else value = value.tz(settings.toZone);
+			}
+
+			if (settings.format === 'calendar') value = value.calendar();
+			else value = value.format(settings.format);
 
 			targets = settings.target.split(',');
 			for (var i=0; i<targets.length; i++) {
@@ -12693,7 +12697,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.16',
+		version: '2016.01.15',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -13535,12 +13539,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 	// Activate submitEvent
 	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
-		submitField = selector.find(settings.submitField);
-		if (submitField.length > 0) {
-			selector.on(settings.submitEvent,settings.submitField,function(){
-				selector.submit();
-			});
-		}
+		selector.on(settings.submitEvent,settings.submitField,function(){
+			selector.submit();
+		});
 	}
 };
 ;/*
@@ -13592,6 +13593,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			copyType : 'simple', // concat,math,simple
 			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
+			scopeMode : 'find', // or 'closest', 'sibling'
 			event : 'change', // specify the event that triggers the copy
 			eventNamespace: 'sameas', // specify an event to trigger when the trick is finished.
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
@@ -13602,7 +13604,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	});
 
 	// Setup our variables
-	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope);
+	if (settings.scope === 'form') var copyGroup = selector.closest('form');
+	else if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
+	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
+	else var copyGroup = $(doc).find(settings.scope);
 
 	if (copyGroup.length > 0) {
 		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
@@ -13756,7 +13761,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.copyType == "math") {
 			try {
 				expr = Parser.parse(strExpression);
-				return Math.round(expr.evaluate()*dec)/dec;
+				return ((Math.round(expr.evaluate()*dec)/dec)+0).toFixed(settings.decimals);
 			}
 			catch(e){
 				return strExpression.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
@@ -13765,25 +13770,29 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		function GetfieldVal(str){
 			var pattern = /\[.*?\]/g,
-				fieldSelectors = str.match(pattern);
+				fieldSelectors = str.match(pattern),
+				individualField;
 
 			for (var i = 0; i < fieldSelectors.length; i++) {
 				copyFields.push(copyGroup.find(fieldSelectors[i].replace('[','['+settings.attributeType+'="').replace(']','"]')));
+				value = '',combinedVal = '';
+				for (var e = 0; e < copyFields[i].length; e++) {
+					individualField = $(copyFields[i][e]);
+					if (individualField.is('select')) value = individualField.find('option').filter(':selected');
+					else if (individualField.is('radio') || individualField.is('checkbox')) value = individualField.filter(':checked');
+					else value = individualField;
 
-				if (copyFields[i].is('select')) value = copyFields[i].find('option').filter(':selected');
-				else if (copyFields[i].is('radio') || copyFields[i].is('checkbox')) value = copyFields[i].filter(':checked');
-				else value = copyFields[i];
+					if (settings.ref === 'text') value = value.text();
+					else if (settings.ref === 'value') value = value.val();
+					else if (settings.ref === 'html') value = value.html();
+					else value = value.attr(settings.ref);
 
-				if (settings.ref === 'text') value = value.text();
-				else if (settings.ref === 'value') value = value.val();
-				else if (settings.ref === 'html') value = value.html();
-				else value = value.attr(settings.ref);
-
-				if (typeof value !== 'undefined') {
-					if (settings.trim === true) value = value.trim();
-
-					str = str.replace(fieldSelectors[i],value);
+					if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
+					if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;
+					else if (settings.copyType === 'concat' && e > 0) combinedVal += value;
+					else combinedVal = value;
 				}
+				if (typeof combinedVal !== 'undefined') str = str.replace(fieldSelectors[i],combinedVal);
 			}
 
 			return str;
@@ -13916,12 +13925,13 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.12.11',
+		version: '2016.01.12',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
+			scopeMode: 'closest', // find, siblings
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
@@ -13936,7 +13946,11 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	});
 
-	settings.trigger = (settings.trigger === 'self') ? selector : $(settings.scope).find(settings.trigger);
+	if (settings.trigger === 'self') settings.trigger = selector;
+	else if (settings.scopeMode === 'closest') settings.trigger = selector.closest(settings.scope).find(settings.trigger);
+	else if (settings.scopeMode === 'siblings' || settings.scopeMode === 'sibling') settings.trigger = selector.siblings(settings.scope).find(settings.trigger);
+	else settings.trigger = $(doc).find(settings.scope).find(settings.trigger);
+
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
 		settings.triggerValue = settings.triggerValue.split(',');
 
@@ -14037,7 +14051,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';
-		return value.trim();
+		if (typeof value === 'string') value = value.trim();
+		return value;
 	}
 };;/*
  * "Utility". An awesome trick for BC Pie.

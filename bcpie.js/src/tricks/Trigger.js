@@ -8,12 +8,13 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2015.12.11',
+		version: '2016.01.12',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
+			scopeMode: 'closest', // find, siblings
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
@@ -28,7 +29,11 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	});
 
-	settings.trigger = (settings.trigger === 'self') ? selector : $(settings.scope).find(settings.trigger);
+	if (settings.trigger === 'self') settings.trigger = selector;
+	else if (settings.scopeMode === 'closest') settings.trigger = selector.closest(settings.scope).find(settings.trigger);
+	else if (settings.scopeMode === 'siblings' || settings.scopeMode === 'sibling') settings.trigger = selector.siblings(settings.scope).find(settings.trigger);
+	else settings.trigger = $(doc).find(settings.scope).find(settings.trigger);
+
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
 		settings.triggerValue = settings.triggerValue.split(',');
 
@@ -129,6 +134,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';
-		return value.trim();
+		if (typeof value === 'string') value = value.trim();
+		return value;
 	}
 };

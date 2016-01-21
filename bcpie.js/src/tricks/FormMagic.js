@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2015.12.16',
+		version: '2016.01.15',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -850,11 +850,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 	// Activate submitEvent
 	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
-		submitField = selector.find(settings.submitField);
-		if (submitField.length > 0) {
-			selector.on(settings.submitEvent,settings.submitField,function(){
-				selector.submit();
-			});
-		}
+		selector.on(settings.submitEvent,settings.submitField,function(){
+			selector.submit();
+		});
 	}
 };

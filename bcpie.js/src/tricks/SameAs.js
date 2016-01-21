@@ -23,6 +23,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			copyType : 'simple', // concat,math,simple
 			decimals : '', // rounds numbers to specified decimal when copyType is set to math
 			scope : 'form', // Uses 'form' or css selectors as values
+			scopeMode : 'find', // or 'closest', 'sibling'
 			event : 'change', // specify the event that triggers the copy
 			eventNamespace: 'sameas', // specify an event to trigger when the trick is finished.
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
@@ -33,7 +34,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	});
 
 	// Setup our variables
-	var copyGroup = (settings.scope === 'form') ? selector.closest('form') : $(doc).find(settings.scope);
+	if (settings.scope === 'form') var copyGroup = selector.closest('form');
+	else if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
+	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
+	else var copyGroup = $(doc).find(settings.scope);
 
 	if (copyGroup.length > 0) {
 		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
@@ -187,7 +191,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.copyType == "math") {
 			try {
 				expr = Parser.parse(strExpression);
-				return Math.round(expr.evaluate()*dec)/dec;
+				return ((Math.round(expr.evaluate()*dec)/dec)+0).toFixed(settings.decimals);
 			}
 			catch(e){
 				return strExpression.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
@@ -196,25 +200,29 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		function GetfieldVal(str){
 			var pattern = /\[.*?\]/g,
-				fieldSelectors = str.match(pattern);
+				fieldSelectors = str.match(pattern),
+				individualField;
 
 			for (var i = 0; i < fieldSelectors.length; i++) {
 				copyFields.push(copyGroup.find(fieldSelectors[i].replace('[','['+settings.attributeType+'="').replace(']','"]')));
+				value = '',combinedVal = '';
+				for (var e = 0; e < copyFields[i].length; e++) {
+					individualField = $(copyFields[i][e]);
+					if (individualField.is('select')) value = individualField.find('option').filter(':selected');
+					else if (individualField.is('radio') || individualField.is('checkbox')) value = individualField.filter(':checked');
+					else value = individualField;
 
-				if (copyFields[i].is('select')) value = copyFields[i].find('option').filter(':selected');
-				else if (copyFields[i].is('radio') || copyFields[i].is('checkbox')) value = copyFields[i].filter(':checked');
-				else value = copyFields[i];
+					if (settings.ref === 'text') value = value.text();
+					else if (settings.ref === 'value') value = value.val();
+					else if (settings.ref === 'html') value = value.html();
+					else value = value.attr(settings.ref);
 
-				if (settings.ref === 'text') value = value.text();
-				else if (settings.ref === 'value') value = value.val();
-				else if (settings.ref === 'html') value = value.html();
-				else value = value.attr(settings.ref);
-
-				if (typeof value !== 'undefined') {
-					if (settings.trim === true) value = value.trim();
-
-					str = str.replace(fieldSelectors[i],value);
+					if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
+					if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;
+					else if (settings.copyType === 'concat' && e > 0) combinedVal += value;
+					else combinedVal = value;
 				}
+				if (typeof combinedVal !== 'undefined') str = str.replace(fieldSelectors[i],combinedVal);
 			}
 
 			return str;

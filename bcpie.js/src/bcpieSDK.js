@@ -708,11 +708,12 @@ win.bcpie = {
 				return selector.data('bcpie-'+settings.name.toLowerCase()+'-settings');
 			}
 		},
-		engine: function() {
+		engine: function(scope) {
+			if (typeof scope === 'undefined') scope = $(doc);
 			var tricks = bcpie.extensions.tricks,trick,instances,instance,arr=[],str="",options={},module = [],functions = {},defaults = {};
 			for (trick in tricks) {
 				arr=[];str="";options={};module = [];functions = {};defaults = {};
-				instances = $(doc).find('[data-bcpie-'+trick.toLowerCase()+']');
+				instances = scope.find('[data-bcpie-'+trick.toLowerCase()+']');
 				for (var a = 0; a<instances.length; a++) {
 					options = {};instance = $(instances[a]);
 					str = instance.data('bcpie-'+trick.toLowerCase());
