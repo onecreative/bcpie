@@ -374,7 +374,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					options.method = 'GET';
 					options.mimeType = 'application/json';
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
@@ -388,7 +388,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					if (bcpie.ajax.token().length > 10) {
 						options.data = JSON.stringify(data.content);
 						options.processData = false;
@@ -408,7 +408,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					options.method = 'DELETE';
 					return bcpie.utils.ajax(options);
 				},

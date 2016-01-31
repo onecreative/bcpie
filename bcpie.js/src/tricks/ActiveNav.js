@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.11.12',
+		version: '2016.01.30',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -159,6 +159,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 				selector.children('ul').addClass(settings.levelClass.names);
 			}
 		}
+		if (settings.level === 1 && activeLinks.length === 0 && $.trim(settings.removeClass.names).length > 0) selector.removeClass(settings.removeClass.names);
 	}
 
 	function outOfView(elem) {

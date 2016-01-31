@@ -11808,7 +11808,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					options.method = 'GET';
 					options.mimeType = 'application/json';
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
@@ -11822,7 +11822,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					if (bcpie.ajax.token().length > 10) {
 						options.data = JSON.stringify(data.content);
 						options.processData = false;
@@ -11842,7 +11842,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+customerID;
+					if (data.customerID !== null) options.url += '/'+data.customerID;
 					options.method = 'DELETE';
 					return bcpie.utils.ajax(options);
 				},
@@ -12193,7 +12193,7 @@ $(function() {
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2015.11.12',
+		version: '2016.01.30',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -12344,6 +12344,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 				selector.children('ul').addClass(settings.levelClass.names);
 			}
 		}
+		if (settings.level === 1 && activeLinks.length === 0 && $.trim(settings.removeClass.names).length > 0) selector.removeClass(settings.removeClass.names);
 	}
 
 	function outOfView(elem) {
@@ -12697,7 +12698,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.01.15',
+		version: '2016.01.25',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -12725,6 +12726,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
+			'onStep' : null, // specify a function to run on multistep step (either direction)
+			'onBack' : null, // specify a function to run on step backwards
+			'onContinue' : null, // specify a function to run on step forward
 			'steps' : '', // multistep container selectors, separated by comma
 			'continueButton' : '', // Continue button selector for multistep form
 			'backButton' : '', // back button selector for multistep form
@@ -13229,51 +13233,68 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					url: thisURL,
 					data: selector.serialize(),
 					success: function(response,status,xhr) {
-						if (loggingIn === true) {
-							$.ajax({
-								url: otherURL,
-								method:'POST',
-								dataType:'jsonp',
-								data: {
-									Username: selector.find('[name=Username]').val(),
-									Password: selector.find('[name=Password]').val()
-								}
-							});
+
+						// Retrieve Message
+						var messageClass = '';
+						if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
+						else if (response.indexOf(settings.systemErrorMessageClass) > 0) {
+							messageClass = settings.systemErrorMessageClass;
+							errorCount += 1;
 						}
-						if (settings.successMessage !== null) {
-							alertify.success(settings.successMessage);
+
+						if (messageClass !== '') {
+							if ($(response).is('.'+messageClass)) msg = $(response);
+							else msg = $(response).find('.'+messageClass);
+						}else if ($(response).is('font')) msg = $(response);
+
+						if ($(msg).size() > 0) successMessage = msg;
+						else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
+
+						// Response Status
+						if (errorCount > 0) {
+							if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
+							else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
+							else alertify.error('Unsuccessful.');
+							submitCount = 0;
+							lockSubmit = false;
 						}else {
-							var messageClass = '';
-							if (response.indexOf(settings.systemMessageClass) > 0) messageClass = settings.systemMessageClass;
-							else if (response.indexOf(settings.systemErrorMessageClass) > 0) messageClass = settings.systemErrorMessageClass;
+							if (loggingIn === true) {
+								$.ajax({
+									url: otherURL,
+									method:'POST',
+									dataType:'jsonp',
+									data: {
+										Username: selector.find('[name=Username]').val(),
+										Password: selector.find('[name=Password]').val()
+									}
+								});
+							}
 
-							if (messageClass !== '') msg = $(response).find('.'+messageClass);
-							else if ($(response).is('font') || $(response).is('.'+messageClass)) msg = $(response);
+							// Show Success Message
+							if (settings.successMessage !== null) alertify.success(settings.successMessage);
+							else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
+							else alertify.success('Success!');
 
-							if ($(msg).size() > 0) successMessage = msg;
-							else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
-
-							showSuccess(selector,successMessage);
-						}
-
-						if (response.indexOf(settings.systemMessageClass) > 0 && settings.ajaxSuccess !== null) {
-							if (settings.ajaxSuccess === 'refresh') win.location.reload();
-							else bcpie.utils.executeCallback({
+							// Callbacks
+							if (errorCount === 0 && settings.ajaxSuccess !== null) {
+								if (settings.ajaxSuccess === 'refresh') win.location.reload();
+								else bcpie.utils.executeCallback({
+										selector: selector,
+										settings: settings,
+										callback: settings.ajaxSuccess,
+										content: response,
+										status: status,
+										xhr: xhr
+									});
+							}else if (errorCount > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
 									selector: selector,
 									settings: settings,
-									callback: settings.ajaxSuccess,
-									content: response,
+									callback: window[settings.ajaxError],
+									content: error,
 									status: status,
 									xhr: xhr
 								});
-						}else if (response.indexOf(settings.systemErrorMessageClass) > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
-								selector: selector,
-								settings: settings,
-								callback: window[settings.ajaxError],
-								content: error,
-								status: status,
-								xhr: xhr
-							});
+						}
 					},
 					error: function(xhr,status,error) {
 						if (settings.successMessage !== null) alertify.error(settings.errorMessage);
@@ -13463,8 +13484,23 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			for (var i = 0; i<required.length; i++) {
 				runValidation(required[i],i,required.length);
 			}
-			if (errorCount === 0) moveToContainer(++multistep.step);
-			else if (settings.validateMode === 'inline') {
+			if (errorCount === 0) {
+				moveToContainer(++multistep.step);
+				if (settings.onStep !== null) {
+					bcpie.utils.executeCallback({
+					selector: selector,
+					settings: settings,
+					callback: settings.onStep
+				});
+				}
+				if (settings.onContinue !== null) {
+					bcpie.utils.executeCallback({
+					selector: selector,
+					settings: settings,
+					callback: settings.onContinue
+				});
+				}
+			}else if (settings.validateMode === 'inline') {
 				// Now that submission has been attempted, allow active field validation.
 				activeValidation(selector.find(multistep.containers[multistep.step]));
 			}
@@ -13476,6 +13512,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				resetRequiredField(required[i]);
 			}
 			moveToContainer(--multistep.step);
+			if (settings.onBack !== null) {
+				bcpie.utils.executeCallback({
+					selector: selector,
+					settings: settings,
+					callback: settings.onBack
+				});
+			}
 		});
 
 		// prevent the enter key from submitting the form until the last step
