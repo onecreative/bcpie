@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.12.11',
+		version: '2016.02.02',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -41,7 +41,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	if (copyGroup.length > 0) {
 		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
-			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
+			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value,boolean;
 
 		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
 		if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
@@ -104,10 +104,12 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	function copyVal(selector,copyFields) {
 		if(settings.copyType == "simple"){
+			boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
 
 			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
-			else if (copyFields[0].is('radio') || copyFields[0].is('checkbox')) value = copyFields[0].filter(':checked');
+			else if (copyFields[0].is('input[type=radio]') || copyFields[0].is('input[type=checkbox]')) value = copyFields[0].filter(':checked');
 			else value = copyFields[0];
+
 
 			if (settings.ref === 'text') value = value.text();
 			else if (settings.ref === 'value') value = value.val();
@@ -129,14 +131,16 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		}
 
 		if (settings.target === 'text' || settings.target === 'value') {
-			if (selector.is('select,textarea,input')) selector.val(value);
+			if (boolean === true) {
+				if (copyFields[0].is(':checked')) selector.prop('checked',true);
+				else selector.prop('checked',false);
+			}else if (selector.is('select,textarea,input')) selector.val(value);
 			else selector.text(value);
 		}else {
 			selector.attr(settings.target,value);
 		}
 
-
-		if (selector.data('sameAsLastVal') !== selector.val()) {
+		if (selector.data('sameAsLastVal') !== selector.val() || boolean === true) {
 			selector.trigger(settings.event+settings.eventNamespace);
 			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
@@ -209,7 +213,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				for (var e = 0; e < copyFields[i].length; e++) {
 					individualField = $(copyFields[i][e]);
 					if (individualField.is('select')) value = individualField.find('option').filter(':selected');
-					else if (individualField.is('radio') || individualField.is('checkbox')) value = individualField.filter(':checked');
+					else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
 					else value = individualField;
 
 					if (settings.ref === 'text') value = value.text();

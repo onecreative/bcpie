@@ -562,9 +562,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 						// Response Status
 						if (errorCount > 0) {
-							if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
-							else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
-							else alertify.error('Unsuccessful.');
+							if (settings.messageMode !== 'off') {
+								if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
+								else alertify.error('Unsuccessful.');
+							}
 							submitCount = 0;
 							lockSubmit = false;
 						}else {
@@ -581,9 +583,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							}
 
 							// Show Success Message
-							if (settings.successMessage !== null) alertify.success(settings.successMessage);
-							else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
-							else alertify.success('Success!');
+							if (settings.messageMode !== 'off') {
+								if (settings.successMessage !== null) alertify.success(settings.successMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
+								// else alertify.success('Success!');
+							}
 
 							// Callbacks
 							if (errorCount === 0 && settings.ajaxSuccess !== null) {
@@ -607,7 +611,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						}
 					},
 					error: function(xhr,status,error) {
-						if (settings.successMessage !== null) alertify.error(settings.errorMessage);
+						if (settings.successMessage !== null && settings.messageMode !== 'off') alertify.error(settings.errorMessage);
 						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
 								selector: selector,
 								settings: settings,

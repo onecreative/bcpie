@@ -11435,7 +11435,7 @@ var Parser = (function (scope) {
 ;var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2015.12.01',
+		sdk: '2016.01.04',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -11578,7 +11578,7 @@ win.bcpie = {
 
 					if (typeof options !== 'object') options = {};
 
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
 						if (data.item !== null) options.url += '/'+data.item;
 						options.headers = {Authorization: bcpie.ajax.token()};
@@ -11677,7 +11677,7 @@ win.bcpie = {
 
 					if (typeof options !== 'object') options = {};
 
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
 						options.headers = {Authorization: bcpie.ajax.token()};
 						options.method = 'DELETE';
@@ -11783,18 +11783,18 @@ win.bcpie = {
 				data.errors = [];
 				if (typeof data.webapp !== 'undefined') {
 					if (data.webapp === null) data.errors.push('"webapp" parameter cannot be null.');
-					else if (data.webapp.toString().match(/\D/g) === null && bcpie.ajax.token().length > 10) data.errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
-					else if (data.webapp.toString().match(/\D/g) !== null && bcpie.ajax.token().length < 10) data.errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
+					else if (data.webapp.toString().match(/\D/g) === null && bcpie.utils.isAdmin() === true) data.errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
+					else if (data.webapp.toString().match(/\D/g) !== null && bcpie.utils.isAdmin() === false) data.errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
 				}
 				if (typeof data.item !== 'undefined') {
 					if (data.item === null) {
-						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.ajax.token().length < 10)) data.errors.push('"item" parameter cannot be null.');
+						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.utils.isAdmin() === false)) data.errors.push('"item" parameter cannot be null.');
 					}else if (data.item.toString().match(/\D/g) !== null) data.errors.push('"item" parameter must be an integer.');
 				}
 				if (typeof data.formID !== 'undefined') {
 					if (data.formID.toString().match(/\D/g) !== null) data.errors.push('"formID" parameter must be an integer.');
 				}
-				if (data.mode === 'get' && bcpie.ajax.token().length < 10) data.errors.push('"get" mode is for API use only.');
+				if (data.mode === 'get' && bcpie.utils.isAdmin() === false) data.errors.push('"get" mode is for API use only.');
 				return data.errors;
 			}
 		},
@@ -11823,7 +11823,7 @@ win.bcpie = {
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.data = JSON.stringify(data.content);
 						options.processData = false;
 						if (data.customerID !== null) options.method = 'PUT';
@@ -11896,6 +11896,7 @@ win.bcpie = {
 		}
 	},
 	utils: {
+		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null},
 		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
@@ -12103,7 +12104,7 @@ win.bcpie = {
 			settings.url = options.url || '';
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
-			if (bcpie.ajax.token().length > 10) settings.connection = options.connection || 'keep-alive';
+			if (bcpie.utils.isAdmin() === true) settings.connection = options.connection || 'keep-alive';
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
@@ -13252,9 +13253,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 						// Response Status
 						if (errorCount > 0) {
-							if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
-							else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
-							else alertify.error('Unsuccessful.');
+							if (settings.messageMode !== 'off') {
+								if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
+								else alertify.error('Unsuccessful.');
+							}
 							submitCount = 0;
 							lockSubmit = false;
 						}else {
@@ -13271,9 +13274,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							}
 
 							// Show Success Message
-							if (settings.successMessage !== null) alertify.success(settings.successMessage);
-							else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
-							else alertify.success('Success!');
+							if (settings.messageMode !== 'off') {
+								if (settings.successMessage !== null) alertify.success(settings.successMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
+								// else alertify.success('Success!');
+							}
 
 							// Callbacks
 							if (errorCount === 0 && settings.ajaxSuccess !== null) {
@@ -13297,7 +13302,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						}
 					},
 					error: function(xhr,status,error) {
-						if (settings.successMessage !== null) alertify.error(settings.errorMessage);
+						if (settings.successMessage !== null && settings.messageMode !== 'off') alertify.error(settings.errorMessage);
 						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
 								selector: selector,
 								settings: settings,
@@ -13621,7 +13626,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2015.12.11',
+		version: '2016.02.02',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -13654,7 +13659,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	if (copyGroup.length > 0) {
 		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
-			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value;
+			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value,boolean;
 
 		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
 		if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
@@ -13717,10 +13722,12 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	function copyVal(selector,copyFields) {
 		if(settings.copyType == "simple"){
+			boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
 
 			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
-			else if (copyFields[0].is('radio') || copyFields[0].is('checkbox')) value = copyFields[0].filter(':checked');
+			else if (copyFields[0].is('input[type=radio]') || copyFields[0].is('input[type=checkbox]')) value = copyFields[0].filter(':checked');
 			else value = copyFields[0];
+
 
 			if (settings.ref === 'text') value = value.text();
 			else if (settings.ref === 'value') value = value.val();
@@ -13742,14 +13749,16 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		}
 
 		if (settings.target === 'text' || settings.target === 'value') {
-			if (selector.is('select,textarea,input')) selector.val(value);
+			if (boolean === true) {
+				if (copyFields[0].is(':checked')) selector.prop('checked',true);
+				else selector.prop('checked',false);
+			}else if (selector.is('select,textarea,input')) selector.val(value);
 			else selector.text(value);
 		}else {
 			selector.attr(settings.target,value);
 		}
 
-
-		if (selector.data('sameAsLastVal') !== selector.val()) {
+		if (selector.data('sameAsLastVal') !== selector.val() || boolean === true) {
 			selector.trigger(settings.event+settings.eventNamespace);
 			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());
@@ -13822,7 +13831,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				for (var e = 0; e < copyFields[i].length; e++) {
 					individualField = $(copyFields[i][e]);
 					if (individualField.is('select')) value = individualField.find('option').filter(':selected');
-					else if (individualField.is('radio') || individualField.is('checkbox')) value = individualField.filter(':checked');
+					else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
 					else value = individualField;
 
 					if (settings.ref === 'text') value = value.text();
@@ -13968,7 +13977,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.01.12',
+		version: '2016.02.02',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -14057,8 +14066,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (selector.is('input,select,textarea')) selector.val(state)
 			else selector.text(state);
 
-			selector.trigger(settings.event+settings.eventNamespace);
-			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+			if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 		}
 	}
 	function changeTrigger(){

@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.01.12',
+		version: '2016.02.02',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -97,8 +97,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			if (selector.is('input,select,textarea')) selector.val(state)
 			else selector.text(state);
 
-			selector.trigger(settings.event+settings.eventNamespace);
-			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+			if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 		}
 	}
 	function changeTrigger(){

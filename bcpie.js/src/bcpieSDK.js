@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2015.12.01',
+		sdk: '2016.01.04',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -144,7 +144,7 @@ win.bcpie = {
 
 					if (typeof options !== 'object') options = {};
 
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
 						if (data.item !== null) options.url += '/'+data.item;
 						options.headers = {Authorization: bcpie.ajax.token()};
@@ -243,7 +243,7 @@ win.bcpie = {
 
 					if (typeof options !== 'object') options = {};
 
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
 						options.headers = {Authorization: bcpie.ajax.token()};
 						options.method = 'DELETE';
@@ -349,18 +349,18 @@ win.bcpie = {
 				data.errors = [];
 				if (typeof data.webapp !== 'undefined') {
 					if (data.webapp === null) data.errors.push('"webapp" parameter cannot be null.');
-					else if (data.webapp.toString().match(/\D/g) === null && bcpie.ajax.token().length > 10) data.errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
-					else if (data.webapp.toString().match(/\D/g) !== null && bcpie.ajax.token().length < 10) data.errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
+					else if (data.webapp.toString().match(/\D/g) === null && bcpie.utils.isAdmin() === true) data.errors.push('For API use, the "webapp" parameter should be the Web App name, not the ID.');
+					else if (data.webapp.toString().match(/\D/g) !== null && bcpie.utils.isAdmin() === false) data.errors.push('For non-API use, the "webapp" parameter should be the Web App ID, not the name.');
 				}
 				if (typeof data.item !== 'undefined') {
 					if (data.item === null) {
-						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.ajax.token().length < 10)) data.errors.push('"item" parameter cannot be null.');
+						if (data.mode === 'get' || data.mode === 'delete' || (data.mode === 'save' && bcpie.utils.isAdmin() === false)) data.errors.push('"item" parameter cannot be null.');
 					}else if (data.item.toString().match(/\D/g) !== null) data.errors.push('"item" parameter must be an integer.');
 				}
 				if (typeof data.formID !== 'undefined') {
 					if (data.formID.toString().match(/\D/g) !== null) data.errors.push('"formID" parameter must be an integer.');
 				}
-				if (data.mode === 'get' && bcpie.ajax.token().length < 10) data.errors.push('"get" mode is for API use only.');
+				if (data.mode === 'get' && bcpie.utils.isAdmin() === false) data.errors.push('"get" mode is for API use only.');
 				return data.errors;
 			}
 		},
@@ -389,7 +389,7 @@ win.bcpie = {
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
-					if (bcpie.ajax.token().length > 10) {
+					if (bcpie.utils.isAdmin() === true) {
 						options.data = JSON.stringify(data.content);
 						options.processData = false;
 						if (data.customerID !== null) options.method = 'PUT';
@@ -462,6 +462,7 @@ win.bcpie = {
 		}
 	},
 	utils: {
+		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null},
 		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
@@ -669,7 +670,7 @@ win.bcpie = {
 			settings.url = options.url || '';
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
-			if (bcpie.ajax.token().length > 10) settings.connection = options.connection || 'keep-alive';
+			if (bcpie.utils.isAdmin() === true) settings.connection = options.connection || 'keep-alive';
 			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
