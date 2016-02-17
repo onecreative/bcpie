@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.02.02',
+		version: '2016.02.11',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -40,7 +40,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	else var copyGroup = $(doc).find(settings.scope);
 
 	if (copyGroup.length > 0) {
-		var copyField, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
+		var copyField, changed, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
 			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value,boolean;
 
 		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
@@ -103,6 +103,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	}
 
 	function copyVal(selector,copyFields) {
+		changed = false;
 		if(settings.copyType == "simple"){
 			boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
 
@@ -132,15 +133,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		if (settings.target === 'text' || settings.target === 'value') {
 			if (boolean === true) {
-				if (copyFields[0].is(':checked')) selector.prop('checked',true);
-				else selector.prop('checked',false);
+				if (copyFields[0].is(':checked') && !selector.is(':checked')) {
+					selector.prop('checked',true);
+					changed = true;
+				}else if (!copyFields[0].is(':checked') && selector.is(':checked')) {
+					selector.prop('checked',false);
+					changed = true;
+				}
 			}else if (selector.is('select,textarea,input')) selector.val(value);
 			else selector.text(value);
-		}else {
-			selector.attr(settings.target,value);
-		}
+		}else selector.attr(settings.target,value);
 
-		if (selector.data('sameAsLastVal') !== selector.val() || boolean === true) {
+		if (boolean === false && selector.data('sameAsLastVal') !== selector.val()) changed = true;
+		
+		if (changed === true) {
 			selector.trigger(settings.event+settings.eventNamespace);
 			if (settings.event !== 'change' && selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
 			selector.data('sameAsLastVal',selector.val());

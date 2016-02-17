@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.01.25',
+		version: '2016.02.12',
 		defaults: {
 			'requiredClass' : 'required',
 			'errorGroupElement' : 'div',
@@ -557,7 +557,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							else msg = $(response).find('.'+messageClass);
 						}else if ($(response).is('font')) msg = $(response);
 
-						if ($(msg).size() > 0) successMessage = msg;
+						if (typeof msg.size !== 'undefined' && messageClass !== '') successMessage = msg.filter('.'+messageClass);
 						else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
 
 						// Response Status
