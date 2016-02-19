@@ -11435,7 +11435,7 @@ var Parser = (function (scope) {
 ;var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.01.04',
+		sdk: '2016.02.18',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -11766,7 +11766,8 @@ win.bcpie = {
 
 				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
 				options.data = $.param(data.content);
-				options.contentType = false;
+				// options.contentType = false;
+				options.contentType = options.contentType || 'application/x-www-form-urlencoded'; /* is this better than false? */ 
 				options.method = 'POST';
 				return bcpie.utils.ajax(options);
 				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
@@ -13626,7 +13627,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.02.11',
+		version: '2016.02.18',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -13647,7 +13648,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			ref : 'value', // html attribute or 'text'. Default is 'value'.
 			target: 'value', // html attribute or 'text'. Default is 'value'.
 			trim: false,
-			convert: null // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: null, // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
+			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
 		}
 	});
 
@@ -13656,6 +13658,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	else if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
 	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
 	else var copyGroup = $(doc).find(settings.scope);
+
+	if (settings.target === 'text' || settings.target === 'value') {
+		if (selector.is('select,textarea,input')) settings.target = 'value';
+		else settings.target = 'text';
+	}
 
 	if (copyGroup.length > 0) {
 		var copyField, changed, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
@@ -13707,8 +13714,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				}
 			}
 		}else {
-			copyVal(selector,copyFields);
-			inputChange(selector,copyFields);
+			if (settings.loadEvent === true) {
+				copyVal(selector,copyFields);
+				inputChange(selector,copyFields);
+			}
 			if (settings.breakOnChange !== false) {
 				selector.on(settings.event+settings.eventNamespace,function() {
 					for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -13722,9 +13731,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 	function copyVal(selector,copyFields) {
 		changed = false;
+		boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
 		if(settings.copyType == "simple"){
-			boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
-
 			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
 			else if (copyFields[0].is('input[type=radio]') || copyFields[0].is('input[type=checkbox]')) value = copyFields[0].filter(':checked');
 			else value = copyFields[0];
@@ -13758,11 +13766,15 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 					selector.prop('checked',false);
 					changed = true;
 				}
-			}else if (selector.is('select,textarea,input')) selector.val(value);
+			}else if (settings.target === 'value') selector.val(value);
 			else selector.text(value);
 		}else selector.attr(settings.target,value);
 
-		if (boolean === false && selector.data('sameAsLastVal') !== selector.val()) changed = true;
+		if (boolean === false) {
+			if (settings.target === 'value' && selector.data('sameAsLastVal') !== selector.val()) changed = true;
+			else if (settings.target === 'text' && selector.data('sameAsLastVal') !== selector.text()) changed = true;
+			else if (selector.data('sameAsLastVal') !== selector.attr(settings.target)) changed = true;
+		}
 		
 		if (changed === true) {
 			selector.trigger(settings.event+settings.eventNamespace);
@@ -13983,7 +13995,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.02.02',
+		version: '2016.02.18',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -13999,8 +14011,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			toggle: true, // if true, on and off states will be toggled on events. Otherwise, only the on state will occur.
 			onCallback: '', // on callback
 			offCallback: '', // off callback
-			onValue: null, // specify default value when trigger is on
-			offValue: null // specify default value when trigger is off
+			onValue: null, // specify default value when trigger is on, or use 'boolean' to indicate a checked state.
+			offValue: null, // specify default value when trigger is off
+			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
 		}
 	});
 
@@ -14028,10 +14041,10 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
 	if (settings.event === 'change') {
-		changeTrigger();
+		if (settings.loadEvent === true) changeTrigger();
 		settings.trigger.on(settings.event,changeTrigger);
 	}else {
-		executeTrigger(settings.state);
+		if (settings.loadEvent === true) executeTrigger(settings.state);
 		settings.trigger.on(settings.event,function(){
 			if (selector.data('bcpie-trigger-state') === 'off') {
 				selector.data('bcpie-trigger-state','on');
@@ -14066,14 +14079,20 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	}
 	function changeValue(state) {
-		if (state === 'off') state = settings.offValue;
-		else if (state === 'on') state = settings.onValue;
-		if (state !== null) {
-			if (selector.is('input,select,textarea')) selector.val(state)
-			else selector.text(state);
-
-			if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+		if (settings.onValue === 'boolean' && selector.is('[type=checkbox]') && state === 'on') {
+			selector.prop('checked',true).attr('checked','checked');
+		}else if (settings.offValue === 'boolean' && selector.is('[type=checkbox]') && state === 'off') {
+			selector.prop('checked',false).removeAttr('checked');
+		}else {
+			if (state === 'off') state = settings.offValue;
+			else if (state === 'on') state = settings.onValue;
+			if (state !== null) {
+				if (selector.is('input,select,textarea')) selector.val(state);
+				else selector.text(state);
+			}
 		}
+		if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+		
 	}
 	function changeTrigger(){
 		var matchedValues;
@@ -14105,7 +14124,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			}else value = triggerElement.val();
 		}
 		else {
-			value = triggerElement.attr(settings.triggerAttr);
+			if (triggerElement.is('select')) {
+				value = triggerElement.find('option').filter(':selected').attr(settings.triggerAttr);
+			}else value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';
 		if (typeof value === 'string') value = value.trim();

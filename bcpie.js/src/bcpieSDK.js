@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.01.04',
+		sdk: '2016.02.18',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -332,7 +332,8 @@ win.bcpie = {
 
 				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
 				options.data = $.param(data.content);
-				options.contentType = false;
+				// options.contentType = false;
+				options.contentType = options.contentType || 'application/x-www-form-urlencoded'; /* is this better than false? */ 
 				options.method = 'POST';
 				return bcpie.utils.ajax(options);
 				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');

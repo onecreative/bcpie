@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.02.02',
+		version: '2016.02.18',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -24,8 +24,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			toggle: true, // if true, on and off states will be toggled on events. Otherwise, only the on state will occur.
 			onCallback: '', // on callback
 			offCallback: '', // off callback
-			onValue: null, // specify default value when trigger is on
-			offValue: null // specify default value when trigger is off
+			onValue: null, // specify default value when trigger is on, or use 'boolean' to indicate a checked state.
+			offValue: null, // specify default value when trigger is off
+			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
 		}
 	});
 
@@ -53,10 +54,10 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
 	if (settings.event === 'change') {
-		changeTrigger();
+		if (settings.loadEvent === true) changeTrigger();
 		settings.trigger.on(settings.event,changeTrigger);
 	}else {
-		executeTrigger(settings.state);
+		if (settings.loadEvent === true) executeTrigger(settings.state);
 		settings.trigger.on(settings.event,function(){
 			if (selector.data('bcpie-trigger-state') === 'off') {
 				selector.data('bcpie-trigger-state','on');
@@ -91,14 +92,20 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	}
 	function changeValue(state) {
-		if (state === 'off') state = settings.offValue;
-		else if (state === 'on') state = settings.onValue;
-		if (state !== null) {
-			if (selector.is('input,select,textarea')) selector.val(state)
-			else selector.text(state);
-
-			if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+		if (settings.onValue === 'boolean' && selector.is('[type=checkbox]') && state === 'on') {
+			selector.prop('checked',true).attr('checked','checked');
+		}else if (settings.offValue === 'boolean' && selector.is('[type=checkbox]') && state === 'off') {
+			selector.prop('checked',false).removeAttr('checked');
+		}else {
+			if (state === 'off') state = settings.offValue;
+			else if (state === 'on') state = settings.onValue;
+			if (state !== null) {
+				if (selector.is('input,select,textarea')) selector.val(state);
+				else selector.text(state);
+			}
 		}
+		if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+		
 	}
 	function changeTrigger(){
 		var matchedValues;
@@ -130,7 +137,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			}else value = triggerElement.val();
 		}
 		else {
-			value = triggerElement.attr(settings.triggerAttr);
+			if (triggerElement.is('select')) {
+				value = triggerElement.find('option').filter(':selected').attr(settings.triggerAttr);
+			}else value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';
 		if (typeof value === 'string') value = value.trim();
