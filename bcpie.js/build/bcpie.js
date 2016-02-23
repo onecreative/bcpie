@@ -13521,27 +13521,27 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
 								// else alertify.success('Success!');
 							}
+						}
 
-							// Callbacks
-							if (errorCount === 0 && settings.ajaxSuccess !== null) {
-								if (settings.ajaxSuccess === 'refresh') win.location.reload();
-								else bcpie.utils.executeCallback({
-										selector: selector,
-										settings: settings,
-										callback: settings.ajaxSuccess,
-										content: response,
-										status: status,
-										xhr: xhr
-									});
-							}else if (errorCount > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
+						// Callbacks
+						if (errorCount === 0 && settings.ajaxSuccess !== null) {
+							if (settings.ajaxSuccess === 'refresh') win.location.reload();
+							else bcpie.utils.executeCallback({
 									selector: selector,
 									settings: settings,
-									callback: window[settings.ajaxError],
-									content: error,
+									callback: settings.ajaxSuccess,
+									content: response,
 									status: status,
 									xhr: xhr
 								});
-						}
+						}else if (errorCount > 0 && settings.ajaxError !== null) bcpie.utils.executeCallback({
+								selector: selector,
+								settings: settings,
+								callback: window[settings.ajaxError],
+								content: error,
+								status: status,
+								xhr: xhr
+							});
 					},
 					error: function(xhr,status,error) {
 						if (settings.successMessage !== null && settings.messageMode !== 'off') alertify.error(settings.errorMessage);
