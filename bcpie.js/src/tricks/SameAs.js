@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.02.18',
+		version: '2016.02.26',
 		defaults: {
 			bothWays : false,
 			attributeType : 'name',
@@ -149,7 +149,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				}
 			}else if (settings.target === 'value') selector.val(value);
 			else selector.text(value);
-		}else selector.attr(settings.target,value);
+		}else selector.attr(settings.target,value).prop(settings.target,value);
 
 		if (boolean === false) {
 			if (settings.target === 'value' && selector.data('sameAsLastVal') !== selector.val()) changed = true;
