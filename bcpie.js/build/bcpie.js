@@ -11965,11 +11965,37 @@ win.bcpie = {
 		},
 		webapp: {
 			item: {
-				get :function(data,options) {
+				all: function(data,options) {
+					if (typeof options === 'undefined') options = {};
+					data = {
+						webapp: data.webapp || null, // integer, string
+						item: null, // doesn't accept an item value
+						filters: data.filters || {}, // object
+						items: data.items || [],
+						finished: data.finished || false
+					}
+					options.async = false;
+					if (data.finished === false) {
+						var response = bcpie.ajax.webapp.item.get(data,options).responseJSON;
+						data.items = data.items.concat(response.items);
+						if (response.links[2].uri !== null) data.filters.skip = response.links[2].uri.split('skip=')[1].split('&')[0];
+						else data.finished = true;
+						return bcpie.ajax.webapp.item.all(data,options);
+					};
+					if (data.finished ===true) {
+						return {
+							totalItemsCount: data.items.length,
+							items: data.items,
+							skip: 0,
+							limit: data.items.length
+						}
+					}
+				},
+				get: function(data,options) {
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null, // integer
-						filters: data.filters || null // object
+						filters: data.filters || {} // object
 					}
 
 					// Catch data errors
@@ -11979,7 +12005,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
 					if (data.item !== null) options.url += '/'+data.item;
-					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
+					else options.url += bcpie.utils.filters(data.filters);
 					options.headers = {Authorization: bcpie.ajax.token()};
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
