@@ -29,8 +29,10 @@ win.bcpie = {
 
 				if (typeof options !== 'object') options = {};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
-				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
-
+				if (data.path.split('/').pop().indexOf('.') === -1) {
+					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
+					data.path = data.path+'?meta';
+				}
 				options.url = '/api/v2/admin/sites/current/storage'+data.path;
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.method = 'GET';
@@ -72,12 +74,14 @@ win.bcpie = {
 			},
 			delete: function(data,options) {
 				data = {
-					path: data.path || '' // string
+					path: data.path || '', // string
+					force: data.force || '' // folders only
 				}
 
 				if (typeof options !== 'object') options = {};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
+				if (data.force !== '') data.path = data.path+'&force='+data.force;
 
 				options.url = '/api/v2/admin/sites/current/storage'+data.path;
 				options.headers = {Authorization: bcpie.ajax.token()};
@@ -96,18 +100,11 @@ win.bcpie = {
 		},
 		folder: {
 			get: function(data,options) {
-				data = {
-					path: data.path || ''
-				}
-				if (typeof options !== 'object') options = {};
-
-				if (data.path.charAt(0) === '/') data.path.slice(1, data.path.length - 1);
-				if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
-
-				options.url = '/api/v2/admin/sites/current/storage/'+data.path+'?meta';
-				options.method = 'GET';
-				options.headers = {Authorization: bcpie.ajax.token()};
-				return bcpie.utils.ajax(options);
+				return bcpie.ajax.file.get(data,options);
+			},
+			delete: function(data,options) {
+				data.force = data.force || false;
+				return bcpie.ajax.file.delete(data,options);
 			}
 		},
 		webapp: {
@@ -493,12 +490,19 @@ win.bcpie = {
 		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
-			bcpie.utils.jsonify.token = /[^,:{}\[\]]+/g;
+			bcpie.utils.jsonify.token = /[^,(:){}\[\]]+/g;
 			bcpie.utils.jsonify.quote = /^['"](.*)['"]$/;
 			bcpie.utils.jsonify.escap = /(["])/g;
-			// Wrap with `{}` if not JavaScript object literal
+			bcpie.utils.jsonify.comma = {};
+			bcpie.utils.jsonify.comma.curly = /,(\s*)}/g;
+			bcpie.utils.jsonify.comma.square = /,(\s*)]/g;
+
+			// Wrap with '{}' if not JavaScript object literal
 			str = $.trim(str);
 			if (bcpie.utils.jsonify.brace.test(str) === false) str = '{'+str+'}';
+
+			// Fix trailing commas
+			str = str.replace(bcpie.utils.jsonify.comma.curly, '}').replace(bcpie.utils.jsonify.comma.square, ']');
 
 			// Retrieve token and convert to JSON
 			return str.replace(bcpie.utils.jsonify.token, function (a) {
