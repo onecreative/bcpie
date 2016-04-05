@@ -11901,9 +11901,11 @@ win.bcpie = {
 
 				if (typeof options !== 'object') options = {};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
-				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
-
-				options.url = '/api/v2/admin/sites/current/storage'+data.path+'?version='+data.version;
+				
+				options.url = '/api/v2/admin/sites/current/storage'+data.path;
+				if (data.path.charAt(data.path.length - 1) === '/' || data.type === 'folder') options.url += '?type=folder';
+				else options.url += '?version='+data.version;
+				
 				options.headers = {Authorization: bcpie.ajax.token()};
 
 				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
@@ -11952,12 +11954,52 @@ win.bcpie = {
 			}
 		},
 		folder: {
-			get: function(data,options) {
-				return bcpie.ajax.file.get(data,options);
+			save: function(data,options) {
+				data.type = 'folder';
+				return bcpie.ajax.file.save(data,options);
 			},
 			delete: function(data,options) {
 				data.force = data.force || false;
 				return bcpie.ajax.file.delete(data,options);
+			},
+			get: function(data,options) {
+				return bcpie.ajax.file.get(data,options);
+			}
+		},
+		template: {
+			save: function(data,options) {
+				if (typeof options === 'undefined') options = {};
+				data = {
+					id: data.id || null,
+					content: {
+						categoryId: data.content.categoryId || -1,
+						name: data.content.name || null,
+						displayFileName: data.content.displayFileName || null,
+						printerView: data.content.printerView || false,
+						displayable: data.content.displayable || true,
+						enabled: data.content.enabled || true,
+						default: data.content.default || false,
+						noHeaders: data.content.noHeaders || true,
+						desktopContent: {
+							content: data.content.desktopContent || null
+						}
+					}
+				};
+
+				options.url = '/webresources/api/v3/sites/current/templates';
+				options.method = 'POST';
+				options.data = JSON.stringify(data.content);
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.mimeType = 'application/json';
+				options.processData = false;
+
+				if (data.id !== null) {
+					options.data.id = data.id;
+					options.url += '/'+data.id;
+					options.method = 'PUT';
+				}
+
+				return bcpie.utils.ajax(options);
 			}
 		},
 		webapp: {
