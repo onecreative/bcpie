@@ -1,8 +1,9 @@
 {module_pageaddress collection="pageaddress" template=""}{% assign pageaddress = pageaddress.pageurl | split: globals.site.host | last -%}
 {module_pagename collection="pagename" template=""}{% assign pagename = pagename.name | escape -%}
 {module_defaulturl collection="defaulturl" template=""}
-{% assign primaryDomain = defaulturl.defaulturl -%}
-{% if primaryDomain == '' -%}{% capture primaryDomain -%}{% if '{module_sitehost}' contains 'worldsecuresystems.com' -%}https://{% else -%}http://{% endif -%}{module_sitehost}{% endcapture -%}{% endif -%}
+{% if defaulturl.defaulturl == 'http://' || defaulturl.defaulturl == 'https://' -%}{% assign primaryDomain = '//' | append: globals.site.host -%}
+{% else -%}{% assign primaryDomain = defaulturl.defaulturl -%}
+{% endif -%}
 <script data-isloggedin="{module_isloggedin}">
 	var globals = {{globals|json}};
 		globals.pageName = '{{pagename}}';
