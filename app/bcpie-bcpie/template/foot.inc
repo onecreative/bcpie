@@ -9,4 +9,4 @@
 		globals.secureDomain = '{module_secureurl}';
 </script>
 <script src="{{root}}scripts/min/footScripts.min.js?24"></script>
-<script src="{{appRoot}}scripts/readyScripts.js?282"></script>
+<script src="{{appRoot}}scripts/readyScripts.js?283"></script>

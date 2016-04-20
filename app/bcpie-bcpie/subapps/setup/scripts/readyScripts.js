@@ -525,13 +525,11 @@ $(function() {
 				bcpie.ajax.file.get({path: '/Templates/1Col.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/1Col.html'}).done(function(data) {
 						bcpie.ajax.template.save({
-							content: {
-								name: '1Col',
-								displayFileName: '1Col.html',
-								printerView: true,
-								default: true,
-								desktopContent: data
-							}
+							name: '1Col',
+							displayFileName: '1Col.html',
+							printerView: true,
+							default: true,
+							desktopContent: data
 						});
 						
 					})
@@ -539,44 +537,36 @@ $(function() {
 				bcpie.ajax.file.get({path: '/Templates/2Col.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/2Col.html'}).done(function(data) {
 						bcpie.ajax.template.save({
-							content: {
-								name: '2Col',
-								displayFileName: '2Col.html',
-								desktopContent: data
-							}
+							name: '2Col',
+							displayFileName: '2Col.html',
+							desktopContent: data
 						});
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col-No-Title.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/1Col-No-Title.html'}).done(function(data) {
 						bcpie.ajax.template.save({
-							content: {
-								name: '1Col-No-Title',
-								displayFileName: '1Col-No-Title.html',
-								desktopContent: data
-							}
+							name: '1Col-No-Title',
+							displayFileName: '1Col-No-Title.html',
+							desktopContent: data
 						});
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col-No-Grid.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/1Col-No-Grid.html'}).done(function(data) {
 						bcpie.ajax.template.save({
-							content: {
-								name: '1Col-No-Grid',
-								displayFileName: '1Col-No-Grid.html',
-								desktopContent: data
-							}
+							name: '1Col-No-Grid',
+							displayFileName: '1Col-No-Grid.html',
+							desktopContent: data
 						});
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/2Col-No-Title.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/2Col-No-Title.html'}).done(function(data) {
 						bcpie.ajax.template.save({
-							content: {
-								name: '2Col-No-Title',
-								displayFileName: '2Col-No-Title.html',
-								desktopContent: data
-							}
+							name: '2Col-No-Title',
+							displayFileName: '2Col-No-Title.html',
+							desktopContent: data
 						});
 					})
 				});
