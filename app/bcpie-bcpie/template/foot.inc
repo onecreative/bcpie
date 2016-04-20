@@ -8,5 +8,5 @@
 		globals.primaryDomain = '{{defaulturl.defaulturl}}';
 		globals.secureDomain = '{module_secureurl}';
 </script>
-<script src="{{root}}scripts/min/footScripts.min.js?24"></script>
-<script src="{{appRoot}}scripts/readyScripts.js?283"></script>
+<script src="{{root}}scripts/min/footScripts.min.js?25"></script>
+<script src="{{appRoot}}scripts/readyScripts.js?284"></script>

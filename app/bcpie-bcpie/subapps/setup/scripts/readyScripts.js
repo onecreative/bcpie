@@ -529,7 +529,7 @@ $(function() {
 							displayFileName: '1Col.html',
 							printerView: true,
 							default: true,
-							desktopContent: data
+							content: data
 						});
 						
 					})
@@ -539,7 +539,7 @@ $(function() {
 						bcpie.ajax.template.save({
 							name: '2Col',
 							displayFileName: '2Col.html',
-							desktopContent: data
+							content: data
 						});
 					})
 				});
@@ -548,7 +548,7 @@ $(function() {
 						bcpie.ajax.template.save({
 							name: '1Col-No-Title',
 							displayFileName: '1Col-No-Title.html',
-							desktopContent: data
+							content: data
 						});
 					})
 				});
@@ -557,7 +557,7 @@ $(function() {
 						bcpie.ajax.template.save({
 							name: '1Col-No-Grid',
 							displayFileName: '1Col-No-Grid.html',
-							desktopContent: data
+							content: data
 						});
 					})
 				});
@@ -566,7 +566,7 @@ $(function() {
 						bcpie.ajax.template.save({
 							name: '2Col-No-Title',
 							displayFileName: '2Col-No-Title.html',
-							desktopContent: data
+							content: data
 						});
 					})
 				});
