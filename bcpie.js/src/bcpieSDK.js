@@ -23,11 +23,11 @@ win.bcpie = {
 		},
 		file: {
 			get: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					path: data.path || '' // string
 				}
-
-				if (typeof options !== 'object') options = {};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.split('/').pop().indexOf('.') === -1) {
 					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
@@ -40,13 +40,15 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 			},
 			save: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					path: data.path || '', // string
 					content: data.content || '', // file object, string
 					version: data.version || 'draft-publish' // 'draft', 'draft-publish'
 				}
 
-				if (typeof options !== 'object') options = {};
+				
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				
 				options.url = '/api/v2/admin/sites/current/storage'+data.path;
@@ -75,12 +77,12 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 			},
 			delete: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					path: data.path || '', // string
 					force: data.force || '' // folders only
 				}
-
-				if (typeof options !== 'object') options = {};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
 				if (data.force !== '') data.path = data.path+'&force='+data.force;
@@ -92,6 +94,7 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 			},
 			uploadStatus: function() {
+				if (typeof data === 'undefined') data = {};
 				if (typeof options !== 'object') options = {};
 				options.url = '/api/v2/admin/sites/current/storage?status';
 				options.method = 'GET';
@@ -102,49 +105,51 @@ win.bcpie = {
 		},
 		folder: {
 			save: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data.type = 'folder';
 				return bcpie.ajax.file.save(data,options);
 			},
 			delete: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data.force = data.force || false;
 				return bcpie.ajax.file.delete(data,options);
 			},
 			get: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				return bcpie.ajax.file.get(data,options);
 			}
 		},
 		template: {
 			save: function(data,options) {
 				if (typeof options === 'undefined') options = {};
+				if (typeof data === 'undefined') data = {};
+				if (typeof data.content === 'undefined') data.content = {};
 				data = {
 					id: data.id || null,
-					content: {
-						categoryId: data.content.categoryId || -1,
-						name: data.content.name || null,
-						displayFileName: data.content.displayFileName || null,
-						printerView: data.content.printerView || false,
-						displayable: data.content.displayable || true,
-						enabled: data.content.enabled || true,
-						default: data.content.default || false,
-						noHeaders: data.content.noHeaders || true,
-						desktopContent: {
-							content: data.content.desktopContent || null
-						}
-					}
+					categoryId: data.content.categoryId || -1,
+					name: data.content.name || null,
+					displayFileName: data.content.displayFileName || null,
+					printerView: data.content.printerView || false,
+					displayable: data.content.displayable || true,
+					enabled: data.content.enabled || true,
+					default: data.content.default || false,
+					noHeaders: data.content.noHeaders || true,
+					desktopContent: {content:data.content || null}
 				};
 
 				options.url = '/webresources/api/v3/sites/current/templates';
-				options.method = 'POST';
+				if (data.id !== null) {
+					options.url += '/'+data.id;
+					options.method = 'PUT';
+				}else options.method = 'POST';
+				delete data.id;
 				options.data = JSON.stringify(data.content);
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.mimeType = 'application/json';
 				options.processData = false;
-
-				if (data.id !== null) {
-					options.data.id = data.id;
-					options.url += '/'+data.id;
-					options.method = 'PUT';
-				}
 
 				return bcpie.utils.ajax(options);
 			}
@@ -152,7 +157,8 @@ win.bcpie = {
 		webapp: {
 			item: {
 				all: function(data,options) {
-					if (typeof options === 'undefined') options = {};
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: null, // doesn't accept an item value
@@ -178,6 +184,8 @@ win.bcpie = {
 					}
 				},
 				get: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null, // integer
@@ -188,7 +196,6 @@ win.bcpie = {
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
 
-					if (typeof options !== 'object') options = {};
 					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
 					if (data.item !== null) options.url += '/'+data.item;
 					else options.url += bcpie.utils.filters(data.filters);
@@ -197,6 +204,8 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				save: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						content: data.content || null,  // $, {}
 						webapp: data.webapp || null, // integer, string
@@ -206,8 +215,6 @@ win.bcpie = {
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return console.log(errors);
-
-					if (typeof options !== 'object') options = {};
 
 					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
@@ -297,6 +304,8 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				delete: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null // integer
@@ -305,8 +314,6 @@ win.bcpie = {
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
-
-					if (typeof options !== 'object') options = {};
 
 					if (bcpie.utils.isAdmin() === true) {
 						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item;
@@ -319,6 +326,8 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				categories: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						mode: data.mode.toLowerCase() || 'get', // 'get', 'save', delete
 						webapp: data.webapp || null, // string
@@ -328,8 +337,6 @@ win.bcpie = {
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
-
-					if (typeof options !== 'object') options = {};
 
 					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items/'+data.item+'/categories';
 					options.headers = {'Authorization': bcpie.ajax.token()};
@@ -344,6 +351,8 @@ win.bcpie = {
 				}
 			},
 			get: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					webapp: data.webapp || null
 				}
@@ -351,14 +360,14 @@ win.bcpie = {
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
-				if (typeof options !== 'object') options = {};
-
 				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
 			},
 			fields: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					webapp: data.webapp || null, // string
 					field: data.field || null, // string
@@ -367,8 +376,6 @@ win.bcpie = {
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
-				if (typeof options !== 'object') options = {};
-
 				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
 				if (data.field !== null) options.url += '/' + data.field;
 				options.headers = {'Authorization': bcpie.ajax.token()};
@@ -376,6 +383,8 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 			},
 			search: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
 				data = {
 					webapp: data.webapp || null,
 					formID: data.formID || null,
@@ -386,8 +395,6 @@ win.bcpie = {
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
-
-				if (typeof options !== 'object') options = {};
 
 				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
 				else data.responsePageID = '';
@@ -412,6 +419,7 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 			},
 			errors: function(data) {
+				if (typeof data === 'undefined') data = {};
 				data.errors = [];
 				if (typeof data.webapp !== 'undefined') {
 					if (data.webapp === null) data.errors.push('"webapp" parameter cannot be null.');
@@ -433,11 +441,12 @@ win.bcpie = {
 		crm: {
 			customers: {
 				get: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null // object
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -447,11 +456,12 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				save: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						customerID: data.customerID || null, // integer
 						content: data.content || null
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -468,10 +478,11 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				delete: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						customerID: data.customerID || null, // integer
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -479,13 +490,14 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				secureZones: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						mode: data.mode.toLowerCase() || 'get', // 'get','subscribe',unsubscribe
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
 						zones: data.zones || null // object
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/securezones';
 
@@ -501,24 +513,26 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				},
 				orders: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						mode: data.mode.toLowerCase() || 'get', // 'get'
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
 					return bcpie.utils.ajax(options);
 				},
 				addresses: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
 					data = {
 						mode: data.mode.toLowerCase() || 'get', // 'get'
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
 					}
-					if (typeof options !== 'object') options = {};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
