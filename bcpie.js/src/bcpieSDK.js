@@ -145,7 +145,7 @@ win.bcpie = {
 					options.method = 'PUT';
 				}else options.method = 'POST';
 				delete data.id;
-				options.data = JSON.stringify(data.content);
+				options.data = JSON.stringify(data);
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.mimeType = 'application/json';
 				options.processData = false;
