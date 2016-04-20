@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	{% include '/_system/includes/template/head.inc' -%}
+</head>
+<body data-bcpie-secure="sessionEndRedirect:{{pageaddress}}; logoutPage:same;">
+	<header id="pageheader" role="banner">
+		{% include '/_system/includes/template/header.inc' -%}
+	</header>
+	<section id="pagecontent">
+		<main role="main">
+			<h1>{module_pagename}</h1>
+			{tag_pagecontent}
+		</main>
+	</section>
+	<footer id="pagefooter" role="contentinfo">
+		{% include '/_system/includes/template/footer.inc' -%}
+	</footer>
+	{% include '/_system/includes/template/foot.inc' -%}
+</body>
+</html>

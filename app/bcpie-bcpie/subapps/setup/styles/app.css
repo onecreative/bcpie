@@ -1,0 +1,113 @@
+body {background: #fcfcfc; display: flex; flex-direction: column;}
+#pagecontent {flex: 1 1 0px;}
+
+.badge {min-width: 1.6em; vertical-align: middle;}
+.badge::before {font-size: .9em; line-height: 1.2em;}
+
+nav#primary {background: #333;}
+nav#primary li {list-style: none; text-align: center;}
+nav#primary li>a {
+	padding: 7px 0 0;
+	display: block;
+	font-size: 11px;
+	color: #fff;}
+nav#primary li.active {background: #555;}
+nav#primary icon {font-size: 18px; display: block;}
+nav#primary a.frameworks>icon {position: relative; margin-left: -14%;}
+nav#primary a.frameworks icon>icon {
+	position: absolute;
+	top: 5px;
+	left: 64%;
+	font-size: .8em;}
+nav#primary a.updates icon::before {
+	border-radius: 50%;
+	background: #fff;
+	width: 19px;
+	height: 19px;
+	color: #333;
+	padding-top: 3px;
+	font-size: 15px;
+	margin-top: -1px;}
+nav#primary li.active a.updates icon::before {color: #555;}
+
+/* @group Frameworks */
+#pagecontent .gridview>.row {max-width: calc(100% + 15px); /* Compensation for block-grid margin bug  */}
+.gridview figure {
+	position: relative; 
+	margin: 0 0 25px 0; 
+	text-align: center;}
+.gridview figcaption {cursor: default; font-size: 15px;}
+.gridview figure .badge {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	z-index: 1;
+	cursor: pointer;}
+.gridview figure .badge:not(.hover) {background: #ddd;}
+.gridview figure img {
+	border: 1px solid #f3f3f3;
+	cursor: pointer;
+	border-radius: 3px;}
+.gridview figure img:hover {
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 1px rgba(0,0,0,.05);
+	transition: all .2s ease-in-out 0s;}
+.gridview figure.inactive img:hover {
+	cursor: default;
+	border: 1px solid #f3f3f3; 
+	box-shadow: none;}
+.gridview figure small {display: none;}
+.gridview figure.active small {display: block; color: green;}
+.gridview figure.active small::before {vertical-align: middle;}
+.gridview figure.active small::after {content: " Active"; vertical-align: middle;}
+.gridview figure.inactive img {opacity: .5; cursor: default;}
+.gridview figure.inactive figcaption {color: #aaa;}
+.gridview figure.inactive>.badge {
+	border-radius: 0;
+	background: none;
+	width: 0px;
+    height: 0px;
+    border-style: inset;
+    border-width: 0 8px calc(16px * .833) 8px;
+    display: inline-block;
+    border-color: transparent transparent orange transparent;
+    transform:rotate(360deg);
+    -ms-transform:rotate(360deg);
+    -moz-transform:rotate(360deg);
+    -webkit-transform:rotate(360deg);
+    -o-transform:rotate(360deg);
+    padding: 0px;
+    margin-top: 3px;}
+.gridview figure.inactive>.badge::before {
+	text-align: center;
+	display: inline-block;
+	margin-left: -2px;
+	margin-top: 4px;}
+/* @end */
+
+#pagefooter .copyright {font-size: 10px;}
+
+
+.alertify .ajs-modal .ajs-content {
+	font-size: 14px;
+}
+.alertify .ajs-modal .ajs-content p {
+	margin-bottom: 15px;
+}
+.alertify-notifier .ajs-message {
+	color: #fff;
+	text-shadow: 1px 1px 0 rgba(0,0,0,.75) !important;
+	border-color: #fff;}
+.alertify-notifier .ajs-message.ajs-warning {background-color: orange;}
+
+.alertify .ajs-dialog .ajs-button.ajs-cancel {
+	border: 1px solid #fff;
+	padding: 5px;
+	background: #828382;
+	color: #fff;
+	font-weight: normal;}
+.alertify .ajs-dialog .ajs-button.ajs-ok {
+	border: 1px solid #fff;
+	padding: 5px;
+	color: #fff !important;
+	background: green;}

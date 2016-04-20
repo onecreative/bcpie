@@ -1,0 +1,22 @@
+{
+	"id": "jquery",
+	"name": "jQuery",
+	"packageVersion": 1459191565,
+	"description": "jQuery JavaScript Library",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "main.svg",
+	"type": "thirdParty",
+	"assets": [
+		{
+			"filename": "jquery.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "2.2.1",
+			"docs": "http://jquery.com/"
+		}
+	],
+	"requires": []
+}

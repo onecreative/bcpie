@@ -1,0 +1,22 @@
+{
+	"id": "what-input",
+	"name": "What Input?",
+	"packageVersion": 1459191565,
+	"description": "A global utility for tracking the current input method (mouse/pointer, keyboard or touch).",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": null,
+	"type": "thirdParty",
+	"assets": [
+		{
+			"filename": "what-input.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "1.2.5",
+			"docs": "https://github.com/ten1seven/what-input"
+		}
+	],
+	"requires": []
+}

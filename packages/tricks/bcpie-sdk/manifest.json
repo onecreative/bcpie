@@ -1,0 +1,38 @@
+{
+	"id": "bcpie-sdk",
+	"name": "BC Pie SDK",
+	"packageVersion": 1459191565,
+	"description": "The core of all goodness in BC Pie.",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "main.svg",
+	"type": "tricks",
+	"assets": [
+		{
+			"filename":"bcpieSDK.js", 
+			"type":"scripts", 
+			"location":"foot",
+			"version": "2016.02.18",
+			"docs": "http://bcpie.com/docs/sdk"
+		}
+	],
+	"requires": [
+		{
+			"id": "jquery",
+			"type": "thirdParty",
+			"packageVersion": 1459191565
+		},
+		{
+			"id": "js-cookie",
+			"type": "thirdParty",
+			"packageVersion": 1459191565
+		},
+		{
+			"id": "moment",
+			"type": "thirdParty",
+			"packageVersion": 1459191565
+		}
+	]
+}

@@ -1,0 +1,959 @@
+{
+	"frameworks":
+	{
+		"active": [],
+		"indexes":
+		{
+			"foundation-6-flex": 0,
+			"bootstrap-3": 1
+		},
+		"items": [
+		{
+			"id": "foundation-6-flex",
+			"name": "Foundation 6 (Flex)",
+			"packageVersion": 1460394720,
+			"description": "The most advanced responsive front-end framework in the world. (This package uses flexbox instead of floats.)",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "main.svg",
+			"type": "frameworks",
+			"assets": [
+			{
+				"filename": "foundation.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "6.2.1",
+				"docs": "http://foundation.zurb.com/sites/docs/",
+				"index": 2
+			},
+			{
+				"filename": "foundation-flex.css",
+				"type": "styles",
+				"version": "6.2.1",
+				"docs": "http://foundation.zurb.com/sites/docs/",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "what-input",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bootstrap-3",
+			"name": "Bootstrap 3",
+			"packageVersion": 1459191565,
+			"description": "Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "main.svg",
+			"type": "frameworks",
+			"assets": [
+			{
+				"filename": "bootstrap.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "3.3.6",
+				"docs": "http://getbootstrap.com/",
+				"index": 2
+			},
+			{
+				"filename": "bootstrap.css",
+				"type": "styles",
+				"version": "3.3.6",
+				"docs": "http://getbootstrap.com/",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		}]
+	},
+	"thirdParty":
+	{
+		"active": [],
+		"indexes":
+		{
+			"what-input": 0,
+			"jquery": 1,
+			"moment": 2,
+			"js-cookie": 3,
+			"alertify-js": 4,
+			"jquery.caret": 5,
+			"jquery-mobilephonenumber": 6,
+			"jquery-caret": 7,
+			"jquery-matchheight": 8,
+			"slick": 9
+		},
+		"items": [
+		{
+			"id": "what-input",
+			"name": "What Input?",
+			"packageVersion": 1459191565,
+			"description": "A global utility for tracking the current input method (mouse/pointer, keyboard or touch).",
+			"docs": "https://github.com/ten1seven/what-input",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "what-input.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.2.5",
+				"index": 0
+			}],
+			"requires": [],
+			"requiredBy": [
+			{
+				"id": "foundation-6-flex",
+				"type": "frameworks",
+				"packageVersion": 1460394720
+			}]
+		},
+		{
+			"id": "jquery",
+			"name": "jQuery",
+			"packageVersion": 1459191565,
+			"description": "jQuery JavaScript Library",
+			"docs": "http://jquery.com/",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "main.svg",
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "jquery.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2.2.1",
+				"index": 1
+			}],
+			"requires": [],
+			"requiredBy": [
+			{
+				"id": "foundation-6-flex",
+				"type": "frameworks",
+				"packageVersion": 1460394720
+			},
+			{
+				"id": "bootstrap-3",
+				"type": "frameworks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "jquery.caret",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "jquery-caret",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "jquery-matchheight",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "slick",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-activenav",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-crumbs",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-date",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-secure",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sameas",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-trigger",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-formmagic",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-slick",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "moment",
+			"name": "MomentJS",
+			"packageVersion": 1459191565,
+			"description": "A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates. This package includes MomentJS, Moment Timezone, Moment ParseFormat, and Moment Duration Format.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "main.svg",
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "moment.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2.11.2",
+				"docs": "http://momentjs.com/docs/",
+				"index": 4
+			},
+			{
+				"filename": "moment-timezone-with-data-2010-2020.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "0.5.0",
+				"docs": "http://momentjs.com/timezone/",
+				"index": 3
+			},
+			{
+				"filename": "moment-timezone-utils.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "0.5.0",
+				"docs": "http://momentjs.com/timezone/",
+				"index": 2
+			},
+			{
+				"filename": "moment.parseFormat.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2.12.16",
+				"docs": "http://gr2m.github.io/moment-parseformat/",
+				"index": 5
+			},
+			{
+				"filename": "moment-duration-format.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.3.0",
+				"docs": "https://github.com/jsmreese/moment-duration-format",
+				"index": 1
+			}],
+			"requires": [],
+			"requiredBy": [
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-date",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "js-cookie",
+			"name": "JavaScript Cookie",
+			"packageVersion": 1459191565,
+			"description": "A simple, lightweight JavaScript API for handling cookies",
+			"docs": "https://github.com/js-cookie/js-cookie",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "js.cookie.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2.1.0",
+				"index": 0
+			}],
+			"requires": [],
+			"requiredBy": [
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "alertify-js",
+			"name": "Alertify JS",
+			"packageVersion": 1459191565,
+			"description": "AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "alertify.svg",
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "alertify.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.6.1",
+				"docs": "http://alertifyjs.com",
+				"index": 3
+			},
+			{
+				"filename": "alertify.css",
+				"type": "styles",
+				"version": "1.6.1",
+				"docs": "http://alertifyjs.com",
+				"index": 1
+			},
+			{
+				"filename": "semantic.css",
+				"type": "styles",
+				"version": "1.6.1",
+				"docs": "http://alertifyjs.com",
+				"index": 2
+			}],
+			"requires": [],
+			"requiredBy": [
+			{
+				"id": "bcpie-formmagic",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "jquery.caret",
+			"name": "jQuery.Caret",
+			"packageVersion": 1459191565,
+			"description": "Manipulate the caret's position in a text box or content-editable element.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "jquery.caret.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.3.2",
+				"docs": "http://stripe.github.io/jquery.mobilePhoneNumber",
+				"index": 0
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "jquery-mobilephonenumber",
+			"name": "jQuery.mobilePhoneNumber",
+			"packageVersion": 1459191565,
+			"description": "A general purpose library for validating and formatting mobile phone numbers.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "jquery.mobilePhoneNumber.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.0.6",
+				"docs": "http://stripe.github.io/jquery.mobilePhoneNumber",
+				"index": 0
+			}],
+			"requires": [
+			{
+				"id": "jquery-caret",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": [
+			{
+				"id": "bcpie-formmagic",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "jquery-caret",
+			"name": "jQuery.Caret",
+			"packageVersion": 1459191565,
+			"description": "Manipulate the caret's position in a text box or content-editable element.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "jquery.caret.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.3.2",
+				"docs": "http://stripe.github.io/jquery.mobilePhoneNumber",
+				"index": 0
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": [
+			{
+				"id": "jquery-mobilephonenumber",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-formmagic",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "jquery-matchheight",
+			"name": "jQuery MatchHeight",
+			"packageVersion": 1459191565,
+			"description": "A more robust, responsive equal heights plugin for jQuerys",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": null,
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "jquery.matchHeight.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "0.6.0",
+				"docs": "https://github.com/liabru/jquery-match-height",
+				"index": 0
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "slick",
+			"name": "Slick Carousel",
+			"packageVersion": 1459191565,
+			"description": "the last carousel you'll ever need",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "slick.svg",
+			"type": "thirdParty",
+			"assets": [
+			{
+				"filename": "slick.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "1.5.9",
+				"docs": "http://kenwheeler.github.io/slick/",
+				"index": 2
+			},
+			{
+				"filename": "slick.css",
+				"type": "styles",
+				"version": "1.5.9",
+				"docs": "http://kenwheeler.github.io/slick/m",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": [
+			{
+				"id": "bcpie-slick",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		}]
+	},
+	"fonts":
+	{
+		"active": [],
+		"indexes":
+		{},
+		"items": []
+	},
+	"layouts":
+	{
+		"active": [],
+		"indexes":
+		{},
+		"items": []
+	},
+	"themes":
+	{
+		"active": [],
+		"indexes":
+		{},
+		"items": []
+	},
+	"tricks":
+	{
+		"active": [],
+		"indexes":
+		{
+			"bcpie-sdk": 0,
+			"bcpie-activenav": 1,
+			"bcpie-crumbs": 2,
+			"bcpie-date": 3,
+			"bcpie-secure": 4,
+			"bcpie-sameas": 5,
+			"bcpie-trigger": 6,
+			"bcpie-formmagic": 7,
+			"bcpie-slick": 8
+		},
+		"items": [
+		{
+			"id": "bcpie-sdk",
+			"name": "BC Pie SDK",
+			"packageVersion": 1459191565,
+			"description": "The core of all goodness in BC Pie.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "main.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "bcpieSDK.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.02.18",
+				"docs": "http://bcpie.com/docs/sdk",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "js-cookie",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "moment",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": [
+			{
+				"id": "bcpie-activenav",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-crumbs",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-date",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-secure",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sameas",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-trigger",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-formmagic",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-slick",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}]
+		},
+		{
+			"id": "bcpie-activenav",
+			"name": "ActiveNav",
+			"packageVersion": 1459191565,
+			"description": "ActiveNav makes it easy to create truly dynamic navigation throughout your site. It can be used to produce something as simple as a highlighted menu item when it represents the current page, to side navigation that only shows links related to the current section of your website.",
+			"docs": "http://bcpie.com/docs/activenav",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "activenav.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "ActiveNav.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.01.30",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-crumbs",
+			"name": "Crumbs",
+			"packageVersion": 1459191565,
+			"description": "Crumbs is a full replacement for the breadcrumbs modules in Business Catalyst. BC’s breadcrumbs modules are inconsistent, require specific placement, and depend on you manually defining them with the sitemap module. Crumbs, on the other hand, are always accurate, can be placed anywhere on your site, and intelligently name your breadcrumbs based on your actual page names. You'll never look back.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "crumbs.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "Crumbs.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2015.04.06",
+				"docs": "http://bcpie.com/docs/crumbs",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-date",
+			"name": "Date",
+			"packageVersion": 1459191565,
+			"description": "Date is a powerful way to display custom-formatted date and time information anywhere on your site. It harnesses the functionality of moment.js, while maintaining the simplicity of Dev-in-a-Box.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "date.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "Date.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.02.26",
+				"docs": "http://bcpie.com/docs/date",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "moment",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-secure",
+			"name": "Secure",
+			"packageVersion": 1459191565,
+			"description": "Make BC's security features work for your site, not against it. Secure can guide users back to your primary domain after performing a transaction on the worldsecuresystems secure domain. Or it can run a custom script, or even redirect a user out of a secure area, when the system automatically logs them out.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "secure.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "Secure.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2015.11.12",
+				"docs": "http://bcpie.com/docs/secure",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-sameas",
+			"name": "SameAs",
+			"packageVersion": 1459191565,
+			"description": "For those times when you need to copy one field's value to another, SameAs has your back. It even allows you to setup copy groups, like billing and shipping fields, or do math with the field values. It’s easy syntax simply could not be faster to implement.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "sameas.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "SameAs.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.02.26",
+				"docs": "http://bcpie.com/docs/sameas",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-trigger",
+			"name": "Trigger",
+			"packageVersion": 1459191565,
+			"description": "Trigger gives you the ability to use one element to 'trigger' a behavior on another. For instance, you may want to add or remove a class when a button is clicked.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "trigger.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "Trigger.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.02.18",
+				"docs": "http://bcpie.com/docs/trigger",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-formmagic",
+			"name": "FormMagic",
+			"packageVersion": 1459191565,
+			"description": "FormMagic takes all the headache out of working with forms in BC. Feel free to get rid of the clutter BC automatically adds to your forms. You can delete the JavaScript and strip your forms down to their skivvies, and rest assured they will work even better than they did before. Enhanced validation and easy Ajax are the hallmarks of this amazing trick.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "formmagic.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "FormMagic.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.02.22",
+				"docs": "http://bcpie.com/docs/formmagic",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "alertify-js",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "jquery-mobilephonenumber",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "jquery-caret",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		},
+		{
+			"id": "bcpie-slick",
+			"name": "Slick",
+			"packageVersion": 1459191565,
+			"description": "The most versatile carousel, now completely Pie-ified.",
+			"distributor":
+			{
+				"name": "ONE Creative",
+				"website": "onecreative.pro"
+			},
+			"image": "slick.svg",
+			"type": "tricks",
+			"assets": [
+			{
+				"filename": "bcpie-slick.js",
+				"type": "scripts",
+				"location": "foot",
+				"version": "2016.04.14",
+				"docs": "http://bcpie.com/docs/slick",
+				"index": 1
+			}],
+			"requires": [
+			{
+				"id": "jquery",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "bcpie-sdk",
+				"type": "tricks",
+				"packageVersion": 1459191565
+			},
+			{
+				"id": "slick",
+				"type": "thirdParty",
+				"packageVersion": 1459191565
+			}],
+			"requiredBy": []
+		}]
+	}
+}

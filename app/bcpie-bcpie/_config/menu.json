@@ -1,0 +1,35 @@
+{
+	"menu-first-bcpie-bcpie": {
+		"weight": 210000,
+		"title": "BC Pie",
+		"icon": "/_system/apps/bcpie-bcpie/images/slice.png",
+		"visible": true,
+		"applyIf": {
+			"userHasRoles": ["Developer"]
+		}
+	},
+	"menu-bcpie-setup": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 10000,
+		"title": "Setup",
+		"attr": {
+			"href": "subapps/setup.html"
+		}
+	},
+	"menu-bcpie-tools": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 20000,
+		"title": "Tools",
+		"attr": {
+			"href": "subapps/tools.html",
+		}
+	},
+	"menu-bcpie-docs": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 30000,
+		"title": "Docs",
+		"attr": {
+			"href": "subapps/docs.html"
+		}
+	}
+}

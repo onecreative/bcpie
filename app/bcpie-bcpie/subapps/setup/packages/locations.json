@@ -1,0 +1,444 @@
+{
+	"frameworks": {},
+	"layouts": {
+		"Affiliate": {
+			"type": "folder",
+			"allowCustom": false,
+			"files": {
+				"affiliate.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"Announcements": {
+			"type": "folder",
+			"allowCustom": false,
+			"files": {
+				"detail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"Blog": {
+			"type": "folder",
+			"allowCustom": false,
+			"files": {
+				"comment.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"overall.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"post.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"postlist.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"trackback.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"Booking": {
+			"files": {
+				"detail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"Comments": {
+			"files": {
+				"comments.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"CustomerCases": {
+			"files": {
+				"detail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"CustomerOrders": {
+			"files": {
+				"detail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"Faq": {
+			"files": {
+				"detail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"Favorite": {
+			"files": {
+				"register.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"Forum": {
+			"files": {
+				"forum.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"post.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"posts_page.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"registration_page.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"topic.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"topics_page.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"Literature": {
+			"files": {
+				"list.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"OnlineShop": {
+			"files": {
+				"catalogue.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"gift_voucher-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"large_product.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"order_receipt-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"order_registration-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"page_content.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"quote_receipt-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"quote_registration-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"shopping_cart-US.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"small_product.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"small_product_backup.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"OutboundEmails": {
+			"files": {
+				"OrderStatusChanged": {
+					"files": {
+						"Goods Dispatched.html": {
+							"type": "html",
+							"allowCustom": false
+						},
+						"Goods Received.html": {
+							"type": "html",
+							"allowCustom": false
+						},
+						"Purchase - Awaiting Payment.html": {
+							"type": "html",
+							"allowCustom": false
+						},
+						"Purchase - Payment Received.html": {
+							"type": "html",
+							"allowCustom": false
+						}
+					}
+				},
+				"AffiliateProgramDetails.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"CSF.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"DoubleOptInEmail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"DropShipping.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"ForumPostSubscriberAlert.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"ForumTopicSubscriberAlert.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"GiftVoucherEmail.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"Invoice.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"LostPassword.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"Order.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"ReferAFriend.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"SecureZoneDetails.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"Workflow3rdParty.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowCompletion.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowEscalation.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowNotification.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowRejection.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowReminder.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"WorkflowTask.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"Shipping": {
+			"files": {
+				"packagelabel.html": {
+					"type": "html",
+					"allowCustom": false
+				},
+				"packingslip.html": {
+					"type": "html",
+					"allowCustom": false
+				}
+			}
+		},
+		"SiteSearch": {
+			"files": {
+				"site_search.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"SystemMessages": {
+			"type": "folder",
+			"allowCustom": false,
+			"files": {
+				"BookingConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"BookingVerification-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"BookingVerificationConfirmForm-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"CreditCardPaymentFailure-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"CustomContentDeleteConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"CustomContentInputFormConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"Error401-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"Error404-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"FavoritesConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"FormConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"General-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"NewsletterSubscribeConfirm-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"NewsletterUnsubscribeConfirm-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"PasswordReset-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"PasswordResetSuccess-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"PasswordRetrieve-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"PasswordRetrieveRequest-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"RatingConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"RatingDenied-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"ReferAFriendConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"SecureZoneAccessDenied-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"SecureZoneAccessExpired-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"SecureZoneLogOut-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"SubscribeConfirmForm-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"UnsubscribeConfirmForm-US.html": {
+					"type": "html",
+					"allowCustom": true
+				},
+				"UpdateDetailsConfirmation-US.html": {
+					"type": "html",
+					"allowCustom": true
+				}
+			}
+		},
+		"WebApps": 0,
+		"Menus": {
+			"files": {}
+		}
+	},
+	"themes": {},
+	"thirdParty": {},
+	"tricks": {}
+}

@@ -1,0 +1,7 @@
+{
+	"name": "SameAs",
+	"version": "2015.09.01",
+	"scripts": [
+		"SameAs.js"
+	]
+}

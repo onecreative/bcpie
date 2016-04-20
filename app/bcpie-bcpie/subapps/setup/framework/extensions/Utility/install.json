@@ -1,0 +1,7 @@
+{
+	"name": "Utility",
+	"version": "2015.09.25",
+	"scripts": [
+		"Utility.js"
+	]
+}

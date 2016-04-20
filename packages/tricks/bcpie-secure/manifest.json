@@ -1,0 +1,28 @@
+{
+	"id": "bcpie-secure",
+	"name": "Secure",
+	"packageVersion": 1459191565,
+	"description": "Make BC's security features work for your site, not against it. Secure can guide users back to your primary domain after performing a transaction on the worldsecuresystems secure domain. Or it can run a custom script, or even redirect a user out of a secure area, when the system automatically logs them out.",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "secure.svg",
+	"type": "tricks",
+	"assets": [{
+		"filename": "Secure.js",
+		"type": "scripts",
+		"location": "foot",
+		"version": "2015.11.12",
+		"docs": "http://bcpie.com/docs/secure"
+	}],
+	"requires": [{
+		"id": "jquery",
+		"type": "thirdParty",
+		"packageVersion": 1459191565
+	}, {
+		"id": "bcpie-sdk",
+		"type": "tricks",
+		"packageVersion": 1459191565
+	}]
+}

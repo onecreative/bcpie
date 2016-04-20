@@ -1,0 +1,28 @@
+{
+    "id": "bcpie-sameas",
+    "name": "SameAs",
+    "packageVersion": 1459191565,
+    "description": "For those times when you need to copy one field's value to another, SameAs has your back. It even allows you to setup copy groups, like billing and shipping fields, or do math with the field values. It’s easy syntax simply could not be faster to implement.",
+    "distributor": {
+        "name": "ONE Creative",
+        "website": "onecreative.pro"
+    },
+    "image": "sameas.svg",
+    "type": "tricks",
+    "assets": [{
+        "filename": "SameAs.js",
+        "type": "scripts",
+        "location": "foot",
+        "version": "2016.02.26",
+        "docs": "http://bcpie.com/docs/sameas"
+    }],
+    "requires": [{
+        "id": "jquery",
+        "type": "thirdParty",
+        "packageVersion": 1459191565
+    }, {
+        "id": "bcpie-sdk",
+        "type": "tricks",
+        "packageVersion": 1459191565
+    }]
+}

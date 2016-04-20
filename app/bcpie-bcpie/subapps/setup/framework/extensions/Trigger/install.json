@@ -1,0 +1,7 @@
+{
+	"name": "Trigger",
+	"version": "2015.09.17",
+	"scripts": [
+		"Trigger.js"
+	]
+}

@@ -1,0 +1,51 @@
+{
+	"id": "fontawesome-4",
+	"name": "Fontawesome 4",
+	"packageVersion": 1459191565,
+	"description": "Font Awesome gives you scalable vector icons that can instantly be customized — size, color, drop shadow, and anything that can be done with the power of CSS.",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "fontawesome.svg",
+	"type": "fonts",
+	"assets": [
+		{
+			"filename":"font-awesome.css", 
+			"type":"styles",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"fontawesome-webfont.eot", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"fontawesome-webfont.svg", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"fontawesome-webfont.ttf", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"fontawesome-webfont.woff", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"fontawesome-webfont.woff2", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}, {
+			"filename":"FontAwesome.otf", 
+			"type":"fonts",
+			"version": "4.5.0",
+			"docs": "https://fortawesome.github.io/Font-Awesome/"
+		}
+	],
+	"requires": []
+}

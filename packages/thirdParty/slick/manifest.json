@@ -1,0 +1,31 @@
+{
+	"id": "slick",
+	"name": "Slick Carousel",
+	"packageVersion": 1459191565,
+	"description": "the last carousel you'll ever need",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "slick.svg",
+	"type": "thirdParty",
+	"assets": [
+		{
+			"filename":"slick.js", 
+			"type":"scripts", 
+			"location":"foot",
+			"version": "1.5.9",
+			"docs": "http://kenwheeler.github.io/slick/"
+		}, {
+			"filename":"slick.css", 
+			"type":"styles", 
+			"version": "1.5.9",
+			"docs": "http://kenwheeler.github.io/slick/m"
+		}
+	],
+	"requires": [{
+		"id": "jquery",
+		"type": "thirdParty",
+		"packageVersion": 1459191565
+	}]
+}
