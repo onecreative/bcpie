@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-easel" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Easel</title>
+  </g>
+  <defs>
+    <clipPath id="iconic-size-lg-easel-clip-0">
+      <path d="M0 78h124v50h-124z" />
+    </clipPath>
+    <clipPath id="iconic-size-lg-easel-clip-1">
+      <path d="M78 8v8h-32v-8h-42v66h116v-66z" />
+    </clipPath>
+    <clipPath id="iconic-size-lg-easel-clip-2">
+      <path d="M48 6h28v8h-28z" />
+    </clipPath>
+    <clipPath id="iconic-size-md-easel-clip-0">
+      <path d="M0 20h31v12h-31z" />
+    </clipPath>
+    <clipPath id="iconic-size-md-easel-clip-1">
+      <path d="M20 2v3h-9v-3h-10v16h29v-16z" />
+    </clipPath>
+    <clipPath id="iconic-size-md-easel-clip-2">
+      <path d="M12 1h7v3h-7z" />
+    </clipPath>
+    <clipPath id="iconic-size-sm-easel-clip-0">
+      <path d="M0 10h16v6h-16z" />
+    </clipPath>
+    <clipPath id="iconic-size-sm-easel-clip-1">
+      <path d="M11 1v2h-6v-2h-4v8h14v-8z" />
+    </clipPath>
+  </defs>
+  <g class="iconic-easel-lg iconic-container iconic-lg" data-width="124" data-height="128" display="inline" transform="translate(2)">
+    <path clip-path="url(#iconic-size-lg-easel-clip-0)" class="iconic-easel-legs iconic-easel-legs-front iconic-property-fill" d="M66 0l46 128h-8l-42-118-42 118h-8l46-128z" />
+    <path class="iconic-easel-legs iconic-easel-legs-back iconic-property-fill" d="M58 78h8v50h-8z" />
+    <path class="iconic-easel-base iconic-property-fill" d="M0 76h124v4h-124z" />
+    <path d="M118.5 74h-113c-.828 0-1.5-.672-1.5-1.5v-63c0-.828.672-1.5 1.5-1.5h113c.828 0 1.5.672 1.5 1.5v63c0 .828-.672 1.5-1.5 1.5z" clip-path="url(#iconic-size-lg-easel-clip-1)" class="iconic-easel-canvas iconic-property-accent iconic-property-fill"
+    />
+    <path d="M68.5 10h-13c-.828 0-1.251-.624-.943-1.393l2.886-7.215c.308-.769 1.229-1.393 2.057-1.393h5c.828 0 1.749.624 2.057 1.393l2.886 7.215c.308.769-.115 1.393-.943 1.393z" class="iconic-easel-clamp iconic-easel-clamp-top iconic-property-fill" />
+    <path clip-path="url(#iconic-size-lg-easel-clip-2)" d="M74.5 18h-25c-.828 0-1.5-.672-1.5-1.5v-9c0-.828.672-1.5 1.5-1.5h25c.828 0 1.5.672 1.5 1.5v9c0 .828-.672 1.5-1.5 1.5z" class="iconic-easel-clamp iconic-easel-clamp-main iconic-property-fill" />
+  </g>
+  <g class="iconic-easel-md iconic-container iconic-md" data-width="31" data-height="32" display="none" transform="scale(4)">
+    <path clip-path="url(#iconic-size-md-easel-clip-0)" class="iconic-easel-legs iconic-easel-legs-front iconic-property-fill" d="M17 0l11 32h-3l-9.5-28-9.5 28h-3l11-32z" />
+    <path class="iconic-easel-legs iconic-easel-legs-back iconic-property-fill" d="M14 20h3v12h-3z" />
+    <path d="M29.5 18h-28c-.276 0-.5-.224-.5-.5v-15c0-.276.224-.5.5-.5h28c.276 0 .5.224.5.5v15c0 .276-.224.5-.5.5z" clip-path="url(#iconic-size-md-easel-clip-1)" class="iconic-easel-canvas iconic-property-accent iconic-property-fill" />
+    <path class="iconic-easel-base iconic-property-fill" d="M0 19h31v2h-31z" />
+    <path d="M17.5 2h-4c-.276 0-.4-.2-.276-.447l.553-1.106c.124-.247.448-.447.724-.447h2c.276 0 .6.2.724.447l.553 1.106c.123.247 0 .447-.276.447z" class="iconic-easel-clamp iconic-easel-clamp-top iconic-property-fill" />
+    <path clip-path="url(#iconic-size-md-easel-clip-2)" d="M18.5 5h-6c-.276 0-.5-.224-.5-.5v-3c0-.276.224-.5.5-.5h6c.276 0 .5.224.5.5v3c0 .276-.224.5-.5.5z" class="iconic-easel-clamp iconic-easel-clamp-main iconic-property-fill" />
+  </g>
+  <g class="iconic-easel-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path clip-path="url(#iconic-size-sm-easel-clip-0)" class="iconic-easel-legs iconic-easel-legs-front iconic-property-fill" d="M9 0l5 16h-2l-4-14-4 14h-2l5-16z" />
+    <path class="iconic-easel-legs iconic-easel-legs-back iconic-property-fill" d="M7 11h2v5h-2z" />
+    <path d="M14.75 9h-13.5c-.138 0-.25-.112-.25-.25v-7.5c0-.138.112-.25.25-.25h13.5c.138 0 .25.112.25.25v7.5c0 .138-.112.25-.25.25z" clip-path="url(#iconic-size-sm-easel-clip-1)" class="iconic-easel-canvas iconic-property-accent iconic-property-fill"
+    />
+    <path class="iconic-easel-base iconic-property-fill" d="M0 10h16v1h-16z" />
+    <path class="iconic-easel-clamp iconic-easel-clamp-main iconic-property-fill" d="M6 0h4v2h-4z" />
+  </g>
+</svg>

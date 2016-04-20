@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-syringe" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Syringe</title>
+  </g>
+  <g class="iconic-syringe-lg iconic-container iconic-lg" data-width="126" data-height="128" display="inline" transform="translate(1)">
+    <path class="iconic-syringe-needle iconic-property-accent iconic-property-fill" d="M44 84l-44 44v-3.627l42-42.373z" />
+    <path transform="matrix(-.707 .707 -.707 -.707 197.449 -46.493)" class="iconic-syringe-plunger iconic-syringe-plunger-main iconic-property-fill" d="M97.54 9.161h21.628v16.971h-21.628z" />
+    <path stroke="#000" stroke-width="4" stroke-linecap="round" class="iconic-syringe-plunger iconic-syringe-plunger-top iconic-property-stroke" d="M108 2l16 16" fill="none" />
+    <path transform="matrix(.707 -.707 .707 .707 -47.096 54.301)" class="iconic-syringe-tube iconic-syringe-tube-base iconic-property-fill" d="M37.757 76.929h8.485v14.142h-8.485z" />
+    <path d="M89 19l-12.293 12.293 5 5c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-5-5-4.586 4.586 3 3c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-3-3-4.586 4.586 3 3c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-3-3-4.586 4.586 5 5c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-5-5-4.586 4.586 3 3c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-3-3-4.586 4.586 3 3c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-3-3-4.586 4.586 5 5c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-5-5-5.293 5.293 18 18 55-55-18-18z"
+    class="iconic-syringe-tube-main iconic-property-fill" />
+    <path stroke="#000" stroke-width="4" stroke-linecap="round" class="iconic-syringe-tube iconic-syringe-tube-top iconic-property-stroke" d="M80 10l34 34" fill="none" />
+  </g>
+  <g class="iconic-syringe-md iconic-container iconic-md" data-width="31" data-height="32" display="none" transform="scale(4)">
+    <path class="iconic-syringe-needle iconic-property-accent iconic-property-fill" d="M12 20l-12 12v-2l11-11z" />
+    <path class="iconic-syringe-plunger iconic-syringe-plunger-main iconic-property-fill" d="M29.438 3.5l-4 4-1.938-2 4-4z" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-syringe-plunger iconic-syringe-plunger-top iconic-property-stroke" d="M26.5.5l4 4" fill="none" />
+    <path transform="matrix(.707 -.707 .707 .707 -11.42 13.429)" class="iconic-syringe-tube iconic-syringe-tube-base iconic-property-fill" d="M9.086 18.379h2.828v4.243h-2.828z" />
+    <path d="M22 4l-2.647 2.647 1.5 1.5c.195.195.195.512 0 .707-.098.098-.226.146-.354.146s-.256-.049-.353-.146l-1.5-1.5-1.293 1.293.5.5c.195.195.195.512 0 .707-.098.098-.226.146-.354.146s-.256-.049-.353-.146l-.5-.5-1.293 1.293 1.5 1.5c.195.195.195.512 0 .707-.098.098-.226.146-.354.146s-.256-.049-.353-.146l-1.5-1.5-1.293 1.293.5.5c.195.195.195.512 0 .707-.098.098-.226.146-.354.146s-.256-.049-.353-.146l-.5-.5-1.293 1.293 1.5 1.5c.195.195.195.512 0 .707-.098.098-.226.146-.354.146s-.256-.049-.353-.146l-1.5-1.5-2.646 2.646 5 5 14-14-5-5z"
+    class="iconic-syringe-tube iconic-syringe-tube-main iconic-property-fill" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-syringe-tube iconic-syringe-tube-top iconic-property-stroke" d="M19.5 1.5l10 10" fill="none" />
+  </g>
+  <g class="iconic-syringe-sm iconic-container iconic-sm" data-width="15" data-height="16" display="none" transform="scale(8)">
+    <path class="iconic-syringe-needle iconic-property-accent iconic-property-fill" d="M5.969 10l-5.969 6v-2l5-5z" />
+    <path class="iconic-syringe-plunger iconic-syringe-plunger-main iconic-property-fill" d="M13.969 2l-2 2-.969-1 2-2z" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-syringe-plunger iconic-syringe-plunger-top iconic-property-stroke" d="M12.5.5l2 2" fill="none" />
+    <path d="M10 2l-1.146 1.147 1 1c.195.195.195.512 0 .707-.098.098-.226.147-.354.147s-.256-.049-.354-.146l-1-1-1.293 1.293 1 1c.195.195.195.512 0 .707-.098.098-.226.146-.353.146s-.256-.049-.354-.146l-1-1-1.293 1.293 1 1c.195.195.195.512 0 .707-.098.098-.226.146-.353.146s-.256-.049-.354-.146l-1-1-1.146 1.146 3 3 7-7-3-3z"
+    class="iconic-syringe-tube iconic-syringe-tube-main iconic-property-fill" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-syringe-tube iconic-syringe-tube-top iconic-property-stroke" d="M8.5.5l6 6" fill="none" />
+  </g>
+</svg>

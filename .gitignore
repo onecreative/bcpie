@@ -5,6 +5,4 @@ gulpfile.js
 *.sublime-workspace
 *.sublime-project
 *.codekit*
-*.svg
-iconic*
 sftp-config.json

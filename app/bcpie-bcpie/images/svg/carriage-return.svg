@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-carriage-return" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Carriage Return</title>
+  </g>
+  <g class="iconic-carriage-return-lg iconic-container iconic-lg" data-width="128" data-height="50" display="inline" transform="translate(0 39)">
+    <path stroke="#000" stroke-width="8" d="M16 36h92c8.837 0 16-7.163 16-16s-7.163-16-16-16h-24" class="iconic-carriage-return-stem iconic-property-stroke" fill="none" />
+    <path class="iconic-carriage-return-head iconic-property-fill" d="M0 36l24 14v-28z" />
+  </g>
+  <g class="iconic-carriage-return-md iconic-container iconic-md" data-width="32" data-height="15" display="none" transform="scale(4) translate(0 8)">
+    <path stroke="#000" stroke-width="3" d="M3 10.5s17.25 0 23 0c2.485 0 4.5-2.015 4.5-4.5s-2.015-4.5-4.5-4.5c-1.25 0-6 0-6 0" class="iconic-carriage-return-stem iconic-property-stroke" fill="none" />
+    <path class="iconic-carriage-return-head iconic-property-fill" d="M0 10.5l6-4.5v9z" />
+  </g>
+  <g class="iconic-carriage-return-sm iconic-container iconic-sm" data-width="16" data-height="10" display="none" transform="scale(8) translate(0 3)">
+    <path stroke="#000" stroke-width="2" d="M2 7h10c1.657 0 3-1.343 3-3s-1.343-3-3-3h-3" class="iconic-carriage-return-stem iconic-property-stroke" fill="none" />
+    <path class="iconic-carriage-return-head iconic-property-fill" d="M0 7l3-3v6z" />
+  </g>
+</svg>

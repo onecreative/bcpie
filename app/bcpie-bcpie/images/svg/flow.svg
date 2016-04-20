@@ -1,0 +1,102 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" data-icon="flow" width="128" height="128" class="iconic iconic-flow iconic-orientation-square" viewBox="0 0 128 128">
+  <g><title>Flow</title></g>
+  <g data-width="128" data-height="128" class="iconic-lg iconic-container" display="inline">
+    <g class="iconic-flow-three-up">
+      <path d="M126.5 128h-33c-.828 0-1.5-.672-1.5-1.5v-79c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v79c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-7 iconic-flow-three-up-column-3 iconic-property-fill"/>
+      <path d="M80.5 128h-33c-.828 0-1.5-.672-1.5-1.5v-19c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v19c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-5 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M34.5 128h-33c-.828 0-1.5-.672-1.5-1.5v-37c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v37c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-2 iconic-flow-three-up-column-1 iconic-property-fill"/>
+      <path d="M80.5 96h-33c-.828 0-1.5-.672-1.5-1.5v-61c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v61c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-4 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M80.5 22h-33c-.828 0-1.5-.672-1.5-1.5v-19c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v19c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-3 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M126.5 36h-33c-.828 0-1.5-.672-1.5-1.5v-33c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v33c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-6 iconic-flow-three-up-column-3 iconic-property-fill"/>
+      <path d="M34.5 78h-33c-.828 0-1.5-.672-1.5-1.5v-75c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v75c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-1 iconic-flow-three-up-column-1 iconic-property-fill"/>
+    </g>
+    <g class="iconic-flow-two-up" display="none">
+      <path d="M126.5 128h-55c-.828 0-1.5-.672-1.5-1.5v-37c0-.828.672-1.5 1.5-1.5h55c.828 0 1.5.672 1.5 1.5v37c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-4 iconic-flow-two-up-column-2 iconic-property-fill"/>
+      <path d="M56.5 128h-55c-.828 0-1.5-.672-1.5-1.5v-85c0-.828.672-1.5 1.5-1.5h55c.828 0 1.5.672 1.5 1.5v85c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-2 iconic-flow-two-up-column-1 iconic-property-fill"/>
+      <path d="M126.5 76h-55c-.828 0-1.5-.672-1.5-1.5v-73c0-.828.672-1.5 1.5-1.5h55c.828 0 1.5.672 1.5 1.5v73c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-3 iconic-flow-two-up-column-2 iconic-property-fill"/>
+      <path d="M56.5 28h-55c-.828 0-1.5-.672-1.5-1.5v-25c0-.828.672-1.5 1.5-1.5h55c.828 0 1.5.672 1.5 1.5v25c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-1 iconic-flow-two-up-column-1 iconic-property-fill"/>
+    </g>
+    <g class="iconic-flow-four-up" display="none">
+      <path d="M18.5 50h-17c-.828 0-1.5-.672-1.5-1.5v-47c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v47c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-1 iconic-flow-four-up-column-1 iconic-property-fill"/>
+      <path d="M126.5 128h-17c-.828 0-1.5-.672-1.5-1.5v-17c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v17c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-11 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M18.5 128h-17c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-3 iconic-flow-four-up-column-1 iconic-property-fill"/>
+      <path d="M126.5 92h-17c-.828 0-1.5-.672-1.5-1.5v-47c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v47c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-10 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M90.5 128h-17c-.828 0-1.5-.672-1.5-1.5v-45c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v45c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-8 iconic-flow-four-up-column-3 iconic-property-fill"/>
+      <path d="M54.5 128h-17c-.828 0-1.5-.672-1.5-1.5v-53c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v53c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-6 iconic-flow-four-up-column-2 iconic-property-fill"/>
+      <path d="M18.5 86h-17c-.828 0-1.5-.672-1.5-1.5v-17c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v17c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-2 iconic-flow-four-up-column-1 iconic-property-fill"/>
+      <path d="M90.5 64h-17c-.828 0-1.5-.672-1.5-1.5v-61c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v61c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-7 iconic-flow-four-up-column-3 iconic-property-fill"/>
+      <path d="M54.5 56h-17c-.828 0-1.5-.672-1.5-1.5v-17c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v17c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-5 iconic-flow-four-up-column-2 iconic-property-fill"/>
+      <path d="M126.5 26h-17c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-9 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M54.5 20h-17c-.828 0-1.5-.672-1.5-1.5v-17c0-.828.672-1.5 1.5-1.5h17c.828 0 1.5.672 1.5 1.5v17c0 .828-.672 1.5-1.5 1.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-4 iconic-flow-four-up-column-2 iconic-property-fill"/>
+    </g>
+  </g>
+  <g data-width="32" data-height="32" class="iconic-md iconic-container" display="none" transform="scale(4)">
+    <g class="iconic-flow-three-up">
+      <path d="M19.5 32h-7c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-5 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M7.5 32h-7c-.276 0-.5-.224-.5-.5v-10c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v10c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-2 iconic-flow-three-up-column-1 iconic-property-fill"/>
+      <path d="M31.5 32h-7c-.276 0-.5-.224-.5-.5v-19c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v19c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-7 iconic-flow-three-up-column-3 iconic-property-fill"/>
+      <path d="M19.5 23h-7c-.276 0-.5-.224-.5-.5v-13c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v13c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-4 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M31.5 8h-7c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-6 iconic-flow-three-up-column-3 iconic-property-fill"/>
+      <path d="M19.5 5h-7c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-3 iconic-flow-three-up-column-2 iconic-property-fill"/>
+      <path d="M7.5 17h-7c-.276 0-.5-.224-.5-.5v-16c0-.276.224-.5.5-.5h7c.276 0 .5.224.5.5v16c0 .276-.224.5-.5.5z" class="iconic-flow-three-up-item iconic-flow-three-up-item-1 iconic-flow-three-up-column-1 iconic-property-fill"/>
+    </g>
+    <g class="iconic-flow-two-up" display="none">
+      <path d="M31.5 32h-13c-.276 0-.5-.224-.5-.5v-8c0-.276.224-.5.5-.5h13c.276 0 .5.224.5.5v8c0 .276-.224.5-.5.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-4 iconic-flow-two-up-column-2 iconic-property-fill"/>
+      <path d="M13.5 32h-13c-.276 0-.5-.224-.5-.5v-20c0-.276.224-.5.5-.5h13c.276 0 .5.224.5.5v20c0 .276-.224.5-.5.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-2 iconic-flow-two-up-column-1 iconic-property-fill"/>
+      <path d="M31.5 19h-13c-.276 0-.5-.224-.5-.5v-18c0-.276.224-.5.5-.5h13c.276 0 .5.224.5.5v18c0 .276-.224.5-.5.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-3 iconic-flow-two-up-column-2 iconic-property-fill"/>
+      <path d="M13.5 7h-13c-.276 0-.5-.224-.5-.5v-6c0-.276.224-.5.5-.5h13c.276 0 .5.224.5.5v6c0 .276-.224.5-.5.5z" class="iconic-flow-two-up-item iconic-flow-two-up-item-1 iconic-flow-two-up-column-1 iconic-property-fill"/>
+    </g>
+    <g class="iconic-flow-four-up" display="none">
+      <path d="M31.5 32h-4c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-11 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M22.5 32h-4c-.276 0-.5-.224-.5-.5v-10c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v10c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-8 iconic-flow-four-up-column-3 iconic-property-fill"/>
+      <path d="M13.5 32h-4c-.276 0-.5-.224-.5-.5v-13c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v13c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-6 iconic-flow-four-up-column-2 iconic-property-fill"/>
+      <path d="M4.5 32h-4c-.276 0-.5-.224-.5-.5v-6c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v6c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-3 iconic-flow-four-up-column-1 iconic-property-fill"/>
+      <path d="M4.5 21h-4c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-2 iconic-flow-four-up-column-1 iconic-property-fill"/>
+      <path d="M31.5 23h-4c-.276 0-.5-.224-.5-.5v-11c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v11c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-10 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M13.5 14h-4c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-5 iconic-flow-four-up-column-2 iconic-property-fill"/>
+      <path d="M31.5 7h-4c-.276 0-.5-.224-.5-.5v-6c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v6c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-9 iconic-flow-four-up-column-4 iconic-property-fill"/>
+      <path d="M22.5 17h-4c-.276 0-.5-.224-.5-.5v-16c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v16c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-7 iconic-flow-four-up-column-3 iconic-property-fill"/>
+      <path d="M13.5 5h-4c-.276 0-.5-.224-.5-.5v-4c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v4c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-4 iconic-flow-four-up-column-2 iconic-property-fill"/>
+      <path d="M4.5 12h-4c-.276 0-.5-.224-.5-.5v-11c0-.276.224-.5.5-.5h4c.276 0 .5.224.5.5v11c0 .276-.224.5-.5.5z" class="iconic-flow-four-up-item iconic-flow-four-up-item-1 iconic-flow-four-up-column-1 iconic-property-fill"/>
+    </g>
+  </g>
+  <g data-width="16" data-height="16" class="iconic-sm iconic-container" display="none" transform="scale(8)">
+    <g class="iconic-flow-three-up">
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-7 iconic-flow-three-up-column-3 iconic-property-fill" d="M12 6h4v10h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-5 iconic-flow-three-up-column-2 iconic-property-fill" d="M6 13h4v3h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-4 iconic-flow-three-up-column-2 iconic-property-fill" d="M6 5h4v6h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-4 iconic-flow-three-up-column-1 iconic-property-fill" d="M0 10h4v6h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-6 iconic-flow-three-up-column-3 iconic-property-fill" d="M12 0h4v4h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-3 iconic-flow-three-up-column-2 iconic-property-fill" d="M6 0h4v3h-4z"/>
+      <path class="iconic-flow-three-up-item iconic-flow-three-up-item-1 iconic-flow-three-up-column-1 iconic-property-fill" d="M0 0h4v8h-4z"/>
+    </g>
+  </g>
+  <g data-width="16" data-height="16" class="iconic-sm iconic-container" display="none" transform="scale(8)">
+    <g class="iconic-flow-two-up" display="none">
+      <path class="iconic-flow-two-up-item iconic-flow-two-up-item-4 iconic-flow-two-up-column-2 iconic-property-fill" d="M9 11h7v5h-7z"/>
+      <path class="iconic-flow-two-up-item iconic-flow-two-up-item-2 iconic-flow-two-up-column-1 iconic-property-fill" d="M0 6h7v10h-7z"/>
+      <path class="iconic-flow-two-up-item iconic-flow-two-up-item-3 iconic-flow-two-up-column-2 iconic-property-fill" d="M9 0h7v9h-7z"/>
+      <path class="iconic-flow-two-up-item iconic-flow-two-up-item-1 iconic-flow-two-up-column-1 iconic-property-fill" d="M0 0h7v4h-7z"/>
+    </g>
+  </g>
+  <g data-width="14" data-height="16" class="iconic-sm iconic-container" display="none" transform="scale(8) translate(1)">
+    <g class="iconic-flow-four-up" display="none">
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-11 iconic-flow-four-up-column-4 iconic-property-fill" d="M12 14h2v2h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-6 iconic-flow-four-up-column-2 iconic-property-fill" d="M4 9h2v7h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-3 iconic-flow-four-up-column-1 iconic-property-fill" d="M0 12h2v4h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-10 iconic-flow-four-up-column-4 iconic-property-fill" d="M12 6h2v6h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-8 iconic-flow-four-up-column-3 iconic-property-fill" d="M8 10h2v6h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-2 iconic-flow-four-up-column-1 iconic-property-fill" d="M0 8h2v2h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-7 iconic-flow-four-up-column-3 iconic-property-fill" d="M8 0h2v8h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-5 iconic-flow-four-up-column-2 iconic-property-fill" d="M4 5h2v2h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-9 iconic-flow-four-up-column-4 iconic-property-fill" d="M12 0h2v4h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-4 iconic-flow-four-up-column-2 iconic-property-fill" d="M4 0h2v3h-2z"/>
+      <path class="iconic-flow-four-up-item iconic-flow-four-up-item-1 iconic-flow-four-up-column-1 iconic-property-fill" d="M0 0h2v6h-2z"/>
+    </g>
+  </g>
+<script class="iconic-api" type="application/ecmascript">
+//<![CDATA[
+var iconicApis=window._Iconic?window._Iconic.smartIconApis:{};iconicApis["flow"]=iconicApis["flow"]||function(t){var e=function(e){t.setAttribute("data-state",e);var i,r,a,n=t.querySelectorAll(".iconic-flow-three-up"),o=t.querySelectorAll(".iconic-flow-two-up"),c=t.querySelectorAll(".iconic-flow-four-up");switch(i=r=a="none",e){case"four-up":a="inline";break;case"two-up":r="inline";break;default:i="inline"}for(var s=0;s<n.length;s++)n[s].setAttribute("display",i),o[s].setAttribute("display",r),c[s].setAttribute("display",a)},i=function(){var i=t.getAttribute("data-state");i&&e(i)};return{update:i,setState:e}};
+//]]>
+</script>
+</svg>

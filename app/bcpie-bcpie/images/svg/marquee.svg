@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-marquee" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Marquee</title>
+  </g>
+  <g class="iconic-marquee-lg iconic-container iconic-lg" data-width="124" data-height="82" display="inline" transform="translate(2 23)">
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-left iconic-marquee-corner-top-left iconic-property-stroke" d="M10 1h-9v9" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-right iconic-marquee-corner-top-right iconic-property-stroke" d="M123 10v-9h-9" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-right iconic-marquee-corner-bottom-right iconic-property-stroke" d="M114 81h9v-9" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-left iconic-marquee-corner-bottom-left iconic-property-stroke" d="M1 72v9h9" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-top iconic-property-stroke" d="M16 1h8m6 0h8m6 0h8m6 0h8m6 0h8m6 0h8m6 0h8" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-bottom iconic-property-stroke" d="M16 81h8m6 0h8m6 0h8m6 0h8m6 0h8m6 0h8m6 0h8" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-left iconic-property-stroke" d="M1 16v8m0 6v8m0 6v8m0 6v8" />
+    <path fill="#fff" stroke="#000" stroke-width="2" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-right iconic-property-stroke" d="M123 16v8m0 6v8m0 6v8m0 6v8" />
+  </g>
+  <g class="iconic-marquee-md iconic-container iconic-md" data-width="30" data-height="20" display="none" transform="scale(4) translate(1 6)">
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-left iconic-marquee-corner-top-left iconic-property-stroke" d="M4 .5h-3.5v3.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-right iconic-marquee-corner-top-right iconic-property-stroke" d="M29.5 4v-3.5h-3.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-right iconic-marquee-corner-bottom-right iconic-property-stroke" d="M26 19.5h3.5v-3.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-left iconic-marquee-corner-bottom-left iconic-property-stroke" d="M.5 16v3.5h3.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-right iconic-property-stroke" d="M29.5 6v3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-left iconic-property-stroke" d="M.5 6v3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-top iconic-property-stroke" d="M11 .5h3m-8 0h3m12 0h3m-8 0h3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-bottom iconic-property-stroke" d="M21 19.5h3m-8 0h3m-8 0h3m-8 0h3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-right iconic-property-stroke" d="M29.5 11v3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-left iconic-property-stroke" d="M.5 11v3" />
+  </g>
+  <g class="iconic-marquee-sm iconic-container iconic-sm" data-width="15" data-height="11" display="none" transform="scale(8) translate(0 2)">
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-left iconic-marquee-corner-top-left iconic-property-stroke" d="M3 .5h-2.5v2.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-top iconic-marquee-corner-right iconic-marquee-corner-top-right iconic-property-stroke" d="M14.5 3v-2.5h-2.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-right iconic-marquee-corner-bottom-right iconic-property-stroke" d="M12 10.5h2.5v-2.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-corner iconic-marquee-corner-bottom iconic-marquee-corner-left iconic-marquee-corner-bottom-left iconic-property-stroke" d="M.5 8v2.5h2.5" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-top iconic-property-stroke" d="M8 .5h3m-7 0h3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-horizontal iconic-marquee-line-horizontal-bottom iconic-property-stroke" d="M8 10.5h3m-7 0h3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-right iconic-property-stroke" d="M14.5 4v3" />
+    <path fill="#fff" stroke="#000" class="iconic-marquee-line iconic-marquee-line-vertical iconic-marquee-line-vertical-left iconic-property-stroke" d="M.5 4v3" />
+  </g>
+</svg>

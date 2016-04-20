@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-share-social" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Share Social</title>
+  </g>
+  <g class="iconic-share-social-lg iconic-container iconic-lg" data-width="128" data-height="68" display="inline" transform="translate(0 30)">
+    <path stroke="#000" stroke-width="8" d="M64 64c16.569 0 30-13.431 30-30h34" class="iconic-share-social-hand iconic-share-social-hand-bottom iconic-property-stroke" fill="none" />
+    <circle cx="64" cy="34" r="12" class="iconic-share-social-circle iconic-property-accent iconic-property-fill" />
+    <path stroke="#000" stroke-width="8" d="M64 4c-16.569 0-30 13.431-30 30h-34" class="iconic-share-social-hand iconic-share-social-hand-top iconic-property-stroke" fill="none" />
+  </g>
+  <g class="iconic-share-social-md iconic-container iconic-md" data-width="31" data-height="19" display="none" transform="scale(4) translate(0 6)">
+    <path stroke="#000" stroke-width="3" d="M31 9.5h-7.5c0 4.418-3.582 8-8 8h-.5" class="iconic-share-social-hand iconic-share-social-hand-bottom iconic-property-stroke" fill="none" />
+    <circle cx="15.5" cy="9.5" r="3.5" class="iconic-share-social-circle iconic-property-accent iconic-property-fill" />
+    <path stroke="#000" stroke-width="3" d="M0 9.5h7.5c0-4.418 3.582-8 8-8h.5" class="iconic-share-social-hand iconic-share-social-hand-top iconic-property-stroke" fill="none" />
+  </g>
+  <g class="iconic-share-social-sm iconic-container iconic-sm" data-width="16" data-height="12" display="none" transform="scale(8) translate(0 2)">
+    <path stroke="#000" stroke-width="2" d="M8 11c2.761 0 5-2.239 5-5h3" class="iconic-share-social-hand iconic-share-social-hand-bottom iconic-property-stroke" fill="none" />
+    <circle cx="8" cy="6" r="2" class="iconic-share-social-circle iconic-property-accent iconic-property-fill" />
+    <path stroke="#000" stroke-width="2" d="M8 1c-2.761 0-5 2.239-5 5h-3" class="iconic-share-social-hand iconic-share-social-hand-top iconic-property-stroke" fill="none" />
+  </g>
+</svg>

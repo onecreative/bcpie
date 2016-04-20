@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-keypad-mobile" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Keypad Mobile</title>
+  </g>
+  <g class="iconic-keypad-mobile-lg iconic-container iconic-lg" data-width="94" data-height="128" display="inline" transform="translate(17)">
+    <path d="M58.5 128h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-0 iconic-property-fill" />
+    <path d="M92.5 94h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-9 iconic-property-fill" />
+    <path d="M58.5 94h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-8 iconic-property-fill" />
+    <path d="M24.5 94h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-7 iconic-property-fill" />
+    <path d="M92.5 60h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-6 iconic-property-fill" />
+    <path d="M58.5 60h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-5 iconic-property-fill" />
+    <path d="M24.5 60h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-4 iconic-property-fill" />
+    <path d="M92.5 26h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-3 iconic-property-fill" />
+    <path d="M58.5 26h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-2 iconic-property-fill" />
+    <path d="M24.5 26h-23c-.828 0-1.5-.672-1.5-1.5v-23c0-.828.672-1.5 1.5-1.5h23c.828 0 1.5.672 1.5 1.5v23c0 .828-.672 1.5-1.5 1.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-1 iconic-property-fill" />
+  </g>
+  <g class="iconic-keypad-mobile-md iconic-container iconic-md" data-width="22" data-height="30" display="none" transform="scale(4) translate(5 1)">
+    <path d="M13.5 30h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-0 iconic-property-fill" />
+    <path d="M21.5 22h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-9 iconic-property-fill" />
+    <path d="M13.5 22h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-8 iconic-property-fill" />
+    <path d="M5.5 22h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-7 iconic-property-fill" />
+    <path d="M21.5 14h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-6 iconic-property-fill" />
+    <path d="M13.5 14h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-5 iconic-property-fill" />
+    <path d="M5.5 14h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-4 iconic-property-fill" />
+    <path d="M21.5 6h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-3 iconic-property-fill" />
+    <path d="M13.5 6h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-2 iconic-property-fill" />
+    <path d="M5.5 6h-5c-.276 0-.5-.224-.5-.5v-5c0-.276.224-.5.5-.5h5c.276 0 .5.224.5.5v5c0 .276-.224.5-.5.5z" class="iconic-keypad-mobile-button iconic-keypad-mobile-button-1 iconic-property-fill" />
+  </g>
+  <g class="iconic-keypad-mobile-sm iconic-container iconic-sm" data-width="11" data-height="15" display="none" transform="scale(8) translate(2)">
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-0 iconic-property-fill" d="M4 12h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-9 iconic-property-fill" d="M8 8h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-8 iconic-property-fill" d="M4 8h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-7 iconic-property-fill" d="M0 8h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-6 iconic-property-fill" d="M8 4h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-5 iconic-property-fill" d="M4 4h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-4 iconic-property-fill" d="M0 4h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-3 iconic-property-fill" d="M8 0h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-2 iconic-property-fill" d="M4 0h3v3h-3z" />
+    <path class="iconic-keypad-mobile-button iconic-keypad-mobile-button-1 iconic-property-fill" d="M0 0h3v3h-3z" />
+  </g>
+</svg>

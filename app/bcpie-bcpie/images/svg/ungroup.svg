@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-ungroup" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Ungroup</title>
+  </g>
+  <g class="iconic-ungroup-lg iconic-container iconic-lg" data-width="128" data-height="128" display="inline">
+    <path d="M106.7 82h-33c-.828 0-1.5-.672-1.5-1.5v-33c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v33c0 .828-.672 1.5-1.5 1.5z" class="iconic-ungroup-item iconic-ungroup-item-2 iconic-property-fill" />
+    <path d="M54.5 82h-33c-.828 0-1.5-.672-1.5-1.5v-33c0-.828.672-1.5 1.5-1.5h33c.828 0 1.5.672 1.5 1.5v33c0 .828-.672 1.5-1.5 1.5z" class="iconic-ungroup-item iconic-ungroup-item-1 iconic-property-fill" />
+    <path stroke="#000" stroke-width="2" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-left iconic-ungroup-bound-bottom-left iconic-property-accent iconic-property-stroke" d="M16 127h-15v-15" fill="none" />
+    <path stroke="#000" stroke-width="2" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-right iconic-ungroup-bound-top-right iconic-property-accent iconic-property-stroke" d="M112 1h15v15" fill="none" />
+    <path stroke="#000" stroke-width="2" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-left iconic-ungroup-bound-top-left iconic-property-accent iconic-property-stroke" d="M1 16v-15h15" fill="none" />
+    <path stroke="#000" stroke-width="2" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-right iconic-ungroup-bound-bottom-right iconic-property-accent iconic-property-stroke" d="M127 112v15h-15" fill="none" />
+  </g>
+  <g class="iconic-ungroup-md iconic-container iconic-md" data-width="31" data-height="31" display="none" transform="scale(4)">
+    <path d="M25.5 20h-8c-.276 0-.5-.224-.5-.5v-8c0-.276.224-.5.5-.5h8c.276 0 .5.224.5.5v8c0 .276-.224.5-.5.5z" class="iconic-ungroup-item iconic-ungroup-item-2 iconic-property-fill" />
+    <path d="M13.5 20h-8c-.276 0-.5-.224-.5-.5v-8c0-.276.224-.5.5-.5h8c.276 0 .5.224.5.5v8c0 .276-.224.5-.5.5z" class="iconic-ungroup-item iconic-ungroup-item-1 iconic-property-fill" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-left iconic-ungroup-bound-bottom-left iconic-property-accent iconic-property-stroke" d="M4 30.5h-3.5v-3.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-right iconic-ungroup-bound-top-right iconic-property-accent iconic-property-stroke" d="M27 .5h3.5v3.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-left iconic-ungroup-bound-top-left iconic-property-accent iconic-property-stroke" d="M.5 4v-3.5h3.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-right iconic-ungroup-bound-bottom-right iconic-property-accent iconic-property-stroke" d="M30.5 27v3.5h-3.5" fill="none" />
+  </g>
+  <g class="iconic-ungroup-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path class="iconic-ungroup-item iconic-ungroup-item-2 iconic-property-fill" d="M9 5h6v6h-6z" />
+    <path class="iconic-ungroup-item iconic-ungroup-item-1 iconic-property-fill" d="M1 5h6v6h-6z" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-left iconic-ungroup-bound-bottom-left iconic-property-accent iconic-property-stroke" d="M3 15.5h-2.5v-2.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-right iconic-ungroup-bound-top-right iconic-property-accent iconic-property-stroke" d="M13 .5h2.5v2.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-top iconic-ungroup-bound-left iconic-ungroup-bound-top-left iconic-property-accent iconic-property-stroke" d="M.5 3v-2.5h2.5" fill="none" />
+    <path stroke="#000" class="iconic-ungroup-bound iconic-ungroup-bound-bottom iconic-ungroup-bound-right iconic-ungroup-bound-bottom-right iconic-property-accent iconic-property-stroke" d="M15.5 13v2.5h-2.5" fill="none" />
+  </g>
+</svg>

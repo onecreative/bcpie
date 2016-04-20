@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-open-source" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Open Source</title>
+  </g>
+  <g class="iconic-open-source-lg iconic-container iconic-lg" data-width="128" data-height="124" display="inline" transform="translate(0 2)">
+    <path d="M64 0c-35.346 0-64 28.654-64 64 0 27.436 17.268 50.83 41.526 59.932l14.749-39.33c-8.338-3.129-14.274-11.17-14.274-20.602 0-12.15 9.85-22 22-22s22 9.85 22 22c0 9.431-5.936 17.473-14.274 20.602l14.749 39.33c24.257-9.101 41.526-32.496 41.526-59.932 0-35.346-28.654-64-64-64z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-open-source-md iconic-container iconic-md" data-width="32" data-height="31" display="none" transform="scale(4)">
+    <path d="M16 0c-8.837 0-16 7.163-16 16 0 6.859 4.324 12.692 10.387 14.968l3.683-9.823c-2.084-.782-3.571-2.788-3.571-5.145 0-3.038 2.462-5.5 5.5-5.5s5.5 2.462 5.5 5.5c0 2.357-1.486 4.363-3.571 5.145l3.683 9.823c6.064-2.276 10.387-8.109 10.387-14.968 0-8.837-7.163-16-16-16z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-open-source-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path d="M8 0c-4.418 0-8 3.582-8 8 0 3.429 2.162 6.346 5.194 7.484l1.756-4.683c-1.137-.427-1.95-1.515-1.95-2.801 0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.286-.813 2.374-1.95 2.801l1.756 4.683c3.032-1.138 5.194-4.055 5.194-7.484 0-4.418-3.582-8-8-8z" class="iconic-property-fill"
+    />
+  </g>
+</svg>

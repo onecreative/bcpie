@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-pointer" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Pointer</title>
+  </g>
+  <g class="iconic-pointer-lg iconic-container iconic-lg" data-width="102" data-height="128" display="inline" transform="translate(13)">
+    <path d="M102 67.765c0-4.569-3.096-8.557-7.523-9.688l-45.874-11.729c-1.49-.199-2.603-1.47-2.603-2.974v-36.373c0-3.866-3.134-7-7-7s-7 3.134-7 7v69c0 3.625-4.835 5.448-8 2.846l-10.343-8.503c-3.124-3.124-8.19-3.124-11.314 0-3.124 3.124-3.124 8.19 0 11.314l41.657 37.723-.002-.012c6.152 5.371 14.194 8.632 23.002 8.632 19.33 0 35-15.67 35-35 0-.34 0-25.235 0-25.235z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-pointer-md iconic-container iconic-md" data-width="26" data-height="31" display="none" transform="scale(4) translate(3)">
+    <path d="M3.414 15.586c-.781-.781-2.047-.781-2.828 0-.781.781-.781 2.047 0 2.828l10.273 10.164-.002-.013c1.609 1.506 3.765 2.435 6.143 2.435 4.971 0 9-4.029 9-9 0-.263 0-5.541 0-5.541 0-1.43-1.009-2.661-2.412-2.942l-11.784-2.357c-.467-.093-.804-.504-.804-.98v-8.68c0-.828-.672-1.5-1.5-1.5s-1.5.672-1.5 1.5v15.5c0 .906-1.209 1.362-2 .712l-2.586-2.126z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-pointer-sm iconic-container iconic-sm" data-width="14" data-height="16" display="none" transform="scale(8) translate(1)">
+    <path d="M.293 9.707c-.391-.391-.391-1.024 0-1.414.391-.391 1.024-.391 1.414 0 0 0 .905.744 1.293 1.063.396.325 1 .097 1-.356v-8c0-.552.448-1 1-1s1 .448 1 1v4.105c0 .51.383.938.89.994l5.362.68c.999.127 1.748.977 1.748 1.984v2.238c0 2.761-2.239 5-5 5-1.288 0-2.45-.5-3.336-1.3l-5.371-4.993z"
+    class="iconic-property-fill" />
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-pill" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Pill</title>
+  </g>
+  <g class="iconic-pill-lg iconic-container iconic-lg" data-width="128" data-height="128" display="inline">
+    <path d="M47.154 41.248l39.598 39.598-34.953 34.953c-5.288 5.288-12.32 8.201-19.799 8.201-7.479 0-14.511-2.913-19.799-8.201-10.917-10.917-10.917-28.681 0-39.598l34.953-34.953m0-5.657l-37.782 37.782c-12.497 12.497-12.497 32.758 0 45.255 6.248 6.248 14.438 9.373 22.627 9.373s16.379-3.124 22.627-9.373l37.782-37.782-45.255-45.255z"
+    class="iconic-pill-cap-hollow iconic-property-fill" />
+    <path d="M73.373 9.373c12.497-12.497 32.758-12.497 45.255 0s12.497 32.758 0 45.255l-31.875 31.875-45.255-45.255 31.875-31.875z" class="iconic-pill-cap-solid iconic-property-fill" />
+  </g>
+  <g class="iconic-pill-md iconic-container iconic-md" data-width="32" data-height="32" display="none" transform="scale(4)">
+    <path d="M11.789 11.726l8.485 8.485-8.031 8.031c-1.133 1.133-2.64 1.757-4.243 1.757s-3.109-.624-4.243-1.757c-2.339-2.339-2.339-6.146 0-8.485l8.031-8.031m0-2.828l-9.445 9.445c-3.124 3.124-3.124 8.19 0 11.314 1.562 1.562 3.609 2.343 5.657 2.343 2.047 0 4.095-.781 5.657-2.343l9.445-9.445-11.314-11.314z"
+    class="iconic-pill-cap-hollow iconic-property-fill" />
+    <path d="M18.343 2.343c3.124-3.124 8.19-3.124 11.314 0s3.124 8.19 0 11.314l-7.969 7.969-11.314-11.314 7.969-7.969z" class="iconic-pill-cap-solid iconic-property-fill" />
+  </g>
+  <g class="iconic-pill-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path d="M5.894 5.863l4.243 4.243-4.016 4.016c-.567.567-1.32.879-2.121.879s-1.555-.312-2.121-.879c-.567-.567-.879-1.32-.879-2.121s.312-1.555.879-2.121l4.016-4.016m0-1.414l-4.723 4.723c-1.562 1.562-1.562 4.095 0 5.657.781.781 1.805 1.171 2.828 1.171s2.047-.391 2.828-1.172l4.723-4.723-5.657-5.657z"
+    class="iconic-pill-cap-hollow iconic-property-fill" />
+    <path d="M9.172 1.172c1.562-1.562 4.095-1.562 5.657 0s1.562 4.095 0 5.657l-3.984 3.984-5.657-5.657 3.984-3.984z" class="iconic-pill-cap-solid iconic-property-fill" />
+  </g>
+</svg>

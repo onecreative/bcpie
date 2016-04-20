@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-weight" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Weight</title>
+  </g>
+  <g class="iconic-weight-lg iconic-container iconic-lg" data-width="128" data-height="128" display="inline">
+    <path class="iconic-weight-handle iconic-weight-handle-neck iconic-property-fill" d="M60 31.5h8v6h-8z" />
+    <circle stroke="#000" stroke-width="4" cx="64" cy="17" r="15" class="iconic-weight-handle iconic-weight-handle-ring iconic-property-stroke" fill="none" />
+    <path d="M31.507 37.417l-31.014 89.167c-.272.782.179 1.417 1.007 1.417h125c.828 0 1.279-.634 1.007-1.417l-31.014-89.167c-.272-.782-1.164-1.417-1.993-1.417h-61c-.828 0-1.721.634-1.993 1.417z" class="iconic-weight-body iconic-property-fill" />
+  </g>
+  <g class="iconic-weight-md iconic-container iconic-md" data-width="31" data-height="32" display="none" transform="scale(4)">
+    <path class="iconic-weight-handle iconic-weight-handle-neck iconic-property-fill" d="M14 8.5h3v2h-3z" />
+    <circle stroke="#000" cx="15.5" cy="4.5" r="4" class="iconic-weight-handle iconic-weight-handle-ring iconic-property-stroke" fill="none" />
+    <path d="M7.836 9.472l-7.671 22.056c-.091.261.06.472.336.472h30c.276 0 .426-.211.336-.472l-7.671-22.056c-.091-.261-.388-.472-.664-.472h-14c-.276 0-.574.211-.664.472z" class="iconic-weight-body iconic-property-fill" />
+  </g>
+  <g class="iconic-weight-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path class="iconic-weight-handle iconic-weight-handle-neck iconic-property-fill" d="M7 5h1.958v1h-1.958z" />
+    <circle stroke="#000" cx="8" cy="3" r="2.5" class="iconic-weight-handle iconic-weight-handle-ring iconic-property-stroke" fill="none" />
+    <path d="M3.907 6.232l-3.814 9.536c-.051.128.019.232.157.232h15.5c.138 0 .208-.104.157-.232l-3.814-9.536c-.051-.128-.205-.232-.343-.232h-7.5c-.138 0-.292.104-.343.232z" class="iconic-weight-body iconic-property-fill" />
+  </g>
+</svg>

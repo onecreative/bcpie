@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-pilcrow" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Pilcrow</title>
+  </g>
+  <g class="iconic-pilcrow-lg iconic-container iconic-lg" data-width="88" data-height="128" display="inline" transform="translate(20)">
+    <path d="M88 0h-60c-15.464 0-28 12.536-28 28s12.536 28 28 28h10v72h8v-120h14v120h8v-120h20v-8z" class="iconic-property-fill" />
+  </g>
+  <g class="iconic-pilcrow-md iconic-container iconic-md" data-width="23" data-height="32" display="none" transform="scale(4) translate(4)">
+    <path d="M23 0h-15.667c-4.05 0-7.333 3.283-7.333 7.333s3.283 7.333 7.333 7.333h2.667v17.333h3v-29h3v29h3v-29h4v-3z" class="iconic-property-fill" />
+  </g>
+  <g class="iconic-pilcrow-sm iconic-container iconic-sm" data-width="13" data-height="16" display="none" transform="scale(8) translate(1)">
+    <path d="M13 0h-9c-2.209 0-4 1.791-4 4s1.791 4 4 4h1v8h2v-14h2v14h2v-14h2v-2z" class="iconic-property-fill" />
+  </g>
+</svg>

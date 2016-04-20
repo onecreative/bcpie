@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-lightbulb-alt-off" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Lightbulb Alt Off</title>
+  </g>
+  <defs>
+    <clipPath id="iconic-size-lg-lightbulb-alt-off-clip-0">
+      <path d="M81.914 13.657v78.343h-80v-3l2.329 2.329 77.671-77.671zm0-11.314v-2.343h-80v82.343l80-80z" />
+    </clipPath>
+    <clipPath id="iconic-size-md-lightbulb-alt-off-clip-0">
+      <path d="M21.854 7.121v18.879h-18.879l18.879-18.879zm0-4.242v-2.879h-21v23.879l21-21z" />
+    </clipPath>
+    <clipPath id="iconic-size-sm-lightbulb-alt-off-clip-0">
+      <path d="M.854 11.879v-11.879h11.879l-11.879 11.879zm4.121.121h7.879v-7.879l-7.879 7.879z" />
+    </clipPath>
+  </defs>
+  <g class="iconic-lightbulb-alt-off-lg iconic-container iconic-lg" data-width="89" data-height="128" display="inline" transform="translate(19)">
+    <path stroke="#000" stroke-width="4" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-3 iconic-property-stroke" d="M33.914 126h16" fill="none" />
+    <path stroke="#000" stroke-width="4" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-2 iconic-property-stroke" d="M29.914 118h24" fill="none" />
+    <path stroke="#000" stroke-width="4" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-1 iconic-property-stroke" d="M29.914 110h24" fill="none" />
+    <path d="M56.914 103.908h-30c-1.657 0-3-1.343-3-3v-5.908c0-.552.448-1 1-1h34c.552 0 1 .448 1 1v5.908c0 1.657-1.343 3-3 3z" class="iconic-lightbulb-alt-off-base iconic-property-fill" />
+    <path stroke="#000" stroke-width="4" class="iconic-lightbulb-alt-off-strike iconic-property-stroke" d="M88.414 1.5l-87 87" fill="none" />
+    <path clip-path="url(#iconic-size-lg-lightbulb-alt-off-clip-0)" d="M41.914 0c-26.667 0-40 22-40 38 0 31.415 24 32 23.976 53.026-.001.541.455.974.996.974h30.055c.541 0 .997-.433.996-.974-.024-21.026 23.976-21.611 23.976-53.026 0-16-13.333-38-40-38zm-18.772 16.098c-7.756 6.034-11.228 15.348-11.228 21.902 0 1.105-.895 2-2 2s-2-.895-2-2c0-6.977 3.345-17.726 12.771-25.059.871-.679 2.127-.521 2.807.351.678.872.522 2.128-.35 2.807zm18.772-6.098c-4.04 0-7.844.652-11.303 1.939-.23.085-.465.126-.697.126-.812 0-1.576-.498-1.875-1.303-.385-1.036.142-2.187 1.177-2.572 3.907-1.453 8.18-2.19 12.698-2.19 1.105 0 2 .895 2 2s-.895 2-2 2z"
+    class="iconic-lightbulb-alt-off-bulb iconic-property-fill" />
+  </g>
+  <g class="iconic-lightbulb-alt-off-md iconic-container iconic-md" data-width="25" data-height="32" display="none" transform="scale(4) translate(3)">
+    <path stroke="#000" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-3 iconic-property-stroke" d="M9.354 31.5h4" fill="none" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-2 iconic-property-stroke" d="M8.354 29.5h6" fill="none" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-1 iconic-property-stroke" d="M8.354 27.5h6" fill="none" />
+    <path d="M15.889 23h-9.071c.013.179.036.349.036.541-.001.179 0 1.297 0 1.962 0 .276.224.497.5.497h8c.276 0 .5-.221.5-.497 0-.665.001-1.783 0-1.962-.001-.192.022-.362.035-.541z" class="iconic-lightbulb-alt-off-base iconic-property-fill" />
+    <path stroke="#000" class="iconic-lightbulb-alt-off-strike iconic-property-stroke" d="M25.354 1.5l-25 25" fill="none" />
+    <path clip-path="url(#iconic-size-md-lightbulb-alt-off-clip-0)" d="M16.039 22c.983-4.074 5.814-4.825 5.814-12 0-4-3.833-10-10.5-10s-10.5 6-10.5 10c0 7.166 4.82 7.974 5.811 12h9.375zm-11.186-11c-.552 0-1-.448-1-1 0-2.443 2.576-7 7.5-7 .552 0 1 .448 1 1s-.448 1-1 1c-3.629 0-5.5 3.505-5.5 5 0 .552-.448 1-1 1z"
+    class="iconic-lightbulb-alt-off-bulb iconic-property-fill" />
+  </g>
+  <g class="iconic-lightbulb-alt-off-sm iconic-container iconic-sm" data-width="14" data-height="16" display="none" transform="scale(8) translate(1)">
+    <path stroke="#000" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-2 iconic-property-stroke" d="M5.354 15.5h3" fill="none" />
+    <path stroke="#000" stroke-linecap="round" class="iconic-lightbulb-alt-off-screw iconic-lightbulb-alt-off-screw-1 iconic-property-stroke" d="M4.354 13.5h5" fill="none" />
+    <path stroke="#000" class="iconic-lightbulb-alt-off-strike iconic-property-stroke" d="M14.354.5l-14 14" fill="none" />
+    <path clip-path="url(#iconic-size-sm-lightbulb-alt-off-clip-0)" d="M4.082 12c-.129 0-.226-.101-.241-.23-.216-1.848-2.987-2.771-2.987-6.271 0-2 2-5.5 6-5.5s6 3.5 6 5.5c0 3.5-2.771 4.422-2.987 6.271-.015.128-.112.229-.241.229h-5.544z" class="iconic-lightbulb-alt-off-bulb iconic-property-fill"
+    />
+  </g>
+</svg>

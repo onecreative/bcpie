@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-plus-thin" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Plus Thin</title>
+  </g>
+  <g class="iconic-plus-thin-lg iconic-container iconic-lg" data-width="128" data-height="128" display="inline">
+    <path stroke="#000" stroke-width="8" stroke-linecap="square" class="iconic-property-stroke" d="M64 4v120m60-60h-120" fill="none" />
+  </g>
+  <g class="iconic-plus-thin-md iconic-container iconic-md" data-width="31" data-height="31" display="none" transform="scale(4)">
+    <path stroke="#000" stroke-width="3" stroke-linecap="square" class="iconic-property-stroke" d="M15.5 1.5v28m14-14h-28" fill="none" />
+  </g>
+  <g class="iconic-plus-thin-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path stroke="#000" stroke-width="2" stroke-linecap="square" class="iconic-property-stroke" d="M8 1v14m7-7h-14" fill="none" />
+  </g>
+</svg>

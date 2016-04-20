@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-building" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Building</title>
+  </g>
+  <g class="iconic-building-lg iconic-container iconic-lg" data-width="90" data-height="128" display="inline" transform="translate(19)">
+    <path class="iconic-building-step iconic-building-step-bottom iconic-property-accent iconic-property-fill" d="M0 126h90v2h-90z" />
+    <path class="iconic-building-step iconic-building-step-middle iconic-property-accent iconic-property-fill" d="M2 122h86v2h-86z" />
+    <path class="iconic-building-step iconic-building-step-top iconic-property-accent iconic-property-fill" d="M4 118h82v2h-82z" />
+    <path d="M2 4v2c2.209 0 4 1.791 4 4v106h34v-14h10v14h34v-106c0-2.209 1.791-4 4-4v-2h-86zm24 82h-14v-14h14v14zm2-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2zm24 68h-14v-14h14v14zm2-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2zm24 68h-14v-14h14v14zm2-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2zm-16-10v-14h14v14h-14zm16-16h-18v-2h18v2z"
+    class="iconic-building-facade iconic-property-fill" />
+    <path class="iconic-building-rooftop iconic-property-fill" d="M0 0h90v2h-90z" />
+  </g>
+  <g class="iconic-building-md iconic-container iconic-md" data-width="31" data-height="32" display="none" transform="scale(4)">
+    <path class="iconic-building-step iconic-building-step-bottom iconic-property-accent iconic-property-fill" d="M0 31.037h31v1h-31z" />
+    <path class="iconic-building-step iconic-building-step-middle iconic-property-accent iconic-property-fill" d="M1 29.037h29v1h-29z" />
+    <path class="iconic-building-step iconic-building-step-top iconic-property-accent iconic-property-fill" d="M2 27h27v1h-27z" />
+    <path d="M2 1c.552 0 1 .448 1 1v24h11v-5h3v5h11v-24c0-.552.448-1 1-1h-27zm8 17h-5v-5h5v5zm0-8h-5v-5h5v5zm8 8h-5v-5h5v5zm0-8h-5v-5h5v5zm8 8h-5v-5h5v5zm0-8h-5v-5h5v5z" class="iconic-building-facade iconic-property-fill" />
+    <path class="iconic-building-rooftop iconic-property-fill" d="M2 0h27v1h-27z" />
+  </g>
+  <g class="iconic-building-sm iconic-container iconic-sm" data-width="14" data-height="16" display="none" transform="scale(8) translate(1)">
+    <path class="iconic-building-step iconic-property-accent iconic-property-fill" d="M0 15h14v1h-14z" />
+    <path d="M6 14v-2h2v2h5v-13h-12v13h5zm2-12h3v3h-3v-3zm0 5h3v3h-3v-3zm-5-5h3v3h-3v-3zm0 5h3v3h-3v-3z" class="iconic-building-facade iconic-property-fill" />
+    <path class="iconic-building-rooftop iconic-property-fill" d="M0 0h14v1h-14z" />
+  </g>
+</svg>

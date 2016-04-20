@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-check-thin" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Check Thin</title>
+  </g>
+  <g class="iconic-check-thin-lg iconic-container iconic-lg" data-width="124" data-height="98" display="inline" transform="translate(2 15)">
+    <path stroke="#000" stroke-width="8" stroke-linecap="square" class="iconic-property-stroke" d="M116.5 7.5l-74.457 78.891-34.043-33.391" fill="none" />
+  </g>
+  <g class="iconic-check-thin-md iconic-container iconic-md" data-width="32" data-height="27" display="none" transform="scale(4) translate(0 2)">
+    <path stroke="#000" stroke-width="3" stroke-linecap="square" class="iconic-property-stroke" d="M29.5 2.5l-18.5 19.5-8.5-8.5" fill="none" />
+  </g>
+  <g class="iconic-check-thin-sm iconic-container iconic-sm" data-width="16" data-height="13" display="none" transform="scale(8) translate(0 1)">
+    <path stroke="#000" stroke-width="2" stroke-linecap="square" class="iconic-property-stroke" d="M14 2l-8 8-4-4" fill="none" />
+  </g>
+</svg>

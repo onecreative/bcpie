@@ -1,0 +1,46 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" data-icon="eye" width="128" height="128" class="iconic iconic-eye" viewBox="0 0 128 128">
+  <g><title>Eye</title></g>
+  <g data-width="128" data-height="76" class="iconic-lg iconic-container" display="inline" transform="translate(0 26)">
+    <g class="iconic-eye-open">
+      <path d="M64.5 0c-40.5 0-64.5 38-64.5 38s24 38 64.5 38c39.5 0 63.5-38 63.5-38s-24-38-63.5-38zm-.5 62c-13.255 0-24-10.745-24-24s10.745-24 24-24 24 10.745 24 24-10.745 24-24 24z" class="iconic-eye-open-eyeball iconic-property-fill"/>
+      <path d="M72 34c-2.209 0-4-1.791-4-4 0-1.1.445-2.096 1.164-2.819-1.566-.749-3.313-1.181-5.164-1.181-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12c0-1.852-.432-3.598-1.181-5.164-.723.719-1.719 1.164-2.819 1.164z" class="iconic-eye-open-pupil iconic-property-fill"/>
+    </g>
+  </g>
+  <g data-width="128" data-height="100" class="iconic-lg iconic-container" display="inline" transform="translate(0 14)">
+    <g class="iconic-eye-closed" display="none">
+      <path stroke="#000" stroke-width="8" stroke-linecap="square" class="iconic-eye-closed-strike iconic-property-stroke" fill="none" d="M21 93l86-86"/>
+      <path d="M26.549 76.138c-17.076-11.15-26.549-26.138-26.549-26.138s24-38 64.5-38c8.034 0 15.414 1.588 22.094 4.093l-12.247 12.247c-3.133-1.499-6.641-2.34-10.346-2.34-13.255 0-24 10.745-24 24 0 3.705.841 7.213 2.34 10.346l-15.791 15.791zm74.999-52.372l-15.888 15.888c1.499 3.133 2.34 6.641 2.34 10.346 0 13.255-10.745 24-24 24-3.705 0-7.213-.841-10.346-2.34l-12.111 12.111c6.905 2.584 14.571 4.229 22.958 4.229 39.5 0 63.5-38 63.5-38s-9.53-15.074-26.452-26.235z" class="iconic-eye-closed-eyeball iconic-property-fill"/>
+    </g>
+  </g>
+
+  <g data-width="32" data-height="20" class="iconic-md iconic-container" display="none" transform="scale(4) translate(0 6)">
+    <g class="iconic-eye-open">
+      <path d="M16.125 0c-10.125 0-16.125 10-16.125 10s6 10 16.125 10c9.875 0 15.875-10 15.875-10s-6-10-15.875-10zm-.125 17c-3.866 0-7-3.134-7-7s3.134-7 7-7 7 3.134 7 7-3.134 7-7 7z" class="iconic-eye-open-eyeball iconic-property-fill"/>
+      <path d="M18.5 9c-.828 0-1.5-.672-1.5-1.5 0-.479.228-.9.577-1.175-.484-.208-1.017-.325-1.577-.325-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4c0-.561-.117-1.093-.325-1.577-.275.349-.696.577-1.175.577z" class="iconic-eye-open-pupil iconic-property-fill"/>
+    </g>
+  </g>
+  <g data-width="32" data-height="28" class="iconic-md iconic-container" display="none" transform="scale(4) translate(0 2)">
+    <g class="iconic-eye-closed" display="none">
+      <path stroke="#000" stroke-width="3" stroke-linecap="square" class="iconic-eye-closed-strike iconic-property-stroke" fill="none" d="M5 25l22-22"/>
+      <path d="M0 14s6-10 16.125-10c1.523 0 2.953.239 4.284.641l-2.602 2.603c-.577-.154-1.181-.244-1.806-.244-3.866 0-7 3.134-7 7 0 .626.09 1.229.244 1.806l-4.016 4.016c-3.377-2.742-5.228-5.822-5.228-5.822zm26.791-5.842l-4.035 4.035c.154.577.244 1.181.244 1.806 0 3.866-3.134 7-7 7-.626 0-1.229-.09-1.806-.244l-2.567 2.567c1.391.424 2.893.677 4.499.677 9.875 0 15.875-10 15.875-10s-1.86-3.095-5.209-5.842z" class="iconic-eye-closed-eyeball iconic-property-fill"/>
+    </g>
+  </g>
+
+  <g data-width="16" data-height="12" class="iconic-sm iconic-container" display="none" transform="scale(8) translate(0 2)">
+    <g class="iconic-eye-open">
+      <path d="M8.063 0c-5.063 0-8.063 6-8.063 6s3 6 8.063 6c4.938 0 7.938-6 7.938-6s-3-6-7.938-6zm-.063 10c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z" class="iconic-eye-open-eyeball iconic-property-fill"/>
+      <path d="M9 6c-.552 0-1-.448-1-1 0-.403.241-.745.584-.903-.186-.057-.379-.097-.584-.097-1.105 0-2 .895-2 2s.895 2 2 2 2-.895 2-2c0-.204-.04-.398-.097-.584-.159.343-.501.584-.903.584z" class="iconic-eye-open-pupil iconic-property-fill"/>
+    </g>
+  </g>
+  <g data-width="16" data-height="16" class="iconic-sm iconic-container" display="none" transform="scale(8)">
+    <g class="iconic-eye-closed" display="none">
+      <path stroke="#000" stroke-width="2" stroke-linecap="square" class="iconic-eye-closed-strike iconic-property-stroke" fill="none" d="M2 14l12-12"/>
+      <path d="M2.152 11.02c-1.395-1.507-2.152-3.02-2.152-3.02s3-6 8.063-6c.923 0 1.778.21 2.558.551l-1.598 1.598c-.329-.087-.667-.149-1.023-.149-2.209 0-4 1.791-4 4 0 .356.061.695.149 1.023l-1.996 1.996zm9.699-4.043c.087.329.149.667.149 1.023 0 2.209-1.791 4-4 4-.356 0-.695-.061-1.023-.149l-1.576 1.576c.808.353 1.697.573 2.662.573 4.938 0 7.938-6 7.938-6s-.761-1.518-2.144-3.028l-2.005 2.005z" class="iconic-eye-closed-eyeball iconic-property-fill"/>
+    </g>
+  </g>
+<script class="iconic-api" type="application/ecmascript">
+//<![CDATA[
+var iconicApis=window._Iconic?window._Iconic.smartIconApis:{};iconicApis["eye"]=iconicApis["eye"]||function(t){var e=function(e){t.setAttribute("data-state",e);var i,r,a=t.querySelectorAll(".iconic-eye-closed"),n=t.querySelectorAll(".iconic-eye-open");i=r="none","closed"===e?r="inline":i="inline";for(var o=0;o<a.length;o++)a[o].setAttribute("display",r),n[o].setAttribute("display",i)},i=function(){var i=t.getAttribute("data-state");i&&e(i)};return{update:i,setState:e}};
+//]]>
+</script>
+</svg>

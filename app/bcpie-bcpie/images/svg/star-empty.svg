@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="iconic iconic-star-empty" width="128" height="128" viewBox="0 0 128 128">
+  <g class="iconic-metadata">
+    <title>Star Empty</title>
+  </g>
+  <g class="iconic-star-empty-lg iconic-container iconic-lg" data-width="128" data-height="122" display="inline" transform="translate(0 3)">
+    <path d="M64 25.678l7.48 22.814 1.806 5.508h30.208l-19.677 14.379-4.692 3.429 1.811 5.522 7.721 23.548-19.936-14.568-4.72-3.449-4.72 3.449-19.936 14.569 7.721-23.548 1.811-5.522-4.692-3.429-19.677-14.379h30.208l1.806-5.508 7.48-22.814m0-25.678l-15.082 46h-48.918l39.463 28.838-15.463 47.162 40-29.231 40 29.231-15.463-47.162 39.463-28.838h-48.918l-15.082-46z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-star-empty-md iconic-container iconic-md" data-width="32" data-height="31" display="none" transform="scale(4)">
+    <path d="M16 6.515l1.968 6.099.447 1.386h7.458l-4.869 3.558-1.167.853.444 1.376 1.923 5.963-5.025-3.672-1.18-.862-1.18.862-5.025 3.672 1.923-5.963.444-1.376-1.167-.853-4.869-3.558h7.458l.447-1.386 1.968-6.099m0-6.515l-3.871 12h-12.129l9.815 7.173-3.815 11.827 10-7.308 10 7.308-3.815-11.827 9.815-7.173h-12.129l-3.871-12z"
+    class="iconic-property-fill" />
+  </g>
+  <g class="iconic-star-empty-sm iconic-container iconic-sm" data-width="16" data-height="16" display="none" transform="scale(8)">
+    <path d="M8 3.162l1.051 3.154.228.684h3.87l-2.774 2.219-.545.436.221.662.931 2.787-2.358-1.885-.625-.499-.625.5-2.356 1.885.929-2.788.221-.661-.544-.436-2.774-2.219h3.87l.228-.684 1.051-3.154m0-3.162l-2 6h-6l5 4-2 6 5-4 5.004 4-2.004-6 5-4h-6l-2-6z"
+    class="iconic-property-fill" />
+  </g>
+</svg>
