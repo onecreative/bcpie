@@ -1,6 +1,6 @@
 <nav id="primary">
 	<ul class="row">
-		{% assign pages = 'Frameworks:fi-monitor:fi-iphone,Layouts:fi-flow-two-up,Themes:fi-palette,Tricks:fi-magic-wand,Fonts:fi-text,Third Party:fi-puzzle-piece,empty,Installed:fi-tag,Updates:fi-arrow-thick-bottom-fill' | split: ',' -%}
+		{% assign pages = 'Frameworks:fi-monitor:fi-iphone,Layouts:fi-flow-two-up,Themes:fi-palette,Tricks:fi-magic-wand,Fonts:fi-text,Third Party:fi-puzzle-piece,empty,Updates:fi-arrow-thick-bottom-fill' | split: ',' -%}{% comment -%}Installed:fi-tag,{% endcomment -%}
 		{% for page in pages -%}
 			{% if page == 'empty' -%}
 				<li class="columns"></li>

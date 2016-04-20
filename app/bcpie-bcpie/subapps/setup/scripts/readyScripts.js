@@ -13,6 +13,7 @@
 $(function() {
 	var doc = document,body = $(doc.body),win = window,
 	resourcePath = '/_system/apps/bcpie-bcpie/subapps/setup/packages/',
+	structurePath = '/_system/apps/bcpie-bcpie/subapps/setup/structure/'
 	readyScripts = {
 		ui: {
 			gridView: {
@@ -491,12 +492,12 @@ $(function() {
 		setup: function() {
 			if (bcpie.globals.hash.indexOf('#access_token') === 0) {
 				bcpie.ajax.file.get({path: '/_system/includes/template/foot.inc'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/foot.inc'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/foot.inc'}).done(function(data) {
 						bcpie.ajax.file.save({path:'/_system/includes/template/foot.inc',content: data});
 					})
 				});
 				bcpie.ajax.file.get({path: '/_system/includes/template/head.inc'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/head.inc'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/head.inc'}).done(function(data) {
 						bcpie.ajax.file.save({path:'/_system/includes/template/head.inc',content: data});
 					})
 				});
@@ -507,12 +508,12 @@ $(function() {
 					bcpie.ajax.file.save({path:'/_system/includes/template/footer.inc'});
 				});
 				bcpie.ajax.file.get({path: '/_system/includes/template/globals.inc'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/globals.inc'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/globals.inc'}).done(function(data) {
 						bcpie.ajax.file.save({path:'/_system/includes/template/globals.inc',content: data});
 					})
 				});
 				bcpie.ajax.file.get({path: '/scripts/readyScripts.js'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/readyScripts.js'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/readyScripts.js'}).done(function(data) {
 						bcpie.ajax.file.save({path:'/scripts/readyScripts.js',content: data});
 					})
 				});
@@ -520,7 +521,7 @@ $(function() {
 					bcpie.ajax.file.save({path:'/StyleSheets/site.css'});
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col.html'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/1Col.html'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/1Col.html'}).done(function(data) {
 						bcpie.ajax.template.save({
 							content: {
 								name: '1Col',
@@ -534,7 +535,7 @@ $(function() {
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/2Col.html'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/2Col.html'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/2Col.html'}).done(function(data) {
 						bcpie.ajax.template.save({
 							content: {
 								name: '2Col',
@@ -545,7 +546,7 @@ $(function() {
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col-No-Title.html'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/1Col-No-Title.html'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/1Col-No-Title.html'}).done(function(data) {
 						bcpie.ajax.template.save({
 							content: {
 								name: '1Col-No-Title',
@@ -556,7 +557,7 @@ $(function() {
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col-No-Grid.html'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/1Col-No-Grid.html'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/1Col-No-Grid.html'}).done(function(data) {
 						bcpie.ajax.template.save({
 							content: {
 								name: '1Col-No-Grid',
@@ -567,7 +568,7 @@ $(function() {
 					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/2Col-No-Title.html'}).fail(function() {
-					bcpie.ajax.file.get({path: resourcePath+'extras/2Col-No-Title.html'}).done(function(data) {
+					bcpie.ajax.file.get({path: structurePath+'files/2Col-No-Title.html'}).done(function(data) {
 						bcpie.ajax.template.save({
 							content: {
 								name: '2Col-No-Title',
