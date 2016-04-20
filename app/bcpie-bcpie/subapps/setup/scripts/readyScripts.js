@@ -34,83 +34,85 @@ $(function() {
 					figureButtons.on('click', function(event) {
 						event.preventDefault();
 						thisFigure = $(this).closest('figure');
-						thisType = thisFigure.data('type');
-						thisPackage = packageJSON[thisType].items[packageJSON[thisType].indexes[thisFigure.data('id')]];
-						requirementsList = '';
-						packageChangeArray = [];
 						
-						if (thisFigure.is('[data-id="new"]')) {
-							fileInput.click();
-						}else if (thisFigure.is('.active')) {
-							for (var i = 0; i < thisPackage.requiredBy.length; i++) {
-								packageType = packageJSON[thisPackage.requiredBy[i].type];
-								if (packageType.active.indexOf(thisPackage.requiredBy[i].id) > -1) {
-									requiredItem = packageType.items[packageType.indexes[thisPackage.requiredBy[i].id]];
-									requirementsList += '<li>'+requiredItem.name+'</li>';
-									packageChangeArray.push({
-										indexNum: packageType.active.indexOf(thisPackage.requiredBy[i].id),
-										packageType: packageType
-									});
+						if (thisFigure.is('[data-id="new"]')) fileInput.click();
+						else {
+							thisType = thisFigure.data('type');
+							thisPackage = packageJSON[thisType].items[packageJSON[thisType].indexes[thisFigure.data('id')]];
+							requirementsList = '';
+							packageChangeArray = [];
+
+							if (thisFigure.is('.active')) {
+								for (var i = 0; i < thisPackage.requiredBy.length; i++) {
+									packageType = packageJSON[thisPackage.requiredBy[i].type];
+									if (packageType.active.indexOf(thisPackage.requiredBy[i].id) > -1) {
+										requiredItem = packageType.items[packageType.indexes[thisPackage.requiredBy[i].id]];
+										requirementsList += '<li>'+requiredItem.name+'</li>';
+										packageChangeArray.push({
+											indexNum: packageType.active.indexOf(thisPackage.requiredBy[i].id),
+											packageType: packageType
+										});
+									}
 								}
+								if (requirementsList === '') requirementsList = '<li>None</li>';
+								alertify.confirm().set({
+									title: 'Deactivate '+thisPackage.name+'?',
+									message: '<p><strong>'+thisPackage.name+'</strong>, and all active packages which depend on it, will immediately be deactivated.</p><p><strong>Active Dependents:</strong></p><ul>'+requirementsList+'</ul>',
+									reverseButtons: true,
+									closable: false,
+									closableByDimmer: false,
+									maximizable: false,
+									pinnable: false,
+									labels: {'ok':'Do It!', 'cancel':'Uh, never mind.'},
+									onok: function() {
+										thisFigure.removeClass('active');
+										if (packageJSON[thisType].active.indexOf(thisPackage.id) > -1) packageJSON[thisType].active.splice(packageJSON[thisType].active.indexOf(thisPackage.id),1);
+										for (var i = 0; i < packageChangeArray.length; i++) {
+											packageChangeArray[i].packageType.active.splice(packageChangeArray[i].indexNum,1);
+										}
+										readyScripts.utils.updatePackageJSON(packageJSON);
+										readyScripts.utils.install();
+										alertify.success(thisPackage.name+' deactivated.');
+									}
+								}).show();
+							}else {
+								for (var i = 0; i < thisPackage.requires.length; i++) {
+									packageType = packageJSON[thisPackage.requires[i].type];
+									if (packageType.active.indexOf(thisPackage.requires[i].id) === -1) {
+										requiredItem = packageType.items[packageType.indexes[thisPackage.requires[i].id]];
+										requirementsList += '<li>'+requiredItem.name+'</li>';
+										packageChangeArray.push({
+											id: thisPackage.requires[i].id,
+											packageType: packageType
+										});
+									}
+								}
+								if (requirementsList === '') requirementsList = '<li>None</li>';
+								alertify.confirm().set({
+									title: 'Activate '+thisPackage.name,
+									message: '<p><strong>'+thisPackage.name+'</strong>, and all packages it requires, will immediately be activated.</p><p><strong>Inactive Dependencies:</strong></p><ul>'+requirementsList+'</ul>',
+									reverseButtons: true,
+									closable: false,
+									closableByDimmer: false,
+									maximizable: false,
+									pinnable: false,
+									labels: {'ok':'Do It!', 'cancel':'Uh, never mind.'},
+									onok: function() {
+										if (thisType === 'frameworks' || thisType === 'themes') {
+											figures.removeClass('active');
+											packageJSON[thisType].active = [];
+										}
+										thisFigure.addClass('active');
+										if (packageJSON[thisType].active.indexOf(thisPackage.id) === -1) packageJSON[thisType].active.push(thisFigure.data('id'));
+										for (var i = 0; i < packageChangeArray.length; i++) {
+											packageChangeArray[i].packageType.active.push(packageChangeArray[i].id);
+										}
+										readyScripts.utils.updatePackageJSON(packageJSON);
+										readyScripts.utils.install();
+										alertify.success(thisPackage.name+' has been activated.');
+									}
+								}).show();
 							}
-							if (requirementsList === '') requirementsList = '<li>None</li>';
-							alertify.confirm().set({
-								title: 'Deactivate '+thisPackage.name+'?',
-								message: '<p><strong>'+thisPackage.name+'</strong>, and all active packages which depend on it, will immediately be deactivated.</p><p><strong>Active Dependents:</strong></p><ul>'+requirementsList+'</ul>',
-								reverseButtons: true,
-								closable: false,
-								closableByDimmer: false,
-								maximizable: false,
-								pinnable: false,
-								labels: {'ok':'Do It!', 'cancel':'Uh, never mind.'},
-								onok: function() {
-									thisFigure.removeClass('active');
-									if (packageJSON[thisType].active.indexOf(thisPackage.id) > -1) packageJSON[thisType].active.splice(packageJSON[thisType].active.indexOf(thisPackage.id),1);
-									for (var i = 0; i < packageChangeArray.length; i++) {
-										packageChangeArray[i].packageType.active.splice(packageChangeArray[i].indexNum,1);
-									}
-									readyScripts.utils.updatePackageJSON(packageJSON);
-									readyScripts.utils.install();
-									alertify.success(thisPackage.name+' deactivated.');
-								}
-							}).show();
-						}else {
-							for (var i = 0; i < thisPackage.requires.length; i++) {
-								packageType = packageJSON[thisPackage.requires[i].type];
-								if (packageType.active.indexOf(thisPackage.requires[i].id) === -1) {
-									requiredItem = packageType.items[packageType.indexes[thisPackage.requires[i].id]];
-									requirementsList += '<li>'+requiredItem.name+'</li>';
-									packageChangeArray.push({
-										id: thisPackage.requires[i].id,
-										packageType: packageType
-									});
-								}
-							}
-							if (requirementsList === '') requirementsList = '<li>None</li>';
-							alertify.confirm().set({
-								title: 'Activate '+thisPackage.name,
-								message: '<p><strong>'+thisPackage.name+'</strong>, and all packages it requires, will immediately be activated.</p><p><strong>Inactive Dependencies:</strong></p><ul>'+requirementsList+'</ul>',
-								reverseButtons: true,
-								closable: false,
-								closableByDimmer: false,
-								maximizable: false,
-								pinnable: false,
-								labels: {'ok':'Do It!', 'cancel':'Uh, never mind.'},
-								onok: function() {
-									if (thisType === 'frameworks' || thisType === 'themes') {
-										figures.removeClass('active');
-										packageJSON[thisType].active = [];
-									}
-									thisFigure.addClass('active');
-									if (packageJSON[thisType].active.indexOf(thisPackage.id) === -1) packageJSON[thisType].active.push(thisFigure.data('id'));
-									for (var i = 0; i < packageChangeArray.length; i++) {
-										packageChangeArray[i].packageType.active.push(packageChangeArray[i].id);
-									}
-									readyScripts.utils.updatePackageJSON(packageJSON);
-									readyScripts.utils.install();
-									alertify.success(thisPackage.name+' has been activated.');
-								}
-							}).show();
 						}					
 					});
 
@@ -204,10 +206,9 @@ $(function() {
 				return bcpie.ajax.file.save({path:resourcePath+'packages.json',content:data},{async:false});
 			},
 			getPackageJSON: function() {
-				try {
-					return JSON.parse(bcpie.ajax.file.get({path:resourcePath+'packages.json'},{async:false}).responseText);
-				}catch(err) {
-					return {
+				packageJSON = JSON.parse(bcpie.ajax.file.get({path:resourcePath+'packages.json'},{async:false}).responseText);
+				if (packageJSON.code == 104002) {
+					packageJSON = {
 						frameworks: {active: [],indexes: {},items: []},
 						thirdParty: {active: [],indexes: {},items: []},
 						layouts: {active: [],indexes: {},items: []},
@@ -215,7 +216,8 @@ $(function() {
 						tricks: {active: [],indexes: {},items: []},
 						fonts: {active: [],indexes: {},items: []}
 					};
-				} 
+				}
+				return packageJSON;
 			},
 			install: function(packageJSON) {
 				if (typeof packageJSON === 'undefined') packageJSON = readyScripts.utils.getPackageJSON();
