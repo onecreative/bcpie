@@ -1,5 +1,0 @@
-<article class="post">
-	<h2><a href="{{url}}">{{title}}</a></h2>
-	<h4 class="subheader">{{date | date: 'MMMM dd, yyyy'}} | {% if commentsCount == 0 %}No comments yet{% elseif commentsCount == 1 %}1 comment{% else %}{{commentsCount}} comments{% endif %}</h4>
-	<p>{{body | strip_html | truncatewords: 40, '...'}} <a href="{{url}}">Read More</a></p>
-</article>
