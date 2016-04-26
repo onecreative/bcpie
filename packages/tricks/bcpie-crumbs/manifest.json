@@ -1,7 +1,7 @@
 {
     "id": "bcpie-crumbs",
     "name": "Crumbs",
-    "packageVersion": 1459191565,
+    "packageVersion": 1461689435,
     "description": "Crumbs is a full replacement for the breadcrumbs modules in Business Catalyst. BC’s breadcrumbs modules are inconsistent, require specific placement, and depend on you manually defining them with the sitemap module. Crumbs, on the other hand, are always accurate, can be placed anywhere on your site, and intelligently name your breadcrumbs based on your actual page names. You'll never look back.",
     "distributor": {
         "name": "ONE Creative",
@@ -23,6 +23,6 @@
     }, {
         "id": "bcpie-sdk",
         "type": "tricks",
-        "packageVersion": 1459191565
+        "packageVersion": 1461689435
     }]
 }

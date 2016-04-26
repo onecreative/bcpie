@@ -1,7 +1,7 @@
 {
     "id": "bcpie-trigger",
     "name": "Trigger",
-    "packageVersion": 1459191565,
+    "packageVersion": 1461689435,
     "description": "Trigger gives you the ability to use one element to 'trigger' a behavior on another. For instance, you may want to add or remove a class when a button is clicked.",
     "distributor": {
         "name": "ONE Creative",
@@ -23,6 +23,6 @@
     }, {
         "id": "bcpie-sdk",
         "type": "tricks",
-        "packageVersion": 1459191565
+        "packageVersion": 1461689435
     }]
 }

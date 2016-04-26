@@ -1,7 +1,7 @@
 {
 	"id": "bcpie-date",
 	"name": "Date",
-	"packageVersion": 1459191565,
+	"packageVersion": 1461689435,
 	"description": "Date is a powerful way to display custom-formatted date and time information anywhere on your site. It harnesses the functionality of moment.js, while maintaining the simplicity of Dev-in-a-Box.",
 	"distributor": {
 		"name": "ONE Creative",
@@ -23,7 +23,7 @@
 	}, {
 		"id": "bcpie-sdk",
 		"type": "tricks",
-		"packageVersion": 1459191565
+		"packageVersion": 1461689435
 	}, {
 		"id": "moment",
 		"type": "thirdParty",

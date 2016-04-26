@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2016.02.26',
+		version: '2016.04.25',
 		defaults: {
 			format: 'YYYY', // use Moment parsing, 'calendar', or 'utc'
 			add: '',
@@ -26,15 +26,35 @@ bcpie.extensions.tricks.Date = function(selector,options){
 		}
 	});
 
+	var ref,value,targets,parseFormat,order,addSplit,subtractSplit;
+
 	if (settings.locale === 'off') settings.locale = bcpie.globals.site.language.toLowerCase();
 	else if (settings.locale === 'auto') settings.locale = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
 
-	if (settings.add !== '') settings.add = $.parseJSON(bcpie.utils.jsonify(settings.add));
-	if (settings.subtract !== '') settings.subtract = $.parseJSON(bcpie.utils.jsonify(settings.subtract));
+	if (settings.add !== '') {
+		addSplit = settings.add.split(',');
+		for (var i = 0; i < addSplit.length; i++) {
+			if ($.isNumeric(addSplit[i].charAt(0))) {
+				if (addSplit[i].split(':').length === 2) addSplit[i] = addSplit[i].split(':')[1]+':'+addSplit[i].split(':')[0];
+				else addSplit[i] = 'years:'+addSplit[i];
+			}
+		}
+		addSplit = addSplit.join(',');
+		settings.add = $.parseJSON(bcpie.utils.jsonify(addSplit));
+	}
+	if (settings.subtract !== '') {
+		var subtractSplit = settings.subtract.split(',');
+		for (var i = 0; i < subtractSplit.length; i++) {
+			if ($.isNumeric(subtractSplit[i].charAt(0))) {
+				if (subtractSplit[i].split(':').length === 2) subtractSplit[i] = subtractSplit[i].split(':')[1]+':'+subtractSplit[i].split(':')[0];
+				else subtractSplit[i] = 'years:'+subtractSplit[i];
+			}
+		}
+		subtractSplit = subtractSplit.join(',');
+		settings.subtract = $.parseJSON(bcpie.utils.jsonify(subtractSplit));
+	}
 
 	if (settings.utc === true) settings.format = 'utc';
-
-	var ref,value,targets,parseFormat,order;
 
 	function initLangSupport() {
 		if (moment.localeData('es') !== null) { // check for the existence of language data other than 'en'

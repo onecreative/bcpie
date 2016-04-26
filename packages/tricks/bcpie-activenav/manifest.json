@@ -1,7 +1,7 @@
 {
 	"id": "bcpie-activenav",
 	"name": "ActiveNav",
-	"packageVersion": 1459191565,
+	"packageVersion": 1461689435,
 	"description": "ActiveNav makes it easy to create truly dynamic navigation throughout your site. It can be used to produce something as simple as a highlighted menu item when it represents the current page, to side navigation that only shows links related to the current section of your website.",
 	"distributor": {
 		"name": "ONE Creative",
@@ -23,6 +23,6 @@
 	}, {
 		"id": "bcpie-sdk",
 		"type": "tricks",
-		"packageVersion": 1459191565
+		"packageVersion": 1461689435
 	}]
 }

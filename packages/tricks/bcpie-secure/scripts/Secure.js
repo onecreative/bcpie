@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2015.11.12',
+		version: '2016.04.26',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '', // callback function to call when a session ends.
@@ -77,19 +77,31 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 	function sessionBehavior() {
 		$.ajax({
-			url: '/',
+			url: '/_system/apps/bcpie-bcpie/public/utilities/loggedinstatus.html',
 			type: 'GET',
 			success: function(response) {
-				if ($(response).filter('[data-isloggedin]').data('isloggedin') === 0) {
-					if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
-					if (settings.onSessionEnd !== '') bcpie.utils.executeCallback({
-						selector: selector,
-						callback: settings.onSessionEnd
-					});
-					clearInterval(interval);
-				}
+				onAutoLogout(response);
+			},
+			error: function() {
+				$.ajax({
+					url: '/',
+					type: 'GET',
+					success: function(response) {
+						onAutoLogout(response);
+					}
+				});
 			}
 		});
+	}
+	function onAutoLogout (response) {
+		if ($(response).filter('[data-loggedin]').data('loggedin') == false) {
+			if (settings.onSessionEnd !== '') bcpie.utils.executeCallback({
+				selector: selector,
+				callback: settings.onSessionEnd
+			});
+			if (settings.sessionEndRedirect !== '') win.location.href = settings.primaryDomain+settings.sessionEndRedirect;
+			clearInterval(interval);
+		}
 	}
 	function bindSessionEvents (argument) {
 		interval = setInterval(function(){sessionBehavior();},900000); // 15min

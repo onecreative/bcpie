@@ -1,7 +1,7 @@
 {
 	"id": "bcpie-formmagic",
 	"name": "FormMagic",
-	"packageVersion": 1459191565,
+	"packageVersion": 1461689435,
 	"description": "FormMagic takes all the headache out of working with forms in BC. Feel free to get rid of the clutter BC automatically adds to your forms. You can delete the JavaScript and strip your forms down to their skivvies, and rest assured they will work even better than they did before. Enhanced validation and easy Ajax are the hallmarks of this amazing trick.",
 	"distributor": {
 		"name": "ONE Creative",
@@ -23,7 +23,7 @@
 	}, {
 		"id": "bcpie-sdk",
 		"type": "tricks",
-		"packageVersion": 1459191565
+		"packageVersion": 1461689435
 	}, {
 		"id": "alertify-js",
 		"type": "thirdParty",

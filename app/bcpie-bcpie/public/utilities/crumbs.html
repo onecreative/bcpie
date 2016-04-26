@@ -1,0 +1,2 @@
+{module_data resource="pages" version="v3" fields="pageUrl,name" where="\{ 'pageUrl': \{ '$in': \[ {{globals.get.paths | replace:',',"','" | prepend: "'" | append: "'"}} \] \} \}" skip="0" limit="500" collection="pages"}
+<div data-pages="{{pages|json}}"></div>

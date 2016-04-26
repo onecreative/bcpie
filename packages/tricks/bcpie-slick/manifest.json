@@ -1,7 +1,7 @@
 {
 	"id": "bcpie-slick",
 	"name": "Slick",
-	"packageVersion": 1459191565,
+	"packageVersion": 1461689435,
 	"description": "The most versatile carousel, now completely Pie-ified.",
 	"distributor": {
 		"name": "ONE Creative",
@@ -23,7 +23,7 @@
 	}, {
 		"id": "bcpie-sdk",
 		"type": "tricks",
-		"packageVersion": 1459191565
+		"packageVersion": 1461689435
 	}, {
 		"id": "slick",
 		"type": "thirdParty",
