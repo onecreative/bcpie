@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2016.01.30',
+		version: '2016.4.25',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -27,13 +27,14 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			hashOffset: 30,
 			removeClass: '',
 			paramSupport: true,
-			bubble: true
+			bubble: true,
+			crumbs: false
 		}
 	});
 
 	// vars
 	var shortPath = settings.path.toLowerCase() + win.location.search.toLowerCase() + settings.hash.toLowerCase(),
-		activeLinks, currentLink, gotIt = 0, first, segment, last, currentHash;
+		activeLinks, currentLink, gotIt = 0, first, segment, last, currentHash, crumbs;
 
 	settings.navClass = classObject(settings.navClass);
 	settings.activeClass = classObject(settings.activeClass);
@@ -149,9 +150,11 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		}
 		if (activeLinks.length > 0) {
 			makeActive(activeLinks, first);
-			if ($.trim(settings.removeClass.names).length > 0) {
-				selector.removeClass(settings.removeClass.names);
+			if (settings.crumbs === true) {
+				selector.find('li').not(settings.activeClass.selector).remove();
+				selector.find(settings.currentActiveClass.selector).text(selector.find(settings.currentActiveClass.selector).children('a').text());
 			}
+			if ($.trim(settings.removeClass.names).length > 0) selector.removeClass(settings.removeClass.names);
 		}else if (selector.find(settings.levelClass.selector).size() === 0){
 			if (settings.level > 1) {
 				selector.children('ul').remove();
@@ -248,5 +251,22 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		}).remove();
 	}
 
-	initActiveNav();
+	if (settings.crumbs === true && selector.children().length === 0) {
+		var breadcrumbs = '',
+			pathString = '',
+			path = '',
+			pages;
+		for (var i=0; i<settings.pathArray.length; i++) {
+			path += settings.pathArray[i];
+			pathString += ','+path;
+		}
+		$.get('/_system/apps/bcpie-bcpie/public/utilities/crumbs.html?paths='+pathString).done(function(data,status,xhr) {
+			pages = $(data).filter('[data-pages]').data('pages').items;
+			for (var i=pages.length-1; i>-1; i--) {
+				breadcrumbs = '<ul><li><a href="'+pages[i].pageUrl+'">'+pages[i].name+'</a>'+breadcrumbs+'</li></ul>';
+			}
+			selector.html(breadcrumbs);
+			initActiveNav();
+		});
+	}else initActiveNav();
 };
