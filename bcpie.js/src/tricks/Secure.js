@@ -77,7 +77,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 	function sessionBehavior() {
 		$.ajax({
-			url: '/_system/apps/bcpie-bcpie/public/utilities/loggedinstatus.html',
+			url: '/_system/apps/bcpie-bcpie/public/utilities/ajax/loggedinstatus.html',
 			type: 'GET',
 			success: function(response) {
 				onAutoLogout(response);

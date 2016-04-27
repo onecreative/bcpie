@@ -12951,7 +12951,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 			path += settings.pathArray[i];
 			pathString += ','+path;
 		}
-		$.get('/_system/apps/bcpie-bcpie/public/utilities/crumbs.html?paths='+pathString).done(function(data,status,xhr) {
+		$.get('/_system/apps/bcpie-bcpie/public/utilities/ajax/crumbs.html?paths='+pathString).done(function(data,status,xhr) {
 			pages = $(data).filter('[data-pages]').data('pages').items;
 			for (var i=pages.length-1; i>-1; i--) {
 				breadcrumbs = '<ul><li><a href="'+pages[i].pageUrl+'">'+pages[i].name+'</a>'+breadcrumbs+'</li></ul>';
@@ -14731,7 +14731,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 	function sessionBehavior() {
 		$.ajax({
-			url: '/_system/apps/bcpie-bcpie/public/utilities/loggedinstatus.html',
+			url: '/_system/apps/bcpie-bcpie/public/utilities/ajax/loggedinstatus.html',
 			type: 'GET',
 			success: function(response) {
 				onAutoLogout(response);
