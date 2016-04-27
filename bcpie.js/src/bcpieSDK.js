@@ -454,6 +454,12 @@ win.bcpie = {
 					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
 					return bcpie.utils.ajax(options);
 				},
+				logout: function() {
+					if (typeof options !== 'object') options = {};
+					options.url = '/logoutprocess.aspx';
+					options.method = 'POST';
+					return bcpie.utils.ajax(options);
+				},
 				save: function(data,options) {
 					if (typeof data === 'undefined') data = {};
 					if (typeof options !== 'object') options = {};
