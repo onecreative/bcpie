@@ -14,19 +14,19 @@
 			"filename": "moment.js",
 			"type": "scripts",
 			"location": "foot",
-			"version": "2.11.2",
+			"version": "2.13.0",
 			"docs": "http://momentjs.com/docs/"
 		}, {
 			"filename": "moment-timezone-with-data-2010-2020.js",
 			"type": "scripts",
 			"location": "foot",
-			"version": "0.5.0",
+			"version": "0.5.3",
 			"docs": "http://momentjs.com/timezone/"
 		}, {
 			"filename": "moment-timezone-utils.js",
 			"type": "scripts",
 			"location": "foot",
-			"version": "0.5.0",
+			"version": "0.5.3",
 			"docs": "http://momentjs.com/timezone/"
 		}, {
 			"filename": "moment.parseFormat.js",
@@ -40,6 +40,42 @@
 			"location": "foot",
 			"version": "1.3.0",
 			"docs": "https://github.com/jsmreese/moment-duration-format"
+		}, {
+			"filename": "de.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
+		}, {
+			"filename": "es.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
+		}, {
+			"filename": "fr.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
+		}, {
+			"filename": "it.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
+		}, {
+			"filename": "pt.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
+		}, {
+			"filename": "ru.js",
+			"type": "scripts",
+			"location": "foot",
+			"version": "",
+			"docs": "http://momentjs.com/docs/"
 		}
 	],
 	"requires": []

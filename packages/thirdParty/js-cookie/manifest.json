@@ -1,7 +1,7 @@
 {
 	"id": "js-cookie",
 	"name": "JavaScript Cookie",
-	"packageVersion": 1459191565,
+	"packageVersion": 1461944962,
 	"description": "A simple, lightweight JavaScript API for handling cookies",
 	"distributor": {
 		"name": "ONE Creative",
@@ -14,7 +14,7 @@
 			"filename": "js.cookie.js",
 			"type": "scripts",
 			"location": "foot",
-			"version": "2.1.0",
+			"version": "2.1.1",
 			"docs": "https://github.com/js-cookie/js-cookie"
 		}
 	],
