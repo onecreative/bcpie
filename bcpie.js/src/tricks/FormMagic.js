@@ -19,7 +19,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
 			'afterAjax' : 'remove', // 'hide', 'show'
 			'useAjax' : false, // deprecated in favor of 'mode'
-			'validateMode' : 'alert', // 'inline', 'off'
+			'validateMode' : 'inline', // 'alert', 'off'
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
@@ -1014,7 +1014,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	buttonSubmitBehaviour(settings.buttonOnLoad);
 
 	// Auto Require certain fields
-	autoRequire = ['FirstName','LastName','FullName','EmailAddress','CaptchaV2','g-recaptcha-response','ItemName'];
+	autoRequire = ['EmailAddress','CaptchaV2','g-recaptcha-response','ItemName'];
 	ccFields = ['CardName','CardNumber','CardExpiryMonth','CardExpiryYear','CardType','CardCCV'];
 
 	// Auto require credit card fields depending upon payment method

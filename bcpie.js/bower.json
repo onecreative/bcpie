@@ -32,7 +32,15 @@
 		},
 		"sources": {
 			"js-cookie": "bower_components/js-cookie/src/js.cookie.js",
-			"moment": "bower_components/moment/moment.js",
+			"moment": [
+				"bower_components/moment/moment.js",
+				"bower_components/moment/locale/es.js",
+				"bower_components/moment/locale/de.js",
+				"bower_components/moment/locale/it.js",
+				"bower_components/moment/locale/fr.js",
+				"bower_components/moment/locale/pt.js",
+				"bower_components/moment/locale/ru.js"
+			],
 			"moment-timezone": [
 				"bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js",
 				"bower_components/moment-timezone/moment-timezone-utils.js"
