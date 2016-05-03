@@ -14144,7 +14144,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	if (settings.utc === true) settings.format = 'utc';
 
 	function initLangSupport() {
-		if (moment.localeData('es') !== null) { // check for the existence of language data other than 'en'
+		if (moment.localeData(settings.locale) !== null) { // check for the existence of language data other than 'en'
 			moment.locale(settings.locale);
 		}else setTimeout(initLangSupport, 100);
 	}
@@ -14207,7 +14207,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	}
 
 	// Initialize Language Support
-	if (settings.locale !== 'en') {
+	if (moment.localeData(settings.locale) === null) {
 		var src = '//cdn.jsdelivr.net/momentjs/'+moment.version+'/locales.min.js';
 		if ($(doc).find('script[src="'+src+'"]').length === 0) {
 			var momentLocale = document.createElement('script');
@@ -14216,8 +14216,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			momentLocale.src = src;
 			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(momentLocale);
 		}
-		initLangSupport();
 	}
+	initLangSupport();
 
 	if (settings.event !== 'load') {
 		selector.on(settings.event, function() {
