@@ -62,7 +62,7 @@ win.bcpie = {
 					options.contentType = 'application/octet-stream';
 					options.processData = false;
 					if (typeof data.content.upload !== 'undefined' || typeof data.content.type !== 'undefined') {
-						options.url.replace('?version='+data.version,'');
+						options.url = options.url.replace('?version='+data.version,'');
 						options.data = data.content;
 					}else if (typeof data.content === 'string') options.data = data.content;
 					else options.data = JSON.stringify(data.content);

@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.04.27',
+		sdk: '2016.05.05',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -761,7 +761,7 @@ win.bcpie = {
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
 			if (bcpie.utils.isAdmin() === true) settings.connection = options.connection || 'keep-alive';
-			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined') delete settings.dataType;
+			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined' && settings.dataType.toLowerCase() !== 'binary' && settings.dataType.toLowerCase() !== 'arraybuffer') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
 		},

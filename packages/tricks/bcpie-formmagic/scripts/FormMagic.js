@@ -8,45 +8,45 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.02.22',
+		version: '2016.05.05',
 		defaults: {
-			'requiredClass' : 'required',
-			'errorGroupElement' : 'div',
-			'errorGroupClass' : 'error-group',
-			'errorMessageElement' : 'small',
-			'errorClass' : 'error',
-			'messageBox' : 'replace', // 'replace' replaces the form with the message, 'off' returns no message, and 'alert' displays the message in an alert box. Otherwise, a CSS selector indicates where to put the message.
-			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
-			'afterAjax' : 'remove', // 'hide', 'show'
-			'useAjax' : false, // deprecated in favor of 'mode'
+			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
+			'submitEvent' : 'submit',
+			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
 			'validateMode' : 'inline', // 'alert', 'off'
-			'fieldTitleAttr' : 'label', // or specify a field attribute
-			'systemMessageClass' : 'system-message',
-			'systemErrorMessageClass' : 'system-error-message',
+			'inlineSuccess' : true, // When true, inline validation will also show success messages, not just errors.
+			'steps' : '', // multistep container selectors, separated by comma
+			'prev' : '', // back button selector for multistep form
+			'next' : '', // Continue button selector for multistep form
+			'responseTarget' : 'replace' // where to show an ajax response after submission. 'replace' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
+			'restoreTarget' : true, // If ajax submission result is empty, the contents of the responseTarget will be restored. This is particularly helpful with live searches.
 			'successMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemMessageClass'. Otherwise, text in this option will be used for the success message, and shown in an Alertify notification.
 			'errorMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemErrorMessageClass'. Otherwise, text in this option will be used for the error message, and shown in an Alertify notification.
+			'formOnResponse' : 'remove', // 'hide', 'show'
+			'buttonOnSubmit' : 'off', // disable,hide
+			'buttonOnResponse' : 'off', // disable,hide
+			'requiredClass' : 'required',
+			'errorGroupClass' : 'error-group',
+			'errorClass' : 'error',
+			'successGroupClass' : 'success-group',
 			'successClass' : 'success',
-			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
-			'submitEvent' : null,
-			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
+			'systemMessageClass' : 'system-message',
+			'systemErrorMessageClass' : 'system-error-message',
+			'fieldTitleAttr' : 'label', // or specify a field attribute
+			'errorGroupElement' : 'div',
+			'errorMessageElement' : 'small',
+			
+			'customErrorFields' : '', // takes a comma delimited list of selectors to match against during validation
+			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
 			'beforeValidation' : null, // specify a function to run before validation
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
-			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
 			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
 			'onStep' : null, // specify a function to run on multistep step (either direction)
-			'onBack' : null, // specify a function to run on step backwards
-			'onContinue' : null, // specify a function to run on step forward
-			'steps' : '', // multistep container selectors, separated by comma
-			'continueButton' : '', // Continue button selector for multistep form
-			'backButton' : '', // back button selector for multistep form
-			'buttonOnLoad' : 'enable', // none,disable,hide
-			'buttonOnSubmit' : 'disable', // none,enable,hide
-			'buttonAfterSubmit' : 'enable', //none,hide,show,disable
-			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
-			'customErrorFields' : '' // takes a comma delimited list of selectors to match against during validation
+			'onPrev' : null, // specify a function to run on step backwards
+			'onNext' : null // specify a function to run on step forward
 		}
 	});
 
@@ -625,16 +625,29 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		})();
 	}
 
-	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
-	if (settings.mode === 'standard' && settings.useAjax === true) settings.mode = 'ajax';
+	if (settings.steps === '' && typeof settings.containers !== 'undefined') settings.steps = settings.containers;
+	if (settings.prev === ''  && typeof settings.backButton !== 'undefined') settings.prev = settings.backButton;
+	if (settings.next === ''  && typeof settings.continueButton !== 'undefined') settings.next = settings.continueButton;
+	if (settings.onPrev === ''  && typeof settings.onBack !== 'undefined') settings.onPrev = settings.onBack;
+	if (settings.onNext === ''  && typeof settings.onContinue !== 'undefined') settings.onNext = settings.onContinue;
+	if (settings.responseTarget === 'replace'  && typeof settings.messageBox !== 'undefined') settings.responseTarget = settings.messageBox;
+	if (settings.restoreTarget === true  && typeof settings.restoreMessageBox !== 'undefined') settings.restoreTarget = settings.restoreMessageBox;
+	if (settings.formOnResponse === null  && typeof settings.afterAjax !== 'undefined') settings.formOnResponse = settings.afterAjax;
+	if (settings.buttonOnResponse === null  && typeof settings.buttonAfterSubmit !== 'undefined') settings.buttonOnResponse = settings.buttonAfterSubmit;
+	if (settings.submitMode === 'standard') {
+		if (typeof settings.mode !== 'undefined') settings.submitMode = settings.mode;
+		else if (typeof settings.noSubmit !== 'undefined' && settings.noSubmit === true) settings.submitMode = 'off';
+		else if (typeof settings.useAjax !== 'undefined' && settings.useAjax === true) settings.submitMode = 'ajax';
+	}
+	
 
 	// setup some local variables
 	var requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
-		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
+		validationTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
 		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
 		multistep = {containers: selector.find(settings.steps), step: 0},
-		lockSubmit = false, messageBoxContents = (body.find(settings.messageBox).length > 0) ? body.find(settings.messageBox).html() : selector.html(), customFlag = false,msg,
+		lockSubmit = false, messageBoxContents = (body.find(settings.responseTarget).length > 0) ? body.find(settings.responseTarget).html() : selector.html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha', 'g-recaptcha-response' : 'Captcha'};
 
 	if (settings.customErrorFields !== '') settings.customErrorFields = settings.customErrorFields.split(',');
@@ -726,44 +739,48 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}
 		}else if (settings.validateMode==='inline') {
 			switch (required.type) {
-				case 'radio' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
-				case 'checkbox' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
-				case 'captcha' : errorTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
-				case 'recaptcha' : errorTarget = (selector.find('#g-recaptcha-response').length > 0) ? selector.find('#g-recaptcha-response') : required.field; break;
-				default : errorTarget = required.field;
-			}
-			if (errorTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) {
-				errorElementExists = true;
-			}else {
-				errorElementExists = false;
+				case 'radio' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
+				case 'checkbox' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
+				case 'captcha' : validationTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
+				case 'recaptcha' : validationTarget = (selector.find('#g-recaptcha-response').length > 0) ? selector.find('#g-recaptcha-response') : required.field; break;
+				default : validationTarget = required.field;
 			}
 
+			errorElementExists = false;
+			successElementExists = false;
+			if (validationTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) errorElementExists = true;
+			if (validationTarget.parent().is(settings.successGroupElement+'.'+settings.successGroupClass.replace(' ','.'))) successElementExists = true;
+
 			if (required.message !=='') {
-				if (errorElementExists) {
+				if (errorElementExists === true) {
 					// just replace the error message
-					errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
+					validationTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
 				}else {
-					// add the message into new element
-					messageElement = '<'+settings.errorMessageElement+' class="'+settings.errorClass+'">'+required.message+'</'+settings.errorMessageElement+'>';
-					errorTarget.addClass(settings.errorClass).wrap(errorElement);
-					if (rdoChkFlag) selector.find('[name="' + required.name + '"]').addClass(settings.errorClass);
-					errorTarget.parent().append(messageElement);
+					if (successElementExists === true) removeInlineValidation(required,validationTarget,settings.successMessageElement,settings.successClass,rdoChkFlag);
+					addInlineValidation(required,validationTarget,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
 				}
-			}else if (errorElementExists) {
-				// remove the element
-				errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
-				errorTarget.removeClass(settings.errorClass).unwrap();
-				if (rdoChkFlag) selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
+			}else {
+				if (errorElementExists === true) removeInlineValidation(required,validationTarget,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
+				if (settings.inlineSuccess === true) addInlineValidation(required,validationTarget,settings.successMessageElement,settings.successClass,rdoChkFlag);
 			}
 		}
+	}
+	function addInlineValidation(required,validationTarget,messageElement,validationClass,rdoChkFlag) {
+		// add the message into new element
+		validationTarget.addClass(validationClass).wrap(messageElement);
+		if (rdoChkFlag === true) selector.find('[name="' + required.name + '"]').addClass(validationClass);
+		validationTarget.parent().append('<'+messageElement+' class="'+validationClass+'">'+required.message+'</'+messageElement+'>');
+	}
+	function removeInlineValidation(required,validationTarget,messageElement,validationClass,rdoChkFlag) {
+		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
+		validationTarget.removeClass(validationClass).unwrap();
+		if (rdoChkFlag == true) selector.find('[name="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
 		switch(behavior){
-			case 'show': submitButton.show(); break;
 			case 'hide': submitButton.hide(); break;
 			case 'disable': submitButton.attr('disabled','disabled'); break;
-			case 'enable': submitButton.removeAttr('disabled'); break;
 			default: submitButton.removeAttr('disabled').show();
 		}
 	}
@@ -778,7 +795,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				otherURL = (bcpie.globals.currentDomain === bcpie.globals.secureDomain) ? bcpie.globals.currentDomain : bcpie.globals.secureDomain;
 				otherURL += thisURL+'&callback=?';
 			}
-			if (settings.mode === 'ajax') {
+			if (settings.submitMode === 'ajax') {
 				$.ajax({
 					type: 'POST',
 					url: thisURL,
@@ -826,7 +843,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							// Show Success Message
 							if (settings.messageMode !== 'off') {
 								if (settings.successMessage !== null) alertify.success(settings.successMessage);
-								else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') inlineSuccess(selector,successMessage);
 								// else alertify.success('Success!');
 							}
 						}
@@ -871,10 +888,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							status: status,
 							xhr: xhr
 						});
-						buttonSubmitBehaviour(settings.buttonAfterSubmit);
+						buttonSubmitBehaviour(settings.buttonOnResponse);
 					}
 				});
-			}else if (settings.mode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
+			}else if (settings.submitMode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
 				var data = {};
 				data.webapp = settings.webapp;
 				if (typeof settings.item !== 'undefined') data.item = settings.item;
@@ -905,7 +922,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						status: status,
 						xhr: xhr
 					});
-					buttonSubmitBehaviour(settings.buttonAfterSubmit);
+					buttonSubmitBehaviour(settings.buttonOnResponse);
 				});
 			}else selector.off('submit').submit();
 
@@ -915,19 +932,19 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function showSuccess(selector,successMessage) {
+	function inlineSuccess(selector,successMessage) {
 		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
-		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
+		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
 		else if(successMessage.find('.webappsearchresults').length > 0) successMessage = successMessage.find('.webappsearchresults').html();
 
-		if (settings.messageBox === 'replace') {
+		if (settings.responseTarget === 'replace') {
 			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
 			else if (typeof settings.afterAjax !== 'undefined' && settings.afterAjax === 'hide' || settings.messageMode === 'prepend') selector.before(successMessage); // for backwards compatibility
 			else selector.html(successMessage).fadeIn();
-		}else if (settings.messageBox !== 'off') {
-			body.find(settings.messageBox).html(successMessage);
+		}else if (settings.responseTarget !== 'off') {
+			body.find(settings.responseTarget).html(successMessage);
 			if (settings.afterAjax === 'remove') selector.remove();
 		}
 	}
@@ -995,13 +1012,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function moveToContainer(index){
 		// show/hide buttons
 		if (index === 0) {
-			selector.find(settings.submitField +','+ settings.backButton).hide();
-			selector.find(settings.continueButton).show();
+			selector.find(settings.submitField +','+ settings.prev).hide();
+			selector.find(settings.next).show();
 		}else if (index === multistep.containers.length - 1) {
-			selector.find(settings.continueButton).hide();
-			selector.find(settings.submitField +','+ settings.backButton).show();
+			selector.find(settings.next).hide();
+			selector.find(settings.submitField +','+ settings.prev).show();
 		}else{
-			selector.find(settings.continueButton +','+ settings.backButton).show();
+			selector.find(settings.next +','+ settings.prev).show();
 			selector.find(settings.submitField).hide();
 		}
 
@@ -1011,7 +1028,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (index !== 0) selector.get(0).scrollIntoView();
 	}
 
-	buttonSubmitBehaviour(settings.buttonOnLoad);
+	buttonSubmitBehaviour('');
 
 	// Auto Require certain fields
 	autoRequire = ['EmailAddress','CaptchaV2','g-recaptcha-response','ItemName'];
@@ -1032,7 +1049,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// start on the first container
 		moveToContainer(multistep.step);
 
-		selector.on('click',settings.continueButton,function(event){
+		selector.on('click',settings.next,function(event){
 			event.preventDefault();
 			BuildRequiredObjectArray(selector.find(multistep.containers[multistep.step]));
 
@@ -1048,11 +1065,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					callback: settings.onStep
 				});
 				}
-				if (settings.onContinue !== null) {
+				if (settings.onNext !== null) {
 					bcpie.utils.executeCallback({
 					selector: selector,
 					settings: settings,
-					callback: settings.onContinue
+					callback: settings.onNext
 				});
 				}
 			}else if (settings.validateMode === 'inline') {
@@ -1061,17 +1078,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}
 		});
 
-		selector.on('click',settings.backButton,function(event){
+		selector.on('click',settings.prev,function(event){
 			event.preventDefault();
 			for (var i = 0; i<required.length; i++) {
 				resetRequiredField(required[i]);
 			}
 			moveToContainer(--multistep.step);
-			if (settings.onBack !== null) {
+			if (settings.onPrev !== null) {
 				bcpie.utils.executeCallback({
 					selector: selector,
 					settings: settings,
-					callback: settings.onBack
+					callback: settings.onPrev
 				});
 			}
 		});
@@ -1080,7 +1097,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		selector.on('keypress',function(e) {
 			if (e.keyCode == 13) {
 				e.preventDefault();
-				if (selector.find(settings.continueButton).filter(':visible').size() > 0) selector.find(settings.continueButton).filter(':visible').trigger('click');
+				if (selector.find(settings.next).filter(':visible').size() > 0) selector.find(settings.next).filter(':visible').trigger('click');
 				else selector.find('[type="submit"]:visible').trigger('click');
 			}
 		});
@@ -1113,9 +1130,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					settings: settings,
 					callback: settings.validationSuccess
 				})).then(function(value) {
-					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
+					if (value !== 'stop' && settings.submitMode !== 'off') submitForm(submitCount);
 				});
-			}else if (settings.noSubmit === false) submitForm(submitCount);
+			}else if (settings.submitMode !== 'off') submitForm(submitCount);
 		}
 		else
 			if (settings.validationError !== null) bcpie.utils.executeCallback({
@@ -1136,7 +1153,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 
 	// Activate submitEvent
-	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
+	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== 'submit') {
 		selector.on(settings.submitEvent,settings.submitField,function(){
 			selector.submit();
 		});
