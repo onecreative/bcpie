@@ -279,18 +279,20 @@ $(function() {
 					packagePath = resourcePath+installOrder[i].type+'/'+installOrder[i].id+'/';
 					for (var e = 0; e < installOrder[i].assets.length; e++) {
 						asset = installOrder[i].assets[e];
-						if (asset.type === 'scripts' || asset.type === 'styles') {
-							data = bcpie.ajax.file.get({path:packagePath+asset.type+'/'+asset.filename},{async:false}).responseText + ';';
-							if (typeof asset.location !== 'undefined') installContent[asset.type][asset.location] += data;
-							else installContent[asset.type] += data;
-						}else if (asset.type === 'fonts') {
-							data = bcpie.ajax.file.get({path:packagePath+asset.type+'/'+asset.filename},{async:false});
-							 installContent[asset.type].push(data);
-						}
+						options = (asset.filename.indexOf('.svg') > -1 || asset.type === 'scripts' || asset.type === 'styles') ? {async:false} : {async:false, dataType:'blob'};
+						bcpie.ajax.file.get({path:packagePath+asset.type+'/'+asset.filename},options).done(function(data) {
+							if (asset.type === 'scripts' || asset.type === 'styles') {
+								if (asset.type === 'scripts' && data.charAt(data.length-1) !== ';') data += ';';
+								if (typeof asset.location !== 'undefined') installContent[asset.type][asset.location] += data;
+								else installContent[asset.type] += data;
+							}else if (asset.type === 'fonts' || asset.type === 'images') {
+								installContent[asset.type].push({filename:asset.filename, content:data});
+							}
+						});
 					}
 				}
 				// Install
-				var settings = {minify:false};
+				var settings = {minify:false},options = {};
 				if (settings.minify === true) {
 					if (installContent.styles.length > 0) {
 						// $.ajax({
@@ -333,17 +335,30 @@ $(function() {
 					content: installContent.scripts.foot
 				});
 				for (var i = 0; i < installContent.fonts.length; i++) {
+					options = (installContent.fonts[i].filename.indexOf('.svg') > -1) ? {} : {processData:false};
 					bcpie.ajax.file.save({
-						path: installPaths.fonts+installContent.fonts[i].getResponseHeader('Content-Disposition').split('filename=')[1],
-						content: installContent.fonts[i].responseText
-					});
+						path: installPaths.fonts+installContent.fonts[i].filename,
+						content: installContent.fonts[i].content
+					},options);
 				}
 				for (var i = 0; i < installContent.images.length; i++) {
+					options = (installContent.images[i].filename.indexOf('.svg') > -1) ? {} : {processData:false};
 					bcpie.ajax.file.save({
-						path: installPaths.images+installContent.images[i].getResponseHeader('Content-Disposition').split('filename=')[1],
-						content: installContent.images[i].responseText
-					});
+						path: installPaths.images+installContent.images[i].filename,
+						content: installContent.images[i].content
+					},options);
 				}
+			},
+			uninstall: function(packageJSON,uninstall) {
+				var removed = packageJSON[uninstall.type].items[packageJSON[uninstall.type].indexes[uninstall.name]];
+				for (var i = 0; i < removed.assets.length; i++) {
+					if (removed.assets[i].type === 'fonts') {
+						bcpie.ajax.file.delete({path:'/fonts/'+remove.assets[i].filename});
+					}
+				}
+				packageJSON[uninstall.type].active.slice(packageJSON[uninstall.type].active.indexOf(uninstall.name),1);
+				delete packageJSON[uninstall.type].items[packageJSON[uninstall.type].indexes[uninstall.name]];
+				delete packageJSON[uninstall.type].indexes[uninstall.name];
 			},
 			uploadAssets: function(packageJSON,uploadObject) {
 				var updated = false;
@@ -368,9 +383,9 @@ $(function() {
 					alertify.alert('Your '+uploadObject.name+' package is missing the following assets:',missingAssets);
 					return 'failed';
 				}else {
-					bcpie.ajax.folder.delete({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id}).always(function(){
+					bcpie.ajax.folder.delete({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id},{async:false}).always(function(){
 						// bcpie.ajax.file.save({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id+'/manifest.json',content:JSON.stringify(uploadObject.manifest)});
-						if (uploadObject.manifest.image !== null && uploadObject.manifest.image !== '') bcpie.ajax.file.save({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id+'/images/'+uploadObject.manifest.image,content:uploadObject.assets[uploadObject.imageIndex]});
+						if (uploadObject.manifest.image !== null && uploadObject.manifest.image !== '') bcpie.ajax.file.save({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id+'/images/'+uploadObject.manifest.image,content:uploadObject.assets[uploadObject.imageIndex]},{async:false});
 						for (var i = 0; i < uploadObject.manifest.assets.length; i++) {
 							index = uploadObject.manifest.assets[i].index;
 							bcpie.ajax.file.save({path:resourcePath+uploadObject.manifest.type+'/'+uploadObject.manifest.id+'/'+uploadObject.manifest.assets[i].type+'/'+uploadObject.manifest.assets[i].filename,content:uploadObject.assets[index]},{async:false});
@@ -497,6 +512,18 @@ $(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/foot.inc'}).done(function(data) {
 						bcpie.ajax.file.save({path:'/_system/includes/template/foot.inc',content: data});
 					})
+					bcpie.ajax.file.save({path:'/_system/includes/library/'});
+					bcpie.ajax.file.get({path: structurePath+'layouts/ModuleTemplates/Default/container.html'}).done(function(data) {
+						bcpie.ajax.file.save({path:'/ModuleTemplates/Menu/Default/container.html',content: data});
+					});
+					bcpie.ajax.file.get({path: structurePath+'layouts/ModuleTemplates/Default/group.html'}).done(function(data) {
+						bcpie.ajax.file.save({path:'/ModuleTemplates/Menu/Default/group.html',content: data});
+					});
+					bcpie.ajax.file.get({path: structurePath+'layouts/ModuleTemplates/Default/childitem.html'}).done(function(data) {
+						bcpie.ajax.file.save({path:'/ModuleTemplates/Menu/Default/childitem.html',content: data});
+					});
+					bcpie.ajax.folder.save({path:'/fonts/'});
+					bcpie.ajax.folder.save({path:'/images/general/'});
 				});
 				bcpie.ajax.file.get({path: '/_system/includes/template/head.inc'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/head.inc'}).done(function(data) {
@@ -569,15 +596,6 @@ $(function() {
 							content: data
 						});
 					})
-				});
-				bcpie.ajax.file.get({path: '/_system/includes/library/'}).fail(function() {
-					bcpie.ajax.file.save({path:'/_system/includes/library/'});
-				});
-				bcpie.ajax.file.get({path: '/fonts/'}).fail(function() {
-					bcpie.ajax.file.save({path:'/fonts/'});
-				});
-				bcpie.ajax.file.get({path: '/images/general/'}).fail(function() {
-					bcpie.ajax.file.save({path:'/images/general/'});
 				});
 			}
 		}

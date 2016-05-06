@@ -1,6 +1,5 @@
 <header id="pageheader" role="banner">
-<div class="right"><a href="{{home}}?page=help">Help</a></div>
-	<h1>Profile</h1>
+<div class="right"><a href="{{appRoot}}index.html?page=help">Help</a></div>
 </header>
 <main id="pagecontent" role="main">
 	<div class="row">
