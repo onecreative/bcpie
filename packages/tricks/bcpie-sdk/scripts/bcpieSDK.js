@@ -34,6 +34,7 @@ win.bcpie = {
 				options.url = '/api/v2/admin/sites/current/storage'+data.path;
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.method = 'GET';
+				if (typeof options.dataType !== 'undefined' && (options.dataType.toLowerCase() === 'binary' || options.dataType.toLowerCase() === 'arraybuffer')) options.processData = false;
 
 				return bcpie.utils.ajax(options);
 			},
@@ -761,7 +762,7 @@ win.bcpie = {
 			settings.method = options.type || options.method || 'POST';
 			settings.contentType = (options.contentType !== false) ? options.contentType || 'application/json' : false;
 			if (bcpie.utils.isAdmin() === true) settings.connection = options.connection || 'keep-alive';
-			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined' && settings.dataType.toLowerCase() !== 'binary' && settings.dataType.toLowerCase() !== 'arraybuffer') delete settings.dataType;
+			if (typeof settings.data === 'undefined' && typeof settings.dataType !== 'undefined' && settings.dataType.toLowerCase() !== 'binary' && settings.dataType.toLowerCase() !== 'arraybuffer' && settings.dataType.toLowerCase() !== 'blob') delete settings.dataType;
 			else if (typeof settings.data !== 'undefined' && typeof settings.dataType === 'undefined' && bcpie.utils.isJson(settings.data)) settings.dataType = 'application/json';
 			return $.ajax(settings);
 		},

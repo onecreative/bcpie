@@ -11,10 +11,10 @@
 	"type": "tricks",
 	"assets": [
 		{
-			"filename":"transports.js", 
+			"filename":"jquery.binarytransport.js", 
 			"type":"scripts", 
 			"location":"foot",
-			"version": "2016.05.05"
+			"version": "1.0"
 		}, {
 			"filename":"bcpieSDK.js", 
 			"type":"scripts", 
