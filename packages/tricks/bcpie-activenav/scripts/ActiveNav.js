@@ -8,13 +8,13 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2016.4.25',
+		version: '2016.5.06',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
 			level: 1, // specify a number
 			levelClass: 'level',
-			lastLevel: 0, // specify a number. 0 will turn off limiting.
+			lastLevel: 'off', // specify a number. 'off' or 0 will turn off limiting.
 			lastLevelClass: 'lastlevel',
 			currentActiveClass: 'current',
 			levelTitle: false,
@@ -231,7 +231,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	}
 
 	// find lastLevel
-	if (settings.lastLevel > 0) {
+	if (settings.lastLevel !== 'off' && settings.lastLevel !== 0) {
 		last = $(selector);
 		for (var i = settings.lastLevel; i > 0; i--) {
 			last = bcpie.utils.closestChildren({
