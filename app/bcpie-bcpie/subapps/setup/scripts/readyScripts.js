@@ -13,7 +13,7 @@
 $(function() {
 	var doc = document,body = $(doc.body),win = window,
 	resourcePath = '/_system/apps/bcpie-bcpie/subapps/setup/packages/',
-	structurePath = '/_system/apps/bcpie-bcpie/subapps/setup/structure/'
+	structurePath = '/_system/apps/bcpie-bcpie/subapps/setup/structure/',
 	readyScripts = {
 		ui: {
 			gridView: {
@@ -547,7 +547,9 @@ $(function() {
 					})
 				});
 				bcpie.ajax.file.get({path: '/StyleSheets/site.css'}).fail(function() {
-					bcpie.ajax.file.save({path:'/StyleSheets/site.css'});
+					bcpie.ajax.file.get({path: structurePath+'files/site.css'}).done(function(data) {
+						bcpie.ajax.file.save({path:'/StyleSheets/site.css',content: data});
+					})
 				});
 				bcpie.ajax.file.get({path: '/Templates/1Col.html'}).fail(function() {
 					bcpie.ajax.file.get({path: structurePath+'files/1Col.html'}).done(function(data) {

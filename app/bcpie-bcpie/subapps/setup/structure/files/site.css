@@ -1,0 +1,50 @@
+/* @group General */
+
+body {}
+
+/* @end */
+/* @group Page Header */
+
+#pageheader {}
+
+@media only screen and (max-width: 64.000em) {
+	
+}
+@media only screen and (min-width: 40.064em) and (max-width: 48.937em) {
+	
+}
+@media only screen and (max-width:40.063em) {
+	
+}
+
+/* @end */
+/* @group Page Content */
+
+#pagecontent {}
+
+@media only screen and (max-width: 64.000em) {
+	
+}
+@media only screen and (min-width: 40.064em) and (max-width: 48.937em) {
+	
+}
+@media only screen and (max-width:40.063em) {
+	
+}
+
+/* @end */
+/* @group Page Footer */
+
+#pagefooter {}
+
+@media only screen and (max-width: 64.000em) {
+	
+}
+@media only screen and (min-width: 40.064em) and (max-width: 48.937em) {
+	
+}
+@media only screen and (max-width:40.063em) {
+	
+}
+
+/* @end */
