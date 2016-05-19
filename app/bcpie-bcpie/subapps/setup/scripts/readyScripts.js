@@ -335,18 +335,16 @@ $(function() {
 					content: installContent.scripts.foot
 				});
 				for (var i = 0; i < installContent.fonts.length; i++) {
-					options = (installContent.fonts[i].filename.indexOf('.svg') > -1) ? {} : {processData:false};
 					bcpie.ajax.file.save({
 						path: installPaths.fonts+installContent.fonts[i].filename,
 						content: installContent.fonts[i].content
-					},options);
+					},{processData:false});
 				}
 				for (var i = 0; i < installContent.images.length; i++) {
-					options = (installContent.images[i].filename.indexOf('.svg') > -1) ? {} : {processData:false};
 					bcpie.ajax.file.save({
 						path: installPaths.images+installContent.images[i].filename,
 						content: installContent.images[i].content
-					},options);
+					},{processData:false});
 				}
 			},
 			uninstall: function(packageJSON,uninstall) {

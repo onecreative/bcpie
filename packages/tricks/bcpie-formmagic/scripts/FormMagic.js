@@ -18,7 +18,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'steps' : '', // multistep container selectors, separated by comma
 			'prev' : '', // back button selector for multistep form
 			'next' : '', // Continue button selector for multistep form
-			'responseTarget' : 'replace' // where to show an ajax response after submission. 'replace' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
+			'responseTarget' : 'replace', // where to show an ajax response after submission. 'replace' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
 			'restoreTarget' : true, // If ajax submission result is empty, the contents of the responseTarget will be restored. This is particularly helpful with live searches.
 			'successMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemMessageClass'. Otherwise, text in this option will be used for the success message, and shown in an Alertify notification.
 			'errorMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemErrorMessageClass'. Otherwise, text in this option will be used for the error message, and shown in an Alertify notification.
