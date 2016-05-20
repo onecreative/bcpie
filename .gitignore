@@ -6,3 +6,4 @@ gulpfile.js
 *.sublime-project
 *.codekit*
 sftp-config.json
+premium-packages

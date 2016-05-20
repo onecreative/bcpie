@@ -35,7 +35,6 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'errorGroupElement' : 'div',
 			'errorMessageElement' : 'small',
-			
 			'customErrorFields' : '', // takes a comma delimited list of selectors to match against during validation
 			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
 			'beforeValidation' : null, // specify a function to run before validation
@@ -756,22 +755,22 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					// just replace the error message
 					validationTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
 				}else {
-					if (successElementExists === true) removeInlineValidation(required,validationTarget,settings.successMessageElement,settings.successClass,rdoChkFlag);
-					addInlineValidation(required,validationTarget,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
+					if (successElementExists === true) removeInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
+					addInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
 				}
 			}else {
-				if (errorElementExists === true) removeInlineValidation(required,validationTarget,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
-				if (settings.inlineSuccess === true) addInlineValidation(required,validationTarget,settings.successMessageElement,settings.successClass,rdoChkFlag);
+				if (errorElementExists === true) removeInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
+				if (settings.inlineSuccess === true) addInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
 			}
 		}
 	}
-	function addInlineValidation(required,validationTarget,messageElement,validationClass,rdoChkFlag) {
+	function addInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		// add the message into new element
-		validationTarget.addClass(validationClass).wrap(messageElement);
+		validationTarget.addClass(validationClass).wrap('<'+messageGroupElement+' class="'+messageGroupClass+'" />');
 		if (rdoChkFlag === true) selector.find('[name="' + required.name + '"]').addClass(validationClass);
 		validationTarget.parent().append('<'+messageElement+' class="'+validationClass+'">'+required.message+'</'+messageElement+'>');
 	}
-	function removeInlineValidation(required,validationTarget,messageElement,validationClass,rdoChkFlag) {
+	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
 		validationTarget.removeClass(validationClass).unwrap();
 		if (rdoChkFlag == true) selector.find('[name="' + required.name + '"]').removeClass(validationClass);
@@ -953,10 +952,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			name : rField.attr('name'),
 			field : rField,
 			type : (rField.is('input')) ? rField.attr('type') : rField.get(0).tagName.toLowerCase(),
-			value : (rField.val() === undefined) ? '' : rField.val(),
+			value : (typeof rField.val() === 'undefined') ? '' : rField.val(),
 			label : (selector.find('label[for="'+rField.attr('name')+'"]').length > 0) ? selector.find('label[for="'+rField.attr('name')+'"]').text() : rField.attr('placeholder')
 		};
-		if (required[i].label === undefined) required[i].label = labelFallback[required[i].name];
+		if (typeof required[i].label === 'undefined') required[i].label = labelFallback[required[i].name];
 	}
 	function autoRequirePaymentFields(scope) {
 		if (paymentMethods.size() == 1 && $(paymentMethods[0]).val() == '1') onlyCCMethod = true;
