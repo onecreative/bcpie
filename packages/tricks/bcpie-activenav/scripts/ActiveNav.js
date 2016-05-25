@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	settings = bcpie.extensions.settings(selector,options,{
 		name: 'ActiveNav',
-		version: '2016.5.06',
+		version: '2016.5.20',
 		defaults: {
 			navClass: 'activenav',
 			activeClass: 'active',
@@ -100,12 +100,13 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 		return first.find('a').filter(function() {
 			if (settings.paramSupport === true) currentLink = $(this).attr('href');
 			else currentLink = $(this).attr('href').split('?')[0];
-			currentLink = currentLink.toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
-			if (currentLink.indexOf('/') !== 0) currentLink = '/'+currentLink;
-
-			if (currentLink === shortPath) {
-				gotIt = 1;
-				return true;
+			if (typeof currentLink !== 'undefined') {
+				currentLink = currentLink.toLowerCase().replace('https:','').replace('http:','').replace(settings.primaryDomain,'').replace(settings.secureDomain,'');
+				if (currentLink.indexOf('/') !== 0) currentLink = '/'+currentLink;
+				if (currentLink === shortPath) {
+					gotIt = 1;
+					return true;
+				}
 			}
 		});
 	}

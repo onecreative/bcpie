@@ -7,7 +7,7 @@
 bcpie.extensions.tricks.Slick = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Slick',
-		version: '2016.04.14',
+		version: '2016.05.20',
 		defaults: {
 			onAfterChange: null,
 			onBeforeChange: null,
@@ -19,6 +19,12 @@ bcpie.extensions.tricks.Slick = function(selector,options) {
 			appendMode: 'find' // closest, find, body
 		}
 	});
+
+	try {settings.responsive = JSON.parse(bcpie.utils.jsonify(settings.responsive));}
+	catch (error) {settings.responsive = undefined;}
+
+	
+
 	var options = {
 		accessibility: settings.accessibility,
 		adaptiveHeight: settings.adaptiveHeight,
