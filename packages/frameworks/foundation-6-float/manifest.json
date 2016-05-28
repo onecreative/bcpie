@@ -1,7 +1,7 @@
 {
 	"id": "foundation-6-float",
 	"name": "Foundation 6 (Float)",
-	"packageVersion": 1462432178,
+	"packageVersion": 1464361119,
 	"description": "The most advanced responsive front-end framework in the world.",
 	"distributor": {
 		"name": "ONE Creative",
@@ -14,13 +14,13 @@
 			"filename": "foundation.js", 
 			"type": "scripts", 
 			"location": "foot",
-			"version": "6.2.1",
+			"version": "6.2.3",
 			"docs": "http://foundation.zurb.com/sites/docs/"
 		},
 		{
 			"filename":"foundation.css", 
 			"type":"styles",
-			"version": "6.2.1",
+			"version": "6.2.3",
 			"docs": "http://foundation.zurb.com/sites/docs/"
 		}
 	],
