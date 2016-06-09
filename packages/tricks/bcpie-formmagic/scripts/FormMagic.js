@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.05.05',
+		version: '2016.06.03',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -33,6 +33,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
 			'fieldTitleAttr' : 'label', // or specify a field attribute
+			'fieldNameAttr' : 'name', // specify which attribute has the field name
 			'errorGroupElement' : 'div',
 			'errorMessageElement' : 'small',
 			'customErrorFields' : '', // takes a comma delimited list of selectors to match against during validation
@@ -644,7 +645,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
 		validationTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
-		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
+		paymentMethods = selector.find('['+settings.fieldNameAttr+'="PaymentMethodType"]'), onlyCCMethod = false,
 		multistep = {containers: selector.find(settings.steps), step: 0},
 		lockSubmit = false, messageBoxContents = (body.find(settings.responseTarget).length > 0) ? body.find(settings.responseTarget).html() : selector.html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha', 'g-recaptcha-response' : 'Captcha'};
@@ -676,8 +677,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		},
 		validation: {
 			select:				function (required) {return checkDropdown(required.value, required.label)},
-			radio:				function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
-			checkbox:			function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
+			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
+			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
 			email:				function (required) {return checkEmail(required.value)},
 			date:				function (required) {return checkDate(required.value,required.label)},
 			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label)},
@@ -767,13 +768,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function addInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		// add the message into new element
 		validationTarget.addClass(validationClass).wrap('<'+messageGroupElement+' class="'+messageGroupClass+'" />');
-		if (rdoChkFlag === true) selector.find('[name="' + required.name + '"]').addClass(validationClass);
+		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').addClass(validationClass);
 		validationTarget.parent().append('<'+messageElement+' class="'+validationClass+'">'+required.message+'</'+messageElement+'>');
 	}
 	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
 		validationTarget.removeClass(validationClass).unwrap();
-		if (rdoChkFlag == true) selector.find('[name="' + required.name + '"]').removeClass(validationClass);
+		if (rdoChkFlag == true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
@@ -788,7 +789,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
 			var otherURL,
 				thisURL = selector.attr('action'),
-				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('[name=Username]').length > 0 && selector.find('[name=Password]').length > 0) ? true : false;
+				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('['+settings.fieldNameAttr+'=Username]').length > 0 && selector.find('['+settings.fieldNameAttr+'=Password]').length > 0) ? true : false;
 			if (loggingIn === true) {
 				thisURL = thisURL.replace(bcpie.globals.secureDomain,'').replace(bcpie.globals.primaryDomain,'');
 				otherURL = (bcpie.globals.currentDomain === bcpie.globals.secureDomain) ? bcpie.globals.currentDomain : bcpie.globals.secureDomain;
@@ -833,8 +834,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 									method:'POST',
 									dataType:'jsonp',
 									data: {
-										Username: selector.find('[name=Username]').val(),
-										Password: selector.find('[name=Password]').val()
+										Username: selector.find('['+settings.fieldNameAttr+'=Username]').val(),
+										Password: selector.find('['+settings.fieldNameAttr+'=Password]').val()
 									}
 								});
 							}
@@ -949,19 +950,19 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 	function buildRequiredObject(rField,i) {
 		required[i] = {
-			name : rField.attr('name'),
+			name : rField.attr(settings.fieldNameAttr),
 			field : rField,
 			type : (rField.is('input')) ? rField.attr('type') : rField.get(0).tagName.toLowerCase(),
 			value : (typeof rField.val() === 'undefined') ? '' : rField.val(),
-			label : (selector.find('label[for="'+rField.attr('name')+'"]').length > 0) ? selector.find('label[for="'+rField.attr('name')+'"]').text() : rField.attr('placeholder')
+			label : (selector.find('label[for="'+rField.attr(settings.fieldNameAttr)+'"]').length > 0) ? selector.find('label[for="'+rField.attr(settings.fieldNameAttr)+'"]').text() : rField.attr('placeholder')
 		};
 		if (typeof required[i].label === 'undefined') required[i].label = labelFallback[required[i].name];
 	}
 	function autoRequirePaymentFields(scope) {
 		if (paymentMethods.size() == 1 && $(paymentMethods[0]).val() == '1') onlyCCMethod = true;
 		if (paymentMethods.filter(':checked').val() == '1' || onlyCCMethod) {
-			scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').addClass(settings.requiredClass);
-		}else scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').removeClass(settings.requiredClass);
+			scope.find('['+settings.fieldNameAttr+'="CardName"], ['+settings.fieldNameAttr+'="CardNumber"], ['+settings.fieldNameAttr+'="CardExpiryMonth"], ['+settings.fieldNameAttr+'="CardExpiryYear"], ['+settings.fieldNameAttr+'="CardType"], ['+settings.fieldNameAttr+'="CardCCV"]').addClass(settings.requiredClass);
+		}else scope.find('['+settings.fieldNameAttr+'="CardName"], ['+settings.fieldNameAttr+'="CardNumber"], ['+settings.fieldNameAttr+'="CardExpiryMonth"], ['+settings.fieldNameAttr+'="CardExpiryYear"], ['+settings.fieldNameAttr+'="CardType"], ['+settings.fieldNameAttr+'="CardCCV"]').removeClass(settings.requiredClass);
 	}
 	function BuildRequiredObjectArray(scope) {
 		var i = 0,_this = null;
@@ -969,14 +970,14 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		
 		// Build required array
 		for (var e = 0; e< autoRequire.length; e++) {
-			autoRequire.field = selector.find('[name="'+autoRequire[e]+'"]');
+			autoRequire.field = selector.find('['+settings.fieldNameAttr+'="'+autoRequire[e]+'"]');
 			if (autoRequire.field.length > 0 && autoRequire.field.not('.'+settings.requiredClass)) autoRequire.field.addClass(settings.requiredClass);
 		}
 		requiredFields = scope.find('input, select, button, textarea').filter('.'+settings.requiredClass);
 
 		for(var cnt=0,len = requiredFields.size(); cnt < len; cnt++){
 			_this = requiredFields[cnt];
-			newRequired = scope.find('[name="'+$(_this).attr("name")+'"]').not('.'+settings.requiredClass);
+			newRequired = scope.find('['+settings.fieldNameAttr+'="'+$(_this).attr(settings.fieldNameAttr)+'"]').not('.'+settings.requiredClass);
 			if (newRequired.length > 0) {
 				for(var cnt2=0, len2 = $(newRequired).size(); cnt2<len2; cnt2++){
 					var newRequiredItem = $(newRequired[cnt2]);
@@ -993,7 +994,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (required.field.is('.'+settings.errorClass)) {
 			required.field.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
 			required.field.removeClass(settings.errorClass).unwrap();
-			if (required.type === 'checkbox' || required.type === 'radio') selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
+			if (required.type === 'checkbox' || required.type === 'radio') selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(settings.errorClass);
 			--errorCount;
 		}
 	}
@@ -1001,9 +1002,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// Set onChangeBinding to true in order to prevent these bindings from occuring multiple times.
 		onChangeBinding = true;
 		for (var i = 0; i<required.length; i++) {
-			scope.on('change','[name="' + required[i].name + '"]', function() {
+			scope.on('change','['+settings.fieldNameAttr+'="' + required[i].name + '"]', function() {
 				for (var i = 0;i<required.length;i++) {
-					if ($(this).attr('name') === required[i].name) runValidation(required[i],0,1);
+					if ($(this).attr(settings.fieldNameAttr) === required[i].name) runValidation(required[i],0,1);
 				}
 			});
 		}

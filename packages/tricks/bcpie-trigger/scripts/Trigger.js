@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.02.18',
+		version: '2016.06.01',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -92,11 +92,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	}
 	function changeValue(state) {
-		if (settings.onValue === 'boolean' && selector.is('[type=checkbox]') && state === 'on') {
-			selector.prop('checked',true).attr('checked','checked');
-		}else if (settings.offValue === 'boolean' && selector.is('[type=checkbox]') && state === 'off') {
-			selector.prop('checked',false).removeAttr('checked');
-		}else {
+		if (settings.onValue === 'boolean' && state === 'on') selector.prop('checked',true).attr('checked','checked');
+		else if (settings.offValue === 'boolean' && state === 'off') selector.prop('checked',false).removeAttr('checked');
+		else {
 			if (state === 'off') state = settings.offValue;
 			else if (state === 'on') state = settings.onValue;
 			if (state !== null) {

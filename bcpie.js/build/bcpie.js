@@ -14312,45 +14312,45 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.02.22',
+		version: '2016.06.03',
 		defaults: {
-			'requiredClass' : 'required',
-			'errorGroupElement' : 'div',
-			'errorGroupClass' : 'error-group',
-			'errorMessageElement' : 'small',
-			'errorClass' : 'error',
-			'messageBox' : 'replace', // 'replace' replaces the form with the message, 'off' returns no message, and 'alert' displays the message in an alert box. Otherwise, a CSS selector indicates where to put the message.
-			'restoreMessageBox' : true, // If submission result is empty, the contents of messageBox will be restored. This is particularly helpful with live searches.
-			'afterAjax' : 'remove', // 'hide', 'show'
-			'useAjax' : false, // deprecated in favor of 'mode'
+			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
+			'submitEvent' : 'submit',
+			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
 			'validateMode' : 'inline', // 'alert', 'off'
-			'fieldTitleAttr' : 'label', // or specify a field attribute
-			'systemMessageClass' : 'system-message',
-			'systemErrorMessageClass' : 'system-error-message',
+			'inlineSuccess' : true, // When true, inline validation will also show success messages, not just errors.
+			'steps' : '', // multistep container selectors, separated by comma
+			'prev' : '', // back button selector for multistep form
+			'next' : '', // Continue button selector for multistep form
+			'responseTarget' : 'replace', // where to show an ajax response after submission. 'replace' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
+			'restoreTarget' : true, // If ajax submission result is empty, the contents of the responseTarget will be restored. This is particularly helpful with live searches.
 			'successMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemMessageClass'. Otherwise, text in this option will be used for the success message, and shown in an Alertify notification.
 			'errorMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemErrorMessageClass'. Otherwise, text in this option will be used for the error message, and shown in an Alertify notification.
+			'formOnResponse' : 'remove', // 'hide', 'show'
+			'buttonOnSubmit' : 'off', // disable,hide
+			'buttonOnResponse' : 'off', // disable,hide
+			'requiredClass' : 'required',
+			'errorGroupClass' : 'error-group',
+			'errorClass' : 'error',
+			'successGroupClass' : 'success-group',
 			'successClass' : 'success',
-			'mode' : 'standard', // 'ajax', 'webapp', 'webapp.item'
-			'submitEvent' : null,
-			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
+			'systemMessageClass' : 'system-message',
+			'systemErrorMessageClass' : 'system-error-message',
+			'fieldTitleAttr' : 'label', // or specify a field attribute
+			'fieldNameAttr' : 'name', // specify which attribute has the field name
+			'errorGroupElement' : 'div',
+			'errorMessageElement' : 'small',
+			'customErrorFields' : '', // takes a comma delimited list of selectors to match against during validation
+			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
 			'beforeValidation' : null, // specify a function to run before validation
 			'validationSuccess' : null, // specify a function to run after validation, but before submission
 			'validationError' : null, // specify a function to run after validation returns errors
-			'noSubmit' : false, // allow form submission to be bypassed after successful validation.
 			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
 			'onStep' : null, // specify a function to run on multistep step (either direction)
-			'onBack' : null, // specify a function to run on step backwards
-			'onContinue' : null, // specify a function to run on step forward
-			'steps' : '', // multistep container selectors, separated by comma
-			'continueButton' : '', // Continue button selector for multistep form
-			'backButton' : '', // back button selector for multistep form
-			'buttonOnLoad' : 'enable', // none,disable,hide
-			'buttonOnSubmit' : 'disable', // none,enable,hide
-			'buttonAfterSubmit' : 'enable', //none,hide,show,disable
-			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
-			'customErrorFields' : '' // takes a comma delimited list of selectors to match against during validation
+			'onPrev' : null, // specify a function to run on step backwards
+			'onNext' : null // specify a function to run on step forward
 		}
 	});
 
@@ -14929,16 +14929,29 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		})();
 	}
 
-	if (settings.steps === '' && settings.containers !== '') settings.steps = settings.containers;
-	if (settings.mode === 'standard' && settings.useAjax === true) settings.mode = 'ajax';
+	if (settings.steps === '' && typeof settings.containers !== 'undefined') settings.steps = settings.containers;
+	if (settings.prev === ''  && typeof settings.backButton !== 'undefined') settings.prev = settings.backButton;
+	if (settings.next === ''  && typeof settings.continueButton !== 'undefined') settings.next = settings.continueButton;
+	if (settings.onPrev === ''  && typeof settings.onBack !== 'undefined') settings.onPrev = settings.onBack;
+	if (settings.onNext === ''  && typeof settings.onContinue !== 'undefined') settings.onNext = settings.onContinue;
+	if (settings.responseTarget === 'replace'  && typeof settings.messageBox !== 'undefined') settings.responseTarget = settings.messageBox;
+	if (settings.restoreTarget === true  && typeof settings.restoreMessageBox !== 'undefined') settings.restoreTarget = settings.restoreMessageBox;
+	if (settings.formOnResponse === null  && typeof settings.afterAjax !== 'undefined') settings.formOnResponse = settings.afterAjax;
+	if (settings.buttonOnResponse === null  && typeof settings.buttonAfterSubmit !== 'undefined') settings.buttonOnResponse = settings.buttonAfterSubmit;
+	if (settings.submitMode === 'standard') {
+		if (typeof settings.mode !== 'undefined') settings.submitMode = settings.mode;
+		else if (typeof settings.noSubmit !== 'undefined' && settings.noSubmit === true) settings.submitMode = 'off';
+		else if (typeof settings.useAjax !== 'undefined' && settings.useAjax === true) settings.submitMode = 'ajax';
+	}
+	
 
 	// setup some local variables
 	var requiredFields,required=[],submitCount=0,
 		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
-		errorTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
-		paymentMethods = selector.find('[name="PaymentMethodType"]'), onlyCCMethod = false,
+		validationTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
+		paymentMethods = selector.find('['+settings.fieldNameAttr+'="PaymentMethodType"]'), onlyCCMethod = false,
 		multistep = {containers: selector.find(settings.steps), step: 0},
-		lockSubmit = false, messageBoxContents = (body.find(settings.messageBox).length > 0) ? body.find(settings.messageBox).html() : selector.html(), customFlag = false,msg,
+		lockSubmit = false, messageBoxContents = (body.find(settings.responseTarget).length > 0) ? body.find(settings.responseTarget).html() : selector.html(), customFlag = false,msg,
 		labelFallback = {'Title' : 'Title', 'FirstName' : 'First Name', 'LastName' : 'Last Name', 'FullName' : 'Full Name', 'EmailAddress' : 'Email Address', 'Username' : 'Username', 'Password' : 'Password', 'HomePhone' : 'Home Phone Number', 'WorkPhone' : 'Work Phone Number', 'CellPhone' : 'Cell Phone Number', 'HomeFax' : 'Home Fax Number', 'WorkFax' : 'Work Fax Number', 'HomeAddress' : 'Home Address', 'HomeCity' : 'Home City', 'HomeState' : 'Home State', 'HomeZip' : 'Home Zip', 'HomeCountry' : 'Home Country', 'WorkAddress' : 'WorkAddress', 'WorkCity' : 'Work City', 'WorkState' : 'Work State', 'WorkZip' : 'Work Zip', 'WorkCountry' : 'Work Country', 'WebAddress' : 'Web Address', 'Company' : 'Company', 'DOB' : 'Date of Birth', 'PaymentMethodType' : 'Payment Method', 'BillingAddress' : 'Billing Address', 'BillingCity' : 'Billing City', 'BillingState' : 'Billing State', 'BillingZip' : 'Billing Zip Code', 'BillingCountry' : 'Billing Country', 'ShippingAddress' : 'Shipping Address', 'ShippingCity' : 'Shipping City', 'ShippingState' : 'Shipping State', 'ShippingZip' : 'Shipping Zip Code', 'ShippingCountry' : 'Shipping Country', 'ShippingInstructions' : 'Shipping Instructions', 'ShippingAttention' : 'Shipping Attention', 'Friend01' : 'Friend Email 1', 'Friend02' : 'Friend Email 2', 'Friend03' : 'Friend Email 3', 'Friend04' : 'Friend Email 4', 'Friend05' : 'Friend Email 5', 'Message' : 'Friend Message', 'Anniversary1Title' : 'Anniversary Title', 'Anniversary1' : 'Anniversary', 'Anniversary2Title' : 'Anniversary 2 Title', 'Anniversary2' : 'Anniversary 2', 'Anniversary3Title' : 'Anniversary 3 Title', 'Anniversary3' : 'Anniversary 3', 'Anniversary4Title' : 'Anniversary 4 Title', 'Anniversary4' : 'Anniversary 4', 'Anniversary5Title' : 'Anniversary 5 Title', 'Anniversary5' : 'Anniversary 5', 'FileAttachment' : 'File Attachment', 'CAT_Custom_1423_326' : 'Gender', 'CAT_Custom_1424_326' : 'Height', 'CAT_Custom_1425_326' : 'Marital Status', 'CAT_Custom_1426_326' : 'Has Children', 'CAT_Custom_1427_326' : 'Years in Business', 'CAT_Custom_1428_326' : 'Number of Employees', 'CAT_Custom_1429_326' : 'Annual Revenue', 'CAT_Custom_1430_326' : 'Financial Year', 'InvoiceNumber' : 'Invoice Number', 'CardName' : 'Name on Card', 'CardNumber' : 'Card Number', 'CardExpiryMonth' : 'Card Expiry Month', 'CardExpiryYear' : 'Card Expiry Year', 'CardType' : 'Card Type', 'CardCCV' : 'CCV Number', 'CaptchaV2' : 'Captcha', 'g-recaptcha-response' : 'Captcha'};
 
 	if (settings.customErrorFields !== '') settings.customErrorFields = settings.customErrorFields.split(',');
@@ -14968,8 +14981,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		},
 		validation: {
 			select:				function (required) {return checkDropdown(required.value, required.label)},
-			radio:				function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
-			checkbox:			function (required) {return checkSelected(selector.find('[name="'+required.name+'"]'), required.label)},
+			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
+			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
 			email:				function (required) {return checkEmail(required.value)},
 			date:				function (required) {return checkDate(required.value,required.label)},
 			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label)},
@@ -15030,44 +15043,48 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}
 		}else if (settings.validateMode==='inline') {
 			switch (required.type) {
-				case 'radio' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
-				case 'checkbox' : errorTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
-				case 'captcha' : errorTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
-				case 'recaptcha' : errorTarget = (selector.find('#g-recaptcha-response').length > 0) ? selector.find('#g-recaptcha-response') : required.field; break;
-				default : errorTarget = required.field;
-			}
-			if (errorTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) {
-				errorElementExists = true;
-			}else {
-				errorElementExists = false;
+				case 'radio' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
+				case 'checkbox' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
+				case 'captcha' : validationTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
+				case 'recaptcha' : validationTarget = (selector.find('#g-recaptcha-response').length > 0) ? selector.find('#g-recaptcha-response') : required.field; break;
+				default : validationTarget = required.field;
 			}
 
+			errorElementExists = false;
+			successElementExists = false;
+			if (validationTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) errorElementExists = true;
+			if (validationTarget.parent().is(settings.successGroupElement+'.'+settings.successGroupClass.replace(' ','.'))) successElementExists = true;
+
 			if (required.message !=='') {
-				if (errorElementExists) {
+				if (errorElementExists === true) {
 					// just replace the error message
-					errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
+					validationTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
 				}else {
-					// add the message into new element
-					messageElement = '<'+settings.errorMessageElement+' class="'+settings.errorClass+'">'+required.message+'</'+settings.errorMessageElement+'>';
-					errorTarget.addClass(settings.errorClass).wrap(errorElement);
-					if (rdoChkFlag) selector.find('[name="' + required.name + '"]').addClass(settings.errorClass);
-					errorTarget.parent().append(messageElement);
+					if (successElementExists === true) removeInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
+					addInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
 				}
-			}else if (errorElementExists) {
-				// remove the element
-				errorTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
-				errorTarget.removeClass(settings.errorClass).unwrap();
-				if (rdoChkFlag) selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
+			}else {
+				if (errorElementExists === true) removeInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
+				if (settings.inlineSuccess === true) addInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
 			}
 		}
+	}
+	function addInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
+		// add the message into new element
+		validationTarget.addClass(validationClass).wrap('<'+messageGroupElement+' class="'+messageGroupClass+'" />');
+		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').addClass(validationClass);
+		validationTarget.parent().append('<'+messageElement+' class="'+validationClass+'">'+required.message+'</'+messageElement+'>');
+	}
+	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
+		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
+		validationTarget.removeClass(validationClass).unwrap();
+		if (rdoChkFlag == true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
 		switch(behavior){
-			case 'show': submitButton.show(); break;
 			case 'hide': submitButton.hide(); break;
 			case 'disable': submitButton.attr('disabled','disabled'); break;
-			case 'enable': submitButton.removeAttr('disabled'); break;
 			default: submitButton.removeAttr('disabled').show();
 		}
 	}
@@ -15076,13 +15093,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			buttonSubmitBehaviour(settings.buttonOnSubmit);
 			var otherURL,
 				thisURL = selector.attr('action'),
-				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('[name=Username]').length > 0 && selector.find('[name=Password]').length > 0) ? true : false;
+				loggingIn = (bcpie.globals.user.isLoggedIn === false && selector.find('['+settings.fieldNameAttr+'=Username]').length > 0 && selector.find('['+settings.fieldNameAttr+'=Password]').length > 0) ? true : false;
 			if (loggingIn === true) {
 				thisURL = thisURL.replace(bcpie.globals.secureDomain,'').replace(bcpie.globals.primaryDomain,'');
 				otherURL = (bcpie.globals.currentDomain === bcpie.globals.secureDomain) ? bcpie.globals.currentDomain : bcpie.globals.secureDomain;
 				otherURL += thisURL+'&callback=?';
 			}
-			if (settings.mode === 'ajax') {
+			if (settings.submitMode === 'ajax') {
 				$.ajax({
 					type: 'POST',
 					url: thisURL,
@@ -15121,8 +15138,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 									method:'POST',
 									dataType:'jsonp',
 									data: {
-										Username: selector.find('[name=Username]').val(),
-										Password: selector.find('[name=Password]').val()
+										Username: selector.find('['+settings.fieldNameAttr+'=Username]').val(),
+										Password: selector.find('['+settings.fieldNameAttr+'=Password]').val()
 									}
 								});
 							}
@@ -15130,7 +15147,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							// Show Success Message
 							if (settings.messageMode !== 'off') {
 								if (settings.successMessage !== null) alertify.success(settings.successMessage);
-								else if (typeof successMessage !== 'undefined' && successMessage !== '') showSuccess(selector,successMessage);
+								else if (typeof successMessage !== 'undefined' && successMessage !== '') inlineSuccess(selector,successMessage);
 								// else alertify.success('Success!');
 							}
 						}
@@ -15175,10 +15192,10 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							status: status,
 							xhr: xhr
 						});
-						buttonSubmitBehaviour(settings.buttonAfterSubmit);
+						buttonSubmitBehaviour(settings.buttonOnResponse);
 					}
 				});
-			}else if (settings.mode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
+			}else if (settings.submitMode === 'webapp.item' && typeof settings.webapp !== 'undefined') {
 				var data = {};
 				data.webapp = settings.webapp;
 				if (typeof settings.item !== 'undefined') data.item = settings.item;
@@ -15209,7 +15226,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 						status: status,
 						xhr: xhr
 					});
-					buttonSubmitBehaviour(settings.buttonAfterSubmit);
+					buttonSubmitBehaviour(settings.buttonOnResponse);
 				});
 			}else selector.off('submit').submit();
 
@@ -15219,37 +15236,37 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			return false;
 		}
 	}
-	function showSuccess(selector,successMessage) {
+	function inlineSuccess(selector,successMessage) {
 		if (settings.afterAjax !== 'show') selector.fadeOut(0);
 
-		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreMessageBox === true) successMessage = messageBoxContents;
+		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) successMessage = messageBoxContents;
 		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
 		else if(successMessage.find('.webappsearchresults').length > 0) successMessage = successMessage.find('.webappsearchresults').html();
 
-		if (settings.messageBox === 'replace') {
+		if (settings.responseTarget === 'replace') {
 			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
 			else if (typeof settings.afterAjax !== 'undefined' && settings.afterAjax === 'hide' || settings.messageMode === 'prepend') selector.before(successMessage); // for backwards compatibility
 			else selector.html(successMessage).fadeIn();
-		}else if (settings.messageBox !== 'off') {
-			body.find(settings.messageBox).html(successMessage);
+		}else if (settings.responseTarget !== 'off') {
+			body.find(settings.responseTarget).html(successMessage);
 			if (settings.afterAjax === 'remove') selector.remove();
 		}
 	}
 	function buildRequiredObject(rField,i) {
 		required[i] = {
-			name : rField.attr('name'),
+			name : rField.attr(settings.fieldNameAttr),
 			field : rField,
 			type : (rField.is('input')) ? rField.attr('type') : rField.get(0).tagName.toLowerCase(),
-			value : (rField.val() === undefined) ? '' : rField.val(),
-			label : (selector.find('label[for="'+rField.attr('name')+'"]').length > 0) ? selector.find('label[for="'+rField.attr('name')+'"]').text() : rField.attr('placeholder')
+			value : (typeof rField.val() === 'undefined') ? '' : rField.val(),
+			label : (selector.find('label[for="'+rField.attr(settings.fieldNameAttr)+'"]').length > 0) ? selector.find('label[for="'+rField.attr(settings.fieldNameAttr)+'"]').text() : rField.attr('placeholder')
 		};
-		if (required[i].label === undefined) required[i].label = labelFallback[required[i].name];
+		if (typeof required[i].label === 'undefined') required[i].label = labelFallback[required[i].name];
 	}
 	function autoRequirePaymentFields(scope) {
 		if (paymentMethods.size() == 1 && $(paymentMethods[0]).val() == '1') onlyCCMethod = true;
 		if (paymentMethods.filter(':checked').val() == '1' || onlyCCMethod) {
-			scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').addClass(settings.requiredClass);
-		}else scope.find('[name="CardName"], [name="CardNumber"], [name="CardExpiryMonth"], [name="CardExpiryYear"], [name="CardType"], [name="CardCCV"]').removeClass(settings.requiredClass);
+			scope.find('['+settings.fieldNameAttr+'="CardName"], ['+settings.fieldNameAttr+'="CardNumber"], ['+settings.fieldNameAttr+'="CardExpiryMonth"], ['+settings.fieldNameAttr+'="CardExpiryYear"], ['+settings.fieldNameAttr+'="CardType"], ['+settings.fieldNameAttr+'="CardCCV"]').addClass(settings.requiredClass);
+		}else scope.find('['+settings.fieldNameAttr+'="CardName"], ['+settings.fieldNameAttr+'="CardNumber"], ['+settings.fieldNameAttr+'="CardExpiryMonth"], ['+settings.fieldNameAttr+'="CardExpiryYear"], ['+settings.fieldNameAttr+'="CardType"], ['+settings.fieldNameAttr+'="CardCCV"]').removeClass(settings.requiredClass);
 	}
 	function BuildRequiredObjectArray(scope) {
 		var i = 0,_this = null;
@@ -15257,14 +15274,14 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		
 		// Build required array
 		for (var e = 0; e< autoRequire.length; e++) {
-			autoRequire.field = selector.find('[name="'+autoRequire[e]+'"]');
+			autoRequire.field = selector.find('['+settings.fieldNameAttr+'="'+autoRequire[e]+'"]');
 			if (autoRequire.field.length > 0 && autoRequire.field.not('.'+settings.requiredClass)) autoRequire.field.addClass(settings.requiredClass);
 		}
 		requiredFields = scope.find('input, select, button, textarea').filter('.'+settings.requiredClass);
 
 		for(var cnt=0,len = requiredFields.size(); cnt < len; cnt++){
 			_this = requiredFields[cnt];
-			newRequired = scope.find('[name="'+$(_this).attr("name")+'"]').not('.'+settings.requiredClass);
+			newRequired = scope.find('['+settings.fieldNameAttr+'="'+$(_this).attr(settings.fieldNameAttr)+'"]').not('.'+settings.requiredClass);
 			if (newRequired.length > 0) {
 				for(var cnt2=0, len2 = $(newRequired).size(); cnt2<len2; cnt2++){
 					var newRequiredItem = $(newRequired[cnt2]);
@@ -15281,7 +15298,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (required.field.is('.'+settings.errorClass)) {
 			required.field.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
 			required.field.removeClass(settings.errorClass).unwrap();
-			if (required.type === 'checkbox' || required.type === 'radio') selector.find('[name="' + required.name + '"]').removeClass(settings.errorClass);
+			if (required.type === 'checkbox' || required.type === 'radio') selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(settings.errorClass);
 			--errorCount;
 		}
 	}
@@ -15289,9 +15306,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// Set onChangeBinding to true in order to prevent these bindings from occuring multiple times.
 		onChangeBinding = true;
 		for (var i = 0; i<required.length; i++) {
-			scope.on('change','[name="' + required[i].name + '"]', function() {
+			scope.on('change','['+settings.fieldNameAttr+'="' + required[i].name + '"]', function() {
 				for (var i = 0;i<required.length;i++) {
-					if ($(this).attr('name') === required[i].name) runValidation(required[i],0,1);
+					if ($(this).attr(settings.fieldNameAttr) === required[i].name) runValidation(required[i],0,1);
 				}
 			});
 		}
@@ -15299,13 +15316,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function moveToContainer(index){
 		// show/hide buttons
 		if (index === 0) {
-			selector.find(settings.submitField +','+ settings.backButton).hide();
-			selector.find(settings.continueButton).show();
+			selector.find(settings.submitField +','+ settings.prev).hide();
+			selector.find(settings.next).show();
 		}else if (index === multistep.containers.length - 1) {
-			selector.find(settings.continueButton).hide();
-			selector.find(settings.submitField +','+ settings.backButton).show();
+			selector.find(settings.next).hide();
+			selector.find(settings.submitField +','+ settings.prev).show();
 		}else{
-			selector.find(settings.continueButton +','+ settings.backButton).show();
+			selector.find(settings.next +','+ settings.prev).show();
 			selector.find(settings.submitField).hide();
 		}
 
@@ -15315,7 +15332,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		if (index !== 0) selector.get(0).scrollIntoView();
 	}
 
-	buttonSubmitBehaviour(settings.buttonOnLoad);
+	buttonSubmitBehaviour('');
 
 	// Auto Require certain fields
 	autoRequire = ['EmailAddress','CaptchaV2','g-recaptcha-response','ItemName'];
@@ -15336,7 +15353,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		// start on the first container
 		moveToContainer(multistep.step);
 
-		selector.on('click',settings.continueButton,function(event){
+		selector.on('click',settings.next,function(event){
 			event.preventDefault();
 			BuildRequiredObjectArray(selector.find(multistep.containers[multistep.step]));
 
@@ -15352,11 +15369,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					callback: settings.onStep
 				});
 				}
-				if (settings.onContinue !== null) {
+				if (settings.onNext !== null) {
 					bcpie.utils.executeCallback({
 					selector: selector,
 					settings: settings,
-					callback: settings.onContinue
+					callback: settings.onNext
 				});
 				}
 			}else if (settings.validateMode === 'inline') {
@@ -15365,17 +15382,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			}
 		});
 
-		selector.on('click',settings.backButton,function(event){
+		selector.on('click',settings.prev,function(event){
 			event.preventDefault();
 			for (var i = 0; i<required.length; i++) {
 				resetRequiredField(required[i]);
 			}
 			moveToContainer(--multistep.step);
-			if (settings.onBack !== null) {
+			if (settings.onPrev !== null) {
 				bcpie.utils.executeCallback({
 					selector: selector,
 					settings: settings,
-					callback: settings.onBack
+					callback: settings.onPrev
 				});
 			}
 		});
@@ -15384,7 +15401,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		selector.on('keypress',function(e) {
 			if (e.keyCode == 13) {
 				e.preventDefault();
-				if (selector.find(settings.continueButton).filter(':visible').size() > 0) selector.find(settings.continueButton).filter(':visible').trigger('click');
+				if (selector.find(settings.next).filter(':visible').size() > 0) selector.find(settings.next).filter(':visible').trigger('click');
 				else selector.find('[type="submit"]:visible').trigger('click');
 			}
 		});
@@ -15417,9 +15434,9 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					settings: settings,
 					callback: settings.validationSuccess
 				})).then(function(value) {
-					if (value !== 'stop' && settings.noSubmit === false) submitForm(submitCount);
+					if (value !== 'stop' && settings.submitMode !== 'off') submitForm(submitCount);
 				});
-			}else if (settings.noSubmit === false) submitForm(submitCount);
+			}else if (settings.submitMode !== 'off') submitForm(submitCount);
 		}
 		else
 			if (settings.validationError !== null) bcpie.utils.executeCallback({
@@ -15440,7 +15457,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 
 	// Activate submitEvent
-	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== null) {
+	if (settings.submitField !== '[type="submit"]' && settings.submitEvent !== 'submit') {
 		selector.on(settings.submitEvent,settings.submitField,function(){
 			selector.submit();
 		});
@@ -15480,97 +15497,94 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.02.26',
+		version: '2016.05.07',
 		defaults: {
-			bothWays : false,
-			attributeType : 'name',
-			clearOnUncheck : true,
-			copy : null,
-			altCopy : null,
-			checkbox : null,
-			altCheckbox : null,
-			breakOnChange : false, // Requires bothWays:false
-			prefix : '',
-			suffix : '',
-			copyType : 'simple', // concat,math,simple
-			decimals : '', // rounds numbers to specified decimal when copyType is set to math
-			scope : 'form', // Uses 'form' or css selectors as values
-			scopeMode : 'find', // or 'closest', 'sibling'
-			event : 'change', // specify the event that triggers the copy
-			eventNamespace: 'sameas', // specify an event to trigger when the trick is finished.
-			ref : 'value', // html attribute or 'text'. Default is 'value'.
-			target: 'value', // html attribute or 'text'. Default is 'value'.
+			copy: null,
+			copyType: 'concat', // concat,math
+			expressAttr: 'name',
+			refAttr: 'value', // html attribute or 'text'. Default is 'value'.
+			targetAttr: 'value', // html attribute or 'text'. Default is 'value'.
+			scope: 'form', // Uses 'form' or css selectors as values
+			scopeMode: 'closest', // or 'find', 'sibling'
+			checkbox: 'off',
+			checkboxLogic: 'and', // or
+			clearOnUncheck: true,
+			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
+			convert: 'off', // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
-			convert: null, // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
-			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
+			bothWays: false,
+			breakOnChange: false, // Requires bothWays:false
+			copyOnLoad: true, // determines whether the trick initiates on load, or instead waits for the event to trigger.
+			event: 'change', // specify the event that triggers the copy
+			eventNamespace: 'sameas' // specify an event to trigger when the trick is finished.
 		}
 	});
 
+	// Backwards compatibility
+	if (settings.copyOnLoad === true && typeof settings.loadEvent !== 'undefined') settings.copyOnLoad = settings.loadEvent;
+	if (settings.expressAttr === 'name' && typeof settings.attributeType !== 'undefined') settings.expressAttr = settings.attributeType;
+	if (settings.refAttr === 'value' && typeof settings.ref !== 'undefined') settings.refAttr = settings.ref;
+	if (settings.targetAttr === 'value' && typeof settings.target !== 'undefined') settings.targetAttr = settings.target;
+	if (settings.copyType === 'simple') settings.copyType = 'concat';
+	if (settings.copy.indexOf('[') === -1) settings.copy = '['+settings.copy+']';
+	if (typeof settings.prefix !== 'undefined') settings.copy = settings.prefix + settings.copy;
+	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
+
 	// Setup our variables
-	if (settings.scope === 'form') var copyGroup = selector.closest('form');
-	else if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
+	if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
 	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
 	else var copyGroup = $(doc).find(settings.scope);
 
-	if (settings.target === 'text' || settings.target === 'value') {
-		if (selector.is('select,textarea,input')) settings.target = 'value';
-		else settings.target = 'text';
+	if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
+		if (selector.is('select,textarea,input')) settings.targetAttr = 'value';
+		else settings.targetAttr = 'text';
 	}
 
 	if (copyGroup.length > 0) {
-		var copyField, changed, checkbox = copyGroup.find('['+settings.attributeType+'="'+settings.checkbox+'"]'),
-			copyFields=[],altCopyFields=[],altCheckbox = copyGroup.find('['+settings.attributeType+'="'+settings.altCheckbox+'"]'),value,boolean;
+		var copyField, changed, checkbox,
+			copyFields=[],value,boolean;
 
-		if (settings.decimals !== '') settings.decimals = parseInt(settings.decimals);
+		if (settings.checkbox !== 'off') {
+			checkbox = settings.checkbox.split(',');
+			for (var i = 0; i < checkbox.length; i++) {
+				checkbox[i] = checkbox[i].replace('[','').replace(']','');
+				if (checkbox[i].indexOf('=') === -1) checkbox[i] = settings.expressAttr+'="'+checkbox[i]+'"';
+				checkbox[i] = copyGroup.find('['+checkbox[i]+']');
+			}
+		}
+
+		if (settings.decimals !== 'off') settings.decimals = parseInt(settings.decimals);
 		if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
 
 		selector.data('sameAsLastVal',selector.val());
-
-		if(settings.copyType=="simple"){
-			settings.copy = settings.copy.replace(/\[/g,"").replace(/\]/g,"");
-			copyFields.push(copyGroup.find('['+settings.attributeType+'="'+settings.copy+'"]').not(selector));
-		}else{
-			settings.bothWays = false;
-			GetFieldsExpression(true);
-		}
+		GetFieldsExpression(true);
 
 		// Choose which method to use
-		if (checkbox.length || altCheckbox.length) {
-			if (checkbox.length) {
-				checkboxChange(checkbox,selector,copyFields);
-				checkbox.on(settings.event+settings.eventNamespace,function(){
-					checkboxChange(checkbox,selector,copyFields);
+		if (settings.checkbox !== 'off' && checkbox.length > 0) {
+			checkboxChange(checkbox,copyFields);
+			for (var i = 0; i < checkbox.length; i++) {
+				checkbox[i].on(settings.event+settings.eventNamespace,function(){
+					checkboxChange(checkbox,copyFields);
 				});
-				if (settings.breakOnChange !== false) {
-					selector.on(settings.event+settings.eventNamespace,function() {
-						checkbox.off(settings.event+settings.eventNamespace);
-						for (var i = copyFields.length - 1; i >= 0; i--) {
-							copyFields[i].off(settings.event+settings.eventNamespace);
-						}
-						selector.off(settings.event+settings.eventNamespace);
-					});
-				}
 			}
-			if (altCheckbox.length) {
-				checkboxChange(altCheckbox,selector,altCopyFields);
-				altCheckbox.on(settings.event+settings.eventNamespace,function(){
-					checkboxChange(altCheckbox,selector,altCopyFields);
+			
+			if (settings.breakOnChange !== false) {
+				selector.on(settings.event+settings.eventNamespace,function() {
+					for (var i = 0; i < checkbox.length; i++) {
+						checkbox[i].off(settings.event+settings.eventNamespace);
+					}
+					for (var i = copyFields.length - 1; i >= 0; i--) {
+						copyFields[i].off(settings.event+settings.eventNamespace);
+					}
+					selector.off(settings.event+settings.eventNamespace);
 				});
-				if (settings.breakOnChange !== false) {
-					selector.on(settings.event+settings.eventNamespace,function() {
-						altCheckbox.off(settings.event+settings.eventNamespace);
-						for (var i = altCopyFields.length - 1; i >= 0; i--) {
-							altCopyFields[i].off(settings.event+settings.eventNamespace);
-						}
-						selector.off(settings.event+settings.eventNamespace);
-					});
-				}
 			}
 		}else {
-			if (settings.loadEvent === true) {
+			if (settings.copyOnLoad === true) {
 				copyVal(selector,copyFields);
 				inputChange(selector,copyFields);
 			}
+			
 			if (settings.breakOnChange !== false) {
 				selector.on(settings.event+settings.eventNamespace,function() {
 					for (var i = copyFields.length - 1; i >= 0; i--) {
@@ -15585,32 +15599,15 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	function copyVal(selector,copyFields) {
 		changed = false;
 		boolean = copyFields[0].is('input[type=checkbox]') && !copyFields[0][0].hasAttribute('value') && selector.is('input[type=checkbox]');
-		if(settings.copyType == "simple"){
-			if (copyFields[0].is('select')) value = copyFields[0].find('option').filter(':selected');
-			else if (copyFields[0].is('input[type=radio]') || copyFields[0].is('input[type=checkbox]')) value = copyFields[0].filter(':checked');
-			else value = copyFields[0];
+		value = GetFieldsExpression();
 
-
-			if (settings.ref === 'text') value = value.text();
-			else if (settings.ref === 'value') value = value.val();
-			else if (settings.ref === 'html') value = value.html();
-			else value = value.attr(settings.ref);
-
-			if (typeof value !== 'undefined') {
-				if (settings.trim === true) value = value.trim();
-
-				if(value.length === 0 || ((settings.prefix.length > 0 || settings.suffix.length > 0) && settings.bothWays === true)) value = value;
-				else value = settings.prefix + value + settings.suffix;
-			}
-		}else value = settings.prefix + GetFieldsExpression() + settings.suffix;
-
-		if (settings.convert !== null && typeof value !== 'undefined') {
+		if (settings.convert !== 'off' && typeof value !== 'undefined') {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
 		}
 
-		if (settings.target === 'text' || settings.target === 'value') {
+		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
 			if (boolean === true) {
 				if (copyFields[0].is(':checked') && !selector.is(':checked')) {
 					selector.prop('checked',true);
@@ -15619,14 +15616,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 					selector.prop('checked',false);
 					changed = true;
 				}
-			}else if (settings.target === 'value') selector.val(value);
+			}else if (settings.targetAttr === 'value') selector.val(value);
 			else selector.text(value);
-		}else selector.attr(settings.target,value).prop(settings.target,value);
+		}else selector.attr(settings.targetAttr,value).prop(settings.targetAttr,value);
 
 		if (boolean === false) {
-			if (settings.target === 'value' && selector.data('sameAsLastVal') !== selector.val()) changed = true;
-			else if (settings.target === 'text' && selector.data('sameAsLastVal') !== selector.text()) changed = true;
-			else if (selector.data('sameAsLastVal') !== selector.attr(settings.target)) changed = true;
+			if (settings.targetAttr === 'value' && selector.data('sameAsLastVal') !== selector.val()) changed = true;
+			else if (settings.targetAttr === 'text' && selector.data('sameAsLastVal') !== selector.text()) changed = true;
+			else if (selector.data('sameAsLastVal') !== selector.attr(settings.targetAttr)) changed = true;
 		}
 		
 		if (changed === true) {
@@ -15650,13 +15647,17 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			});
 		}
 	}
-	function checkboxChange(chkbox,selector,copyFields) {
-		if (chkbox.prop('checked')) {
-			if(chkbox.attr(settings.attributeType) == settings.checkbox)
-				altCheckbox.removeAttr('checked');
-			else if(chkbox.attr(settings.attributeType) == settings.altCheckbox)
-				checkbox.removeAttr('checked');
+	function checkboxChange(checkbox,copyFields) {
+		var checked = 0;
+		for (var i = 0; i < checkbox.length; i++) {
+			if (checkbox[i].prop('checked')) checked += 1;
+		}
 
+		if (settings.checkboxLogic === 'and' && checked.length === checked) checked = true;
+		else if (settings.checkboxLogic === 'or' && checked > 0) checked = true;
+		else checked = false;
+
+		if (checked) {
 			copyVal(selector,copyFields);
 			inputChange(selector,copyFields);
 		}else {
@@ -15675,12 +15676,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	}
 	function GetFieldsExpression(init){
 		var strExpression = settings.copy,expr,dec = 1;
+		
 		strExpression = GetfieldVal(strExpression);
 		if (typeof settings.decimals == 'number') {
 			for (var i = 0; i<settings.decimals; i++) {
 				dec = dec*10;
 			}
 		}
+		
 		if (settings.copyType == "math") {
 			try {
 				expr = Parser.parse(strExpression);
@@ -15690,36 +15693,37 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 				return strExpression.replace(/\+/g,'').replace(/\-/g,'').replace(/\//g,'').replace(/\*/g,'').replace(/\)/g,'').replace(/\(/g,'');
 			}
 		}else if (settings.copyType == "concat") return strExpression;
+	}
+	function GetfieldVal(str) {
+		var pattern = /\[.*?\]/g,newSelector,
+			fieldSelectors = str.match(pattern),
+			individualField;
 
-		function GetfieldVal(str){
-			var pattern = /\[.*?\]/g,
-				fieldSelectors = str.match(pattern),
-				individualField;
+		for (var i = 0; i < fieldSelectors.length; i++) {
+			newSelector = fieldSelectors[i].replace('[','').replace(']','');
+			if (newSelector.indexOf('=') === -1) newSelector = settings.expressAttr+'="'+newSelector+'"';
+			newSelector = copyGroup.find('['+newSelector+']');
+			copyFields.push(copyGroup.find(newSelector));
+			value = '',combinedVal = '';
+			for (var e = 0; e < copyFields[i].length; e++) {
+				individualField = $(copyFields[i][e]);
+				if (individualField.is('select')) value = individualField.find('option').filter(':selected');
+				else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
+				else value = individualField;
 
-			for (var i = 0; i < fieldSelectors.length; i++) {
-				copyFields.push(copyGroup.find(fieldSelectors[i].replace('[','['+settings.attributeType+'="').replace(']','"]')));
-				value = '',combinedVal = '';
-				for (var e = 0; e < copyFields[i].length; e++) {
-					individualField = $(copyFields[i][e]);
-					if (individualField.is('select')) value = individualField.find('option').filter(':selected');
-					else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
-					else value = individualField;
+				if (settings.refAttr === 'text') value = value.text();
+				else if (settings.refAttr === 'value') value = value.val();
+				else if (settings.refAttr === 'html') value = value.html();
+				else value = value.attr(settings.refAttr);
 
-					if (settings.ref === 'text') value = value.text();
-					else if (settings.ref === 'value') value = value.val();
-					else if (settings.ref === 'html') value = value.html();
-					else value = value.attr(settings.ref);
-
-					if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
-					if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;
-					else if (settings.copyType === 'concat' && e > 0) combinedVal += value;
-					else combinedVal = value;
-				}
-				if (typeof combinedVal !== 'undefined') str = str.replace(fieldSelectors[i],combinedVal);
+				if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
+				if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;
+				else if (settings.copyType === 'concat' && e > 0) combinedVal += value;
+				else combinedVal = value;
 			}
-
-			return str;
+			if (typeof combinedVal !== 'undefined') str = str.replace(fieldSelectors[i],combinedVal);
 		}
+		return str;
 	}
 };;/*
  * Secure
@@ -15860,7 +15864,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.02.18',
+		version: '2016.06.01',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -15944,11 +15948,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 	}
 	function changeValue(state) {
-		if (settings.onValue === 'boolean' && selector.is('[type=checkbox]') && state === 'on') {
-			selector.prop('checked',true).attr('checked','checked');
-		}else if (settings.offValue === 'boolean' && selector.is('[type=checkbox]') && state === 'off') {
-			selector.prop('checked',false).removeAttr('checked');
-		}else {
+		if (settings.onValue === 'boolean' && state === 'on') selector.prop('checked',true).attr('checked','checked');
+		else if (settings.offValue === 'boolean' && state === 'off') selector.prop('checked',false).removeAttr('checked');
+		else {
 			if (state === 'off') state = settings.offValue;
 			else if (state === 'on') state = settings.onValue;
 			if (state !== null) {
