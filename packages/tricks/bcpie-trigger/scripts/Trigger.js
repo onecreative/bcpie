@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.06.01',
+		version: '2016.06.29',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -106,9 +106,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		
 	}
 	function changeTrigger(){
-		var matchedValues;
+		var matchedValues = 0;
 		for (var e = 0; e < settings.trigger.length; e++) {
-			matchedValues = 0;
 			for (var i=0; i<settings.triggerValue.length; i++) {
 				if (settings.triggerValue[i] === 'boolean' && $(settings.trigger[e]).is(':checked')) matchedValues ++;
 				else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
