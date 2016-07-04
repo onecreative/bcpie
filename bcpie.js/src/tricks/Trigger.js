@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.06.29',
+		version: '2016.07.02',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -110,7 +110,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		for (var e = 0; e < settings.trigger.length; e++) {
 			for (var i=0; i<settings.triggerValue.length; i++) {
 				if (settings.triggerValue[i] === 'boolean' && $(settings.trigger[e]).is(':checked')) matchedValues ++;
-				else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
+				else if (typeof GetValue($(settings.trigger[e])) === 'object') {
+					if (GetValue($(settings.trigger[e])).indexOf(settings.triggerValue[i]) > -1) matchedValues ++;
+				}else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
 			}
 		}
 		if (settings.triggerMode === 'or' && matchedValues > 0) settings.state = 'on';
@@ -120,7 +122,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		executeTrigger(settings.state);
 	}
 	function GetValue(triggerElement) {
-		var value;
+		var value,tempArray = [];
 		if (settings.triggerAttr === 'value') {
 			if(triggerElement.is('[type=radio]'))
 				value = triggerElement.filter(':checked').val();
@@ -135,7 +137,13 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 		else {
 			if (triggerElement.is('select')) {
-				value = triggerElement.find('option').filter(':selected').attr(settings.triggerAttr);
+				value = triggerElement.find('option').filter(':selected');
+				if (value.length > 1) {
+					for (var i = 0; i < value.length; i++) {
+						tempArray.push($(value[i]).attr(settings.triggerAttr));
+					}
+					value = tempArray;
+				}else value = value.attr(settings.triggerAttr);
 			}else value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';

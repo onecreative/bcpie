@@ -14172,7 +14172,7 @@ bcpie.extensions.tricks.Crumbs = function(selector,options) {
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2016.04.25',
+		version: '2016.06.30',
 		defaults: {
 			format: 'YYYY', // use Moment parsing, 'calendar', or 'utc'
 			add: '',
@@ -14183,7 +14183,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			toZone: '', // specify a valid timezone string (like America/Denver) or use 'local' to automatically detect it
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
-			event: 'load', // specify the window event that triggers Date's behavior
+			event: undefined, // specify the window event that triggers Date's behavior.
+			triggerOnLoad: true, // determines if the trick fires on page load.
 			locale: 'off', // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
 			triggeredEvent: 'change', // specify an event to trigger when the trick is finished.
 			eventNamespace: 'date' // specify a suffix to add to triggeredEvent (event.suffix).
@@ -14191,6 +14192,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	});
 
 	var ref,value,targets,parseFormat,order,addSplit,subtractSplit;
+
+	if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
 
 	if (settings.locale === 'off') settings.locale = bcpie.globals.site.language.toLowerCase();
 	else if (settings.locale === 'auto') settings.locale = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
@@ -14225,7 +14228,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			moment.locale(settings.locale);
 		}else setTimeout(initLangSupport, 100);
 	}
-	function runDate() {
+	function runDate(load) {
+		if (typeof load === 'undefined') load = false;
+		
 		// determine the reference
 		if (settings.ref === 'text' && selector.is('input')) settings.ref = 'value';
 		ref = (settings.ref === 'text') ? selector.text() : selector.prop(settings.ref);
@@ -14248,7 +14253,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 					case 'US': order = 'MDY'; break;
 					default: order = 'DMY';
 				}
-				parseFormat = (settings.moment === 'auto') ? moment.parseFormat(ref,{preferredOrder: order}) : settings.moment;
+				if (settings.moment === 'auto') parseFormat = (ref.match(/[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}(\+|-)[0-9]{2}:[0-9]{2}/)) ? 'YYYY-MM-DD[T]HH:mm:ssZZ;' : moment.parseFormat(ref,{preferredOrder: order});
+				else parseFormat = settings.moment;
 				if (settings.fromZone !== 'local') {
 					value = moment.tz(ref,parseFormat,settings.fromZone);
 				}else {
@@ -14278,7 +14284,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			for (var i=0; i<targets.length; i++) {
 				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
-				selector.trigger(settings.triggeredEvent+'.'+settings.eventNamespace);
+				if (load === false) selector.trigger(settings.triggeredEvent+settings.eventNamespace);
 			}
 		}
 	}
@@ -14296,12 +14302,12 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	}
 	initLangSupport();
 
-	if (settings.event !== 'load') {
+	if (settings.triggerOnLoad === true) runDate(true);
+	if (typeof settings.event !== 'undefined') {
 		selector.on(settings.event, function() {
 			runDate();
 		});
-	}else runDate();
-
+	}
 };;/*
  * "FormMagic". An awesome trick for BC Pie.
  * http://bcpie.com
@@ -15497,7 +15503,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.05.07',
+		version: '2016.06.30',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -15548,7 +15554,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkbox = settings.checkbox.split(',');
 			for (var i = 0; i < checkbox.length; i++) {
 				checkbox[i] = checkbox[i].replace('[','').replace(']','');
-				if (checkbox[i].indexOf('=') === -1) checkbox[i] = settings.expressAttr+'="'+checkbox[i]+'"';
+				if (checkbox[i].indexOf('=') === -1) checkbox[i] = settings.attributeType+'="'+checkbox[i]+'"';
 				checkbox[i] = copyGroup.find('['+checkbox[i]+']');
 			}
 		}
@@ -15563,20 +15569,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.checkbox !== 'off' && checkbox.length > 0) {
 			checkboxChange(checkbox,copyFields);
 			for (var i = 0; i < checkbox.length; i++) {
-				checkbox[i].on(settings.event+settings.eventNamespace,function(){
+				checkbox[i].on(settings.event,function(){
 					checkboxChange(checkbox,copyFields);
 				});
 			}
 			
 			if (settings.breakOnChange !== false) {
-				selector.on(settings.event+settings.eventNamespace,function() {
+				selector.on(settings.event,function() {
 					for (var i = 0; i < checkbox.length; i++) {
-						checkbox[i].off(settings.event+settings.eventNamespace);
+						checkbox[i].off(settings.event);
 					}
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+settings.eventNamespace);
+						copyFields[i].off(settings.event);
 					}
-					selector.off(settings.event+settings.eventNamespace);
+					selector.off(settings.event);
 				});
 			}
 		}else {
@@ -15586,11 +15592,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 			
 			if (settings.breakOnChange !== false) {
-				selector.on(settings.event+settings.eventNamespace,function() {
+				selector.on(settings.event,function() {
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+settings.eventNamespace);
+						copyFields[i].off(settings.event);
 					}
-					selector.off(settings.event+settings.eventNamespace);
+					selector.off(settings.event);
 				});
 			}
 		}
@@ -15634,13 +15640,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+settings.eventNamespace,function() {
+			$(copyFields[i]).on(settings.event,function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+settings.eventNamespace,function(){
+			selector.on(settings.event,function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -15662,9 +15668,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+settings.eventNamespace);
+				copyFields[i].off(settings.event);
 			}
-			selector.off(settings.event+settings.eventNamespace);
+			selector.off(settings.event);
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {
@@ -15701,7 +15707,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		for (var i = 0; i < fieldSelectors.length; i++) {
 			newSelector = fieldSelectors[i].replace('[','').replace(']','');
-			if (newSelector.indexOf('=') === -1) newSelector = settings.expressAttr+'="'+newSelector+'"';
+			if (newSelector.indexOf('=') === -1) newSelector = settings.attributeType+'="'+newSelector+'"';
 			newSelector = copyGroup.find('['+newSelector+']');
 			copyFields.push(copyGroup.find(newSelector));
 			value = '',combinedVal = '';
@@ -15864,7 +15870,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.06.29',
+		version: '2016.07.02',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
@@ -15966,7 +15972,9 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		for (var e = 0; e < settings.trigger.length; e++) {
 			for (var i=0; i<settings.triggerValue.length; i++) {
 				if (settings.triggerValue[i] === 'boolean' && $(settings.trigger[e]).is(':checked')) matchedValues ++;
-				else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
+				else if (typeof GetValue($(settings.trigger[e])) === 'object') {
+					if (GetValue($(settings.trigger[e])).indexOf(settings.triggerValue[i]) > -1) matchedValues ++;
+				}else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
 			}
 		}
 		if (settings.triggerMode === 'or' && matchedValues > 0) settings.state = 'on';
@@ -15976,7 +15984,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		executeTrigger(settings.state);
 	}
 	function GetValue(triggerElement) {
-		var value;
+		var value,tempArray = [];
 		if (settings.triggerAttr === 'value') {
 			if(triggerElement.is('[type=radio]'))
 				value = triggerElement.filter(':checked').val();
@@ -15991,7 +15999,13 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		}
 		else {
 			if (triggerElement.is('select')) {
-				value = triggerElement.find('option').filter(':selected').attr(settings.triggerAttr);
+				value = triggerElement.find('option').filter(':selected');
+				if (value.length > 1) {
+					for (var i = 0; i < value.length; i++) {
+						tempArray.push($(value[i]).attr(settings.triggerAttr));
+					}
+					value = tempArray;
+				}else value = value.attr(settings.triggerAttr);
 			}else value = triggerElement.attr(settings.triggerAttr);
 		}
 		if (typeof value === 'undefined' || value === null) value = '';

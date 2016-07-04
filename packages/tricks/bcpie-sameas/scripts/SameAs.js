@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.05.07',
+		version: '2016.06.30',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -74,20 +74,20 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		if (settings.checkbox !== 'off' && checkbox.length > 0) {
 			checkboxChange(checkbox,copyFields);
 			for (var i = 0; i < checkbox.length; i++) {
-				checkbox[i].on(settings.event+settings.eventNamespace,function(){
+				checkbox[i].on(settings.event,function(){
 					checkboxChange(checkbox,copyFields);
 				});
 			}
 			
 			if (settings.breakOnChange !== false) {
-				selector.on(settings.event+settings.eventNamespace,function() {
+				selector.on(settings.event,function() {
 					for (var i = 0; i < checkbox.length; i++) {
-						checkbox[i].off(settings.event+settings.eventNamespace);
+						checkbox[i].off(settings.event);
 					}
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+settings.eventNamespace);
+						copyFields[i].off(settings.event);
 					}
-					selector.off(settings.event+settings.eventNamespace);
+					selector.off(settings.event);
 				});
 			}
 		}else {
@@ -97,11 +97,11 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			}
 			
 			if (settings.breakOnChange !== false) {
-				selector.on(settings.event+settings.eventNamespace,function() {
+				selector.on(settings.event,function() {
 					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event+settings.eventNamespace);
+						copyFields[i].off(settings.event);
 					}
-					selector.off(settings.event+settings.eventNamespace);
+					selector.off(settings.event);
 				});
 			}
 		}
@@ -145,13 +145,13 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	}
 	function inputChange(selector,copyFields) {
 		for (var i = copyFields.length - 1; i >= 0; i--) {
-			$(copyFields[i]).on(settings.event+settings.eventNamespace,function() {
+			$(copyFields[i]).on(settings.event,function() {
 				copyVal(selector,copyFields);
 			});
 		}
 
 		if (settings.bothWays === true) {
-			selector.on(settings.event+settings.eventNamespace,function(){
+			selector.on(settings.event,function(){
 				if (selector.val() !== copyFields[0].val()) {
 					copyVal(copyFields[0],[selector]);
 				}
@@ -173,9 +173,9 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			inputChange(selector,copyFields);
 		}else {
 			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event+settings.eventNamespace);
+				copyFields[i].off(settings.event);
 			}
-			selector.off(settings.event+settings.eventNamespace);
+			selector.off(settings.event);
 			selector.val('');
 
 			if (selector.data('sameAsLastVal') !== selector.val()) {

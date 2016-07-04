@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2016.04.25',
+		version: '2016.06.30',
 		defaults: {
 			format: 'YYYY', // use Moment parsing, 'calendar', or 'utc'
 			add: '',
@@ -19,7 +19,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			toZone: '', // specify a valid timezone string (like America/Denver) or use 'local' to automatically detect it
 			ref: 'text', // specify an html attribute (inputs will assume 'text' means 'value'). You can also say 'now' to use the current date and time.
 			target: 'text', // specify an html attribute (inputs will default to 'value'). Separate multiple targets with commas.
-			event: 'load', // specify the window event that triggers Date's behavior
+			event: undefined, // specify the window event that triggers Date's behavior.
+			triggerOnLoad: true, // determines if the trick fires on page load.
 			locale: 'off', // 'off' uses the site's language, 'auto' finds the user's language, or you can specify with a locale abbreviation.
 			triggeredEvent: 'change', // specify an event to trigger when the trick is finished.
 			eventNamespace: 'date' // specify a suffix to add to triggeredEvent (event.suffix).
@@ -27,6 +28,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	});
 
 	var ref,value,targets,parseFormat,order,addSplit,subtractSplit;
+
+	if (settings.eventNamespace !== '') settings.eventNamespace = '.'+settings.eventNamespace;
 
 	if (settings.locale === 'off') settings.locale = bcpie.globals.site.language.toLowerCase();
 	else if (settings.locale === 'auto') settings.locale = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
@@ -61,7 +64,9 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			moment.locale(settings.locale);
 		}else setTimeout(initLangSupport, 100);
 	}
-	function runDate() {
+	function runDate(load) {
+		if (typeof load === 'undefined') load = false;
+		
 		// determine the reference
 		if (settings.ref === 'text' && selector.is('input')) settings.ref = 'value';
 		ref = (settings.ref === 'text') ? selector.text() : selector.prop(settings.ref);
@@ -84,7 +89,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 					case 'US': order = 'MDY'; break;
 					default: order = 'DMY';
 				}
-				parseFormat = (settings.moment === 'auto') ? moment.parseFormat(ref,{preferredOrder: order}) : settings.moment;
+				if (settings.moment === 'auto') parseFormat = (ref.match(/[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}(\+|-)[0-9]{2}:[0-9]{2}/)) ? 'YYYY-MM-DD[T]HH:mm:ssZZ;' : moment.parseFormat(ref,{preferredOrder: order});
+				else parseFormat = settings.moment;
 				if (settings.fromZone !== 'local') {
 					value = moment.tz(ref,parseFormat,settings.fromZone);
 				}else {
@@ -114,7 +120,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			for (var i=0; i<targets.length; i++) {
 				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
 				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
-				selector.trigger(settings.triggeredEvent+'.'+settings.eventNamespace);
+				if (load === false) selector.trigger(settings.triggeredEvent+settings.eventNamespace);
 			}
 		}
 	}
@@ -132,10 +138,10 @@ bcpie.extensions.tricks.Date = function(selector,options){
 	}
 	initLangSupport();
 
-	if (settings.event !== 'load') {
+	if (settings.triggerOnLoad === true) runDate(true);
+	if (typeof settings.event !== 'undefined') {
 		selector.on(settings.event, function() {
 			runDate();
 		});
-	}else runDate();
-
+	}
 };
