@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.06.30',
+		version: '2016.07.04',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -59,7 +59,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkbox = settings.checkbox.split(',');
 			for (var i = 0; i < checkbox.length; i++) {
 				checkbox[i] = checkbox[i].replace('[','').replace(']','');
-				if (checkbox[i].indexOf('=') === -1) checkbox[i] = settings.attributeType+'="'+checkbox[i]+'"';
+				if (checkbox[i].indexOf('=') === -1) checkbox[i] = settings.expressAttr+'="'+checkbox[i]+'"';
 				checkbox[i] = copyGroup.find('['+checkbox[i]+']');
 			}
 		}
@@ -164,7 +164,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (checkbox[i].prop('checked')) checked += 1;
 		}
 
-		if (settings.checkboxLogic === 'and' && checked.length === checked) checked = true;
+		if (settings.checkboxLogic === 'and' && checkbox.length === checked) checked = true;
 		else if (settings.checkboxLogic === 'or' && checked > 0) checked = true;
 		else checked = false;
 
@@ -212,7 +212,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		for (var i = 0; i < fieldSelectors.length; i++) {
 			newSelector = fieldSelectors[i].replace('[','').replace(']','');
-			if (newSelector.indexOf('=') === -1) newSelector = settings.attributeType+'="'+newSelector+'"';
+			if (newSelector.indexOf('=') === -1) newSelector = settings.expressAttr+'="'+newSelector+'"';
 			newSelector = copyGroup.find('['+newSelector+']');
 			copyFields.push(copyGroup.find(newSelector));
 			value = '',combinedVal = '';
