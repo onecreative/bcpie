@@ -19,7 +19,7 @@
 			"filename":"bcpieSDK.js", 
 			"type":"scripts", 
 			"location":"foot",
-			"version": "2016.05.05",
+			"version": "2016.07.07",
 			"docs": "http://bcpie.com/docs/sdk"
 		}
 	],

@@ -79,7 +79,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.05.05',
+		sdk: '2016.07.07',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -307,7 +307,7 @@ win.bcpie = {
 
 						if (typeof bcpie.ajax.webapp.item.save[data.webapp] === 'undefined') {
 							// Retrieve the custom fields list from the server
-							bcpie.ajax.webapp.item.save[data.webapp] = bcpie.ajax.webapp.fields({webapp: data.webapp},{async:false});
+							bcpie.ajax.webapp.item.save[data.webapp] = bcpie.ajax.webapp.fields.get({webapp: data.webapp},{async:false});
 						}
 
 
@@ -430,33 +430,75 @@ win.bcpie = {
 				if (typeof data === 'undefined') data = {};
 				if (typeof options !== 'object') options = {};
 				data = {
-					webapp: data.webapp || null
+					webapp: data.webapp || undefined
 				}
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
 
-				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
+				options.url = '/api/v2/admin/sites/current/webapps';
+				if (typeof data.webapp !== 'undefined') options.url += '/'+data.webapp;
 				options.headers = {'Authorization': bcpie.ajax.token()};
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
 			},
-			fields: function(data,options) {
-				if (typeof data === 'undefined') data = {};
-				if (typeof options !== 'object') options = {};
-				data = {
-					webapp: data.webapp || null, // string
-					field: data.field || null, // string
-				}
-				// Catch data errors
-				var errors = bcpie.ajax.webapp.errors(data);
-				if (errors.length > 0) return errors;
+			fields: {
+				get: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null // string
+					}
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
 
-				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
-				if (data.field !== null) options.url += '/' + data.field;
-				options.headers = {'Authorization': bcpie.ajax.token()};
-				options.method = 'GET';
-				return bcpie.utils.ajax(options);
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'GET';
+					return bcpie.utils.ajax(options);
+				},
+				save: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null, // integer
+						content: data.content || null // object
+					}
+					
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					if (data.content !== null) options.content = data.content;
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'POST';
+					options.processData = false;
+					return bcpie.utils.ajax(options);
+				},
+				delete: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null // integer or blank
+					}
+					
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'DELETE';
+					return bcpie.utils.ajax(options);
+				}
 			},
 			search: function(data,options) {
 				if (typeof data === 'undefined') data = {};
@@ -486,13 +528,6 @@ win.bcpie = {
 				return bcpie.utils.ajax(options);
 				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
 				// return (response.children().length > 0) ? response.children() : response.html();
-			},
-			list: function(options) {
-				if (typeof options !== 'object') options = {};
-				options.url = '/api/v2/admin/sites/current/webapps';
-				options.headers = {'Authorization': bcpie.ajax.token()};
-				options.method = 'GET';
-				return bcpie.utils.ajax(options);
 			},
 			errors: function(data) {
 				if (typeof data === 'undefined') data = {};
