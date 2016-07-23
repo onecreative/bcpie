@@ -12918,7 +12918,7 @@ var Parser = (function (scope) {
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.07.07',
+		sdk: '2016.07.15',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -13281,6 +13281,22 @@ win.bcpie = {
 				options.method = 'GET';
 				return bcpie.utils.ajax(options);
 			},
+			delete: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					webapp: data.webapp || null // string
+				}
+
+				// Catch data errors
+				var errors = bcpie.ajax.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
+				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.method = 'DELETE';
+				return bcpie.utils.ajax(options);
+			},
 			fields: {
 				get: function(data,options) {
 					if (typeof data === 'undefined') data = {};
@@ -13314,7 +13330,8 @@ win.bcpie = {
 
 					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
 					if (data.field !== null) options.url += '/' + data.field;
-					if (data.content !== null) options.content = data.content;
+					if (data.field === null && data.content !== null && typeof data.content.id === 'undefined') data.content.id = 0;
+					if (data.content !== null) options.data = data.content;
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.method = 'POST';
 					options.processData = false;
@@ -13499,7 +13516,7 @@ win.bcpie = {
 	},
 	utils: {
 		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null},
-		escape: function(str) { return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"); },
+		escape: function(str) { return str.replace(/\\/g,"").replace(/[\-\[\]\\/\{\}\(\)\*\+\?\.\^\$\|\'\"]/g,"\\$&"); },
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
 			bcpie.utils.jsonify.token = /[^,(:){}\[\]]+/g;
