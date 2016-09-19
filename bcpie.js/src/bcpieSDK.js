@@ -104,7 +104,7 @@ win.bcpie = {
 				data = {
 					id: data.id || 'me' // user id
 				}
-				options.url = '/api/v2/admin/sites/current/users/'+data.id;
+				options.url = '/webresources/api/v3/sites/current/users/'+data.id;
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.method = 'GET';
 
