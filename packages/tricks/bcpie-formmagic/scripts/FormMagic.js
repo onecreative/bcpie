@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.06.03',
+		version: '2016.08.23',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -18,11 +18,17 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'steps' : '', // multistep container selectors, separated by comma
 			'prev' : '', // back button selector for multistep form
 			'next' : '', // Continue button selector for multistep form
-			'responseTarget' : 'replace', // where to show an ajax response after submission. 'replace' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
+			'beforeResponseMode' : 'off', // off, prepend, append, before, append, replace
+			'beforeResponseMessage' : null, // a css selector with a message to display during the submission process.
+			'beforeResponseTarget' : selector, // selector, alert, css selector
+			'responseMode' : 'replace', // off, prepend, append, before, append, replace
+			'responseTarget' : selector, // where to show an ajax response after submission. 'selector' replaces the form with the message, 'off' returns no message, 'alert' displays the message in a temporary alert box, 'dialog' displays the message in a dialog box. Otherwise, a CSS selector indicates where to put the message.
 			'restoreTarget' : true, // If ajax submission result is empty, the contents of the responseTarget will be restored. This is particularly helpful with live searches.
 			'successMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemMessageClass'. Otherwise, text in this option will be used for the success message, and shown in an Alertify notification.
 			'errorMessage': null, // null tells FormMagic to find the message via ajax, using the 'systemErrorMessageClass'. Otherwise, text in this option will be used for the error message, and shown in an Alertify notification.
-			'formOnResponse' : 'remove', // 'hide', 'show'
+			'formBeforeResponse' : null, // null, 'hide'
+			'formOnSuccessResponse' : null, // null, 'hide', 'show'
+			'formOnErrorResponse' : null, // null, 'hide', 'show'
 			'buttonOnSubmit' : 'off', // disable,hide
 			'buttonOnResponse' : 'off', // disable,hide
 			'requiredClass' : 'required',
@@ -630,9 +636,11 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	if (settings.next === ''  && typeof settings.continueButton !== 'undefined') settings.next = settings.continueButton;
 	if (settings.onPrev === ''  && typeof settings.onBack !== 'undefined') settings.onPrev = settings.onBack;
 	if (settings.onNext === ''  && typeof settings.onContinue !== 'undefined') settings.onNext = settings.onContinue;
-	if (settings.responseTarget === 'replace'  && typeof settings.messageBox !== 'undefined') settings.responseTarget = settings.messageBox;
+	if (settings.responseMode === 'replace'  && typeof settings.messageMode !== 'undefined') settings.responseMode = settings.messageMode;
+	if (settings.responseTarget === selector  && typeof settings.messageBox !== 'undefined') settings.responseTarget = settings.messageBox;
 	if (settings.restoreTarget === true  && typeof settings.restoreMessageBox !== 'undefined') settings.restoreTarget = settings.restoreMessageBox;
-	if (settings.formOnResponse === null  && typeof settings.afterAjax !== 'undefined') settings.formOnResponse = settings.afterAjax;
+	if (settings.formOnSuccessResponse === null  && typeof settings.afterAjax !== 'undefined') settings.formOnSuccessResponse = settings.afterAjax;
+	if (settings.formOnErrorResponse === null  && typeof settings.afterAjax !== 'undefined') settings.formOnErrorResponse = settings.afterAjax;
 	if (settings.buttonOnResponse === null  && typeof settings.buttonAfterSubmit !== 'undefined') settings.buttonOnResponse = settings.buttonAfterSubmit;
 	if (settings.submitMode === 'standard') {
 		if (typeof settings.mode !== 'undefined') settings.submitMode = settings.mode;
@@ -796,6 +804,18 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				otherURL += thisURL+'&callback=?';
 			}
 			if (settings.submitMode === 'ajax') {
+				if (settings.formBeforeResponse === 'hide') selector.hide();
+				if (settings.beforeResponseMode !== 'off' && settings.beforeResponseMessage !== null) {
+					settings.beforeResponseMessage = body.find(settings.beforeResponseMessage);
+					if (settings.beforeResponseMessage.length > 0) {
+						if (settings.beforeResponseTarget !== selector) settings.beforeResponseTarget = body.find(settings.beforeResponseTarget);
+						if (settings.beforeResponseMode === 'replace') settings.beforeResponseTarget = settings.beforeResponseTarget.html(settings.beforeResponseMessage).fadeIn();
+						else if (settings.beforeResponseMode === 'append') settings.beforeResponseTarget = settings.beforeResponseTarget.append(settings.beforeResponseMessage).fadeIn();
+						else if (settings.beforeResponseMode === 'prepend') settings.beforeResponseTarget = settings.beforeResponseTarget.prepend(settings.beforeResponseMessage).fadeIn();
+						else if (settings.beforeResponseMode === 'before') settings.beforeResponseTarget = settings.beforeResponseTarget.before(settings.beforeResponseMessage).fadeIn();
+						else if (settings.beforeResponseMode === 'after') settings.beforeResponseTarget = settings.beforeResponseTarget.after(settings.beforeResponseMessage).fadeIn();
+					}
+				}
 				$.ajax({
 					type: 'POST',
 					url: thisURL,
@@ -809,44 +829,66 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							messageClass = settings.systemErrorMessageClass;
 							errorCount += 1;
 						}
+						if (errorCount === 0 && loggingIn === true) {
+							$.ajax({
+								url: otherURL,
+								method:'POST',
+								dataType:'jsonp',
+								data: {
+									Username: selector.find('['+settings.fieldNameAttr+'=Username]').val(),
+									Password: selector.find('['+settings.fieldNameAttr+'=Password]').val()
+								}
+							});
+						}
+						if (errorCount > 0 && settings.errorMessage !== null) responseMessage = settings.errorMessage;
+						else if (errorCount === 0 && settings.successMessage !== null) responseMessage = settings.successMessage;
+						else {
+							if (messageClass !== '') {
+								if ($(response).is('.'+messageClass)) msg = $(response);
+								else msg = $(response).find('.'+messageClass);
+							}else if ($(response).is('font')) msg = $(response);
 
-						if (messageClass !== '') {
-							if ($(response).is('.'+messageClass)) msg = $(response);
-							else msg = $(response).find('.'+messageClass);
-						}else if ($(response).is('font')) msg = $(response);
-
-						if (typeof msg.size !== 'undefined' && messageClass !== '') successMessage = msg.filter('.'+messageClass);
-						else if (messageClass !== '') successMessage = $(response).filter('.'+messageClass);
+							if (typeof msg.size !== 'undefined' && messageClass !== '') responseMessage = msg.filter('.'+messageClass);
+							else if (messageClass !== '') responseMessage = $(response).filter('.'+messageClass);
+							
+							if (responseMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) responseMessage = messageBoxContents;
+							else if(responseMessage.find('.search-results').length > 0) responseMessage = responseMessage.find('.search-results').html();
+							else if(responseMessage.find('.webappsearchresults').length > 0) responseMessage = responseMessage.find('.webappsearchresults').html();
+						}
+						if (typeof responseMessage === 'undefined' || responseMessage === '') {
+							if (errorCount > 0) responseMessage = 'Successful.';
+							else responseMessage = 'Unsuccessful.';
+						}
 
 						// Response Status
-						if (errorCount > 0) {
-							if (settings.messageMode !== 'off') {
-								if (settings.errorMessage !== null) alertify.error(settings.errorMessage);
-								else if (typeof successMessage !== 'undefined' && successMessage !== '') alertify.error(successMessage.text());
-								else alertify.error('Unsuccessful.');
-							}
-							submitCount = 0;
-							lockSubmit = false;
-						}else {
-							if (loggingIn === true) {
-								$.ajax({
-									url: otherURL,
-									method:'POST',
-									dataType:'jsonp',
-									data: {
-										Username: selector.find('['+settings.fieldNameAttr+'=Username]').val(),
-										Password: selector.find('['+settings.fieldNameAttr+'=Password]').val()
-									}
-								});
-							}
-
-							// Show Success Message
-							if (settings.messageMode !== 'off') {
-								if (settings.successMessage !== null) alertify.success(settings.successMessage);
-								else if (typeof successMessage !== 'undefined' && successMessage !== '') inlineSuccess(selector,successMessage);
-								// else alertify.success('Success!');
+						if (settings.beforeResponseMode !== 'off' && settings.beforeResponseMessage.length > 0) settings.beforeResponseTarget.remove();
+						if (settings.responseMode !== 'off') {
+							if (settings.responseTarget === 'alert') {
+								if (errorCount > 0) alertify.error(responseMessage);
+								else alertify.success(responseMessage);
+							}else if (settings.responseTarget === 'dialog') {
+								// put dialog code here
+							}else {
+								if (settings.responseTarget !== selector) settings.responseTarget = body.find(settings.responseTarget);
+							
+								if (settings.responseMode === 'replace') settings.responseTarget = settings.responseTarget.html(responseMessage).fadeIn();
+								else if (settings.responseMode === 'append') settings.responseTarget = settings.responseTarget.append(responseMessage).fadeIn();
+								else if (settings.responseMode === 'prepend') settings.responseTarget = settings.responseTarget.prepend(responseMessage).fadeIn();
+								else if (settings.responseMode === 'before') settings.responseTarget = settings.responseTarget.before(responseMessage).fadeIn();
+								else if (settings.responseMode === 'after') settings.responseTarget = settings.responseTarget.after(responseMessage).fadeIn();
 							}
 						}
+						if (errorCount === 0) {
+							if (settings.formOnSuccessResponse === 'remove') selector.remove();
+							else if (settings.formOnSuccessResponse === 'hide') selector.fadeOut(0);
+							else if (settings.formOnSuccessResponse === 'show') selector.fadeIn();
+						}else {
+							if (settings.formOnErrorResponse === 'hide') selector.fadeOut(0);
+							else if (settings.formOnErrorResponse === 'show') selector.fadeIn();
+						}
+
+						submitCount = 0;
+						lockSubmit = false;
 
 						// Callbacks
 						if (errorCount === 0 && settings.ajaxSuccess !== null) {
@@ -869,7 +911,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 							});
 					},
 					error: function(xhr,status,error) {
-						if (settings.successMessage !== null && settings.messageMode !== 'off') alertify.error(settings.errorMessage);
+						if (settings.successMessage !== null && settings.responseTarget === 'alert') alertify.error(settings.errorMessage);
 						if (settings.ajaxError !== null) bcpie.utils.executeCallback({
 								selector: selector,
 								settings: settings,
@@ -930,22 +972,6 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		}else{
 			alert("This form has already been submitted. Please refresh the page if you need to submit again.");
 			return false;
-		}
-	}
-	function inlineSuccess(selector,successMessage) {
-		if (settings.afterAjax !== 'show') selector.fadeOut(0);
-
-		if (successMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) successMessage = messageBoxContents;
-		else if(successMessage.find('.search-results').length > 0) successMessage = successMessage.find('.search-results').html();
-		else if(successMessage.find('.webappsearchresults').length > 0) successMessage = successMessage.find('.webappsearchresults').html();
-
-		if (settings.responseTarget === 'replace') {
-			if (typeof settings.messageMode !== 'undefined' && settings.messageMode === 'append') selector.after(successMessage); // for backwards compatibility
-			else if (typeof settings.afterAjax !== 'undefined' && settings.afterAjax === 'hide' || settings.messageMode === 'prepend') selector.before(successMessage); // for backwards compatibility
-			else selector.html(successMessage).fadeIn();
-		}else if (settings.responseTarget !== 'off') {
-			body.find(settings.responseTarget).html(successMessage);
-			if (settings.afterAjax === 'remove') selector.remove();
 		}
 	}
 	function buildRequiredObject(rField,i) {

@@ -1,60 +1,235 @@
 {
-	"frameworks": {},
+	"frameworks": {
+		"nextid": 0,
+		"active": [],
+		"indexBy": {},
+		"items": []
+	},
 	"layouts": {
-		"Affiliate": {
-			"type": "folder",
-			"allowCustom": false,
-			"files": {
-				"affiliate.html": {
-					"type": "html",
-					"allowCustom": true
-				}
-			}
+		"nextid": 2,
+		"active": ["0","1"],
+		"indexBy": {
+			"id": {
+				"0": [0],
+				"1": [1]
+			},
+			"name": {
+				"Affiliate": [0],
+				"Announcements": [1]
+			},
 		},
-		"Announcements": {
-			"type": "folder",
-			"allowCustom": false,
-			"files": {
-				"detail.html": {
-					"type": "html",
-					"allowCustom": false
-				},
-				"list.html": {
-					"type": "html",
-					"allowCustom": true
+		"items": [
+			{
+				"id": "0",
+				"name": "Affiliate",
+				"files": {
+					"nextid": 1,
+					"active": ["0"],
+					"indexBy": {
+						"id": {
+							"0": [0]
+						},
+						"name": {
+							"affiliate.html": [0]
+						},
+						"path": {
+							"/Layouts/Affiliate/": [0]
+						},
+						"type": {
+							"html": [0]
+						},
+						"allowCustomFile": {
+							"true": [0]
+						},
+						"allowCustomPath": {
+							"false": [0]
+						},
+						"default": {
+							"true": [0]
+						}
+					},
+					"items": [
+						{
+							"id": "0",
+							"name": "affiliate.html",
+							"path": "/Layouts/Affiliate/",
+							"type": "html",
+							"allowCustomFile": true,
+							"allowCustomPath": false,
+							"default": true
+						}
+					]
 				}
-			}
-		},
-		"Blog": {
-			"type": "folder",
-			"allowCustom": false,
-			"files": {
-				"comment.html": {
-					"type": "html",
-					"allowCustom": false
-				},
-				"list.html": {
-					"type": "html",
-					"allowCustom": true
-				},
-				"overall.html": {
-					"type": "html",
-					"allowCustom": false
-				},
-				"post.html": {
-					"type": "html",
-					"allowCustom": false
-				},
-				"postlist.html": {
-					"type": "html",
-					"allowCustom": false
-				},
-				"trackback.html": {
-					"type": "html",
-					"allowCustom": false
+			}, {
+				"id": "1",
+				"name": "Announcements",
+				"files": {
+					"nextid": 2,
+					"active": ["0","1"],
+					"indexBy": {
+						"id": {
+							"0": [0],
+							"1": [1]
+						},
+						"name": {
+							"detail.html": [0],
+							"list.html": [1]
+						},
+						"path": {
+							"/Layouts/Announcements/": [0,1]
+						},
+						"type": {
+							"html": [0,1]
+						},
+						"allowCustomFile": {
+							"false": [0],
+							"true": [1]
+						},
+						"allowCustomPath": {
+							"false": [0,1]
+						},
+						"default": {
+							"true": [0,1]
+						}
+					},
+					"items": [
+						{
+							"id": "0",
+							"name": "detail.html",
+							"path": "/Layouts/Announcements/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "1",
+							"name": "list.html",
+							"path": "/Layouts/Announcements/",
+							"type": "html",
+							"allowCustomFile": true,
+							"allowCustomPath": false,
+							"default": true
+						}
+					]
 				}
-			}
-		},
+			}, {
+				"id": "2",
+				"name": "Blog",
+				"files": {
+					"nextid": 6,
+					"active": ["0","1","2","3","4","5"],
+					"indexBy": {
+						"id": {
+							"0": [0],
+							"1": [1],
+							"2": [2],
+							"3": [3],
+							"4": [4],
+							"5": [5]
+						},
+						"name": {
+							"comment.html": [0],
+							"list.html": [1],
+							"overall.html": [2],
+							"post.html": [3],
+							"postlist.html": [4],
+							"trackback.html": [5]
+						},
+						"path": {
+							"/Layouts/Blog/": [0,1,2,3,4,5]
+						},
+						"type": {
+							"html": [0,1,2,3,4,5]
+						},
+						"allowCustomFile": {
+							"true": [1],
+							"false": [0,2,3,4,5]
+						},
+						"allowCustomPath": {
+							"false": [0,1,2,3,4,5]
+						},
+						"default": {
+							"true": [0,1,2,3,4,5]
+						}
+					},
+					"items": [
+						{
+							"id": "0",
+							"name": "comment.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "1",
+							"name": "list.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": true,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "2",
+							"name": "overall.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "3",
+							"name": "post.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "4",
+							"name": "postlist.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}, {
+							"id": "5",
+							"name": "trackback.html",
+							"path": "/Layouts/Blog/",
+							"type": "html",
+							"allowCustomFile": false,
+							"allowCustomPath": false,
+							"default": true
+						}
+					]
+				}
+			}, 
+		]
+	}, 
+	"themes": {
+		"nextid": 0,
+		"active": [],
+		"indexBy": {},
+		"items": []
+	},
+	"thirdParty": {
+		"nextid": 0,
+		"active": [],
+		"indexBy": {},
+		"items": []
+	},
+	"tricks": {
+		"nextid": 0,
+		"active": [],
+		"indexBy": {},
+		"items": []
+	}
+}
+
+
+{
+	"layouts": {
 		"Booking": {
 			"files": {
 				"detail.html": {
@@ -437,8 +612,5 @@
 		"Menus": {
 			"files": {}
 		}
-	},
-	"themes": {},
-	"thirdParty": {},
-	"tricks": {}
+	}
 }

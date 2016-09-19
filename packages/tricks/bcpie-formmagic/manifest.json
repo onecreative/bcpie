@@ -13,7 +13,7 @@
 		"filename": "FormMagic.js",
 		"type": "scripts",
 		"location": "foot",
-		"version": "2016.02.22",
+		"version": "2016.08.20",
 		"docs": "http://bcpie.com/docs/formmagic"
 	}],
 	"requires": [{

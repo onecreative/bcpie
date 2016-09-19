@@ -79,7 +79,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.07.15',
+		sdk: '2016.09.19',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -96,6 +96,20 @@ win.bcpie = {
 		token: function() {
 			if (typeof Cookies('access_token') !== 'undefined') return Cookies('access_token');
 			else return Cookies('access_token',window.location.hash.replace('#access_token=',''));
+		},
+		user: {
+			get: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					id: data.id || 'me' // user id
+				}
+				options.url = '/api/v2/admin/sites/current/users/'+data.id;
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.method = 'GET';
+
+				return bcpie.utils.ajax(options);
+			}
 		},
 		file: {
 			get: function(data,options) {
