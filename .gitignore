@@ -7,3 +7,4 @@ gulpfile.js
 *.codekit*
 sftp-config.json
 premium-packages
+*.DS_Store
