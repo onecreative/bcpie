@@ -18,17 +18,24 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
-			state: 'class', // beginning state of the trigger. Options are 'on', 'off', 'class', and 'value'. 'class' and 'value' automatically determine the state by whether the onClass/offClass or onValue/offValue is applied to the element.
-			onClass: '', // css class(es) to be applied. Separate multiples with a space.
-			offClass: '', // css class(es) to be applied. Separate multiples with a space.
+			state: 'class', // beginning state of the trigger. Options are 'on', 'off', 'auto', 'class', and 'value'. 'class' and 'value' automatically determine the state by whether the onClass/offClass or onValue/offValue is applied to the element.
+			onAttribute: '', // attribute value(s) to be applied. Format is 'name:value'. Separate multiple attributes with a comma. For example, 'class:hide default,name:phoneNumber,value:555-213-6887'
+			offAttribute: '', // attribute value(s) to be applied. Format is 'name:value'. Separate multiple attributes with a comma. For example, 'class:hide default,name:phoneNumber,value:555-213-6887'
+			onClass: '', // deprecated in favor of onAttribute. css class(es) to be applied. Separate multiples with a space.
+			offClass: '', // deprecated in favor of offAttribute. css class(es) to be applied. Separate multiples with a space.
 			toggle: true, // if true, on and off states will be toggled on events. Otherwise, only the on state will occur.
 			onCallback: '', // on callback
 			offCallback: '', // off callback
-			onValue: null, // specify default value when trigger is on, or use 'boolean' to indicate a checked state.
-			offValue: null, // specify default value when trigger is off
+			onValue: null, // deprecated in favor of onAttribute. specify default value when trigger is on, or use 'boolean' to indicate a checked state.
+			offValue: null, // deprecated in favor of offAttribute. specify default value when trigger is off
 			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
 		}
 	});
+
+	// To Do: 
+	// • build 'onAttribute' and 'offAttribute' mechanisms.
+	// • change 'state' mechanism to use 'auto' instead of 'class' and 'value'
+	// • depricate 'onClass', 'offClass', 'onValue', 'offValue', and the 'class' and 'value' states of 'state'
 
 	if (settings.trigger === 'self') settings.trigger = selector;
 	else if (settings.scopeMode === 'closest') settings.trigger = selector.closest(settings.scope).find(settings.trigger);

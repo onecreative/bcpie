@@ -1,0 +1,31 @@
+{
+	"id": "select2",
+	"name": "Select2",
+	"packageVersion": 1459191565,
+	"description": "",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "select.svg",
+	"type": "thirdParty",
+	"assets": [
+		{
+			"filename":"select2.js", 
+			"type":"scripts", 
+			"location":"foot",
+			"version": "4.0.3",
+			"docs": "https://select2.github.io/"
+		}, {
+			"filename":"select2.css", 
+			"type":"styles", 
+			"version": "4.0.3",
+			"docs": "https://select2.github.io/"
+		}
+	],
+	"requires": [{
+		"id": "jquery",
+		"type": "thirdParty",
+		"packageVersion": 1459191565
+	}]
+}

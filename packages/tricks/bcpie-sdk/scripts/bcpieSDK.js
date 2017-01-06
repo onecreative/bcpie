@@ -1,7 +1,7 @@
 var doc = document,body = $(doc.body),win = window,settings;
 win.bcpie = {
 	active: {
-		sdk: '2016.09.19',
+		sdk: '2017.01.06',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -25,7 +25,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 				data = {
 					id: data.id || 'me' // user id
-				}
+				};
 				options.url = '/webresources/api/v3/sites/current/users/'+data.id;
 				options.headers = {Authorization: bcpie.ajax.token()};
 				options.method = 'GET';
@@ -39,7 +39,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 				data = {
 					path: data.path || '' // string
-				}
+				};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.split('/').pop().indexOf('.') === -1) {
 					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
@@ -59,7 +59,7 @@ win.bcpie = {
 					path: data.path || '', // string
 					content: data.content || '', // file object, string
 					version: data.version || 'draft-publish' // 'draft', 'draft-publish'
-				}
+				};
 
 				
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
@@ -95,7 +95,7 @@ win.bcpie = {
 				data = {
 					path: data.path || '', // string
 					force: data.force || '' // folders only
-				}
+				};
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.charAt(data.path.length - 1) === '/') data.path.slice(0, - 1);
 				if (data.force !== '') data.path = data.path+'&force='+data.force;
@@ -177,7 +177,7 @@ win.bcpie = {
 						filters: data.filters || {}, // object
 						items: data.items || [],
 						finished: data.finished || false
-					}
+					};
 					options.async = false;
 					if (data.finished === false) {
 						var response = bcpie.ajax.webapp.item.get(data,options).responseJSON;
@@ -185,14 +185,14 @@ win.bcpie = {
 						if (response.links[2].uri !== null) data.filters.skip = response.links[2].uri.split('skip=')[1].split('&')[0];
 						else data.finished = true;
 						return bcpie.ajax.webapp.item.all(data,options);
-					};
+					}
 					if (data.finished ===true) {
 						return {
 							totalItemsCount: data.items.length,
 							items: data.items,
 							skip: 0,
 							limit: data.items.length
-						}
+						};
 					}
 				},
 				get: function(data,options) {
@@ -202,7 +202,7 @@ win.bcpie = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null, // integer
 						filters: data.filters || {} // object
-					}
+					};
 
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
@@ -222,7 +222,7 @@ win.bcpie = {
 						content: data.content || null,  // $, {}
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null // integer
-					}
+					};
 
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
@@ -270,7 +270,7 @@ win.bcpie = {
 									if (key === 'state' && newData[key] === ' ' ) newData[key] = '';
 									if (fieldTypes[key] === 'Number') {
 										newData[key] = bcpie.utils.validation.number(key,newData[key]);
-										if (newData[key] === NaN) delete data[key];
+										if (isNaN(newData[key])) delete data[key];
 									}else if (fieldTypes[key] === 'Boolean') {
 										newData[key] = bcpie.utils.validation.boolean(key,newData[key]);
 									}else if (fieldTypes[key] === 'DateTime') {
@@ -283,18 +283,18 @@ win.bcpie = {
 									if (fieldTypes.fields[key] === 'Number' || fieldTypes.fields[key] === 'DataSource') {
 										newData.fields[key] = bcpie.utils.validation.number(key,newData.fields[key]);
 										if (fieldTypes.fields[key] === 'DataSource' && newData.fields[key] === 0) newData.fields[key] = null;
-										if (newData.fields[key] === NaN) delete newData.fields[key];
+										if (isNaN(newData.fields[key])) delete newData.fields[key];
 									}else if (fieldTypes.fields[key] === 'Boolean') {
 										newData.fields[key] = bcpie.utils.validation.boolean(key,newData.fields[key]);
-										if (newData.fields[key] === null) delete newData.fields[key];
+										if (isNaN(newData.fields[key])) delete newData.fields[key];
 									}else if (fieldTypes.fields[key] === 'DateTime') {
 										newData.fields[key] = bcpie.utils.validation.dateTime(key,newData.fields[key]);
-										if (newData.fields[key] === null) delete newData.fields[key];
+										if (isNaN(newData.fields[key])) delete newData.fields[key];
 									}
 								}else delete newData.fields[key];
 							}
 						}
-						if (typeof options.data['country'] === 'undefined') newData['country'] = allFields['country'];
+						if (typeof options.data.country === 'undefined') newData.country = allFields.country;
 						options.data = JSON.stringify(newData);
 					}else {
 						if (data.item === null) options.url = '/CustomContentProcess.aspx?CCID='+data.webapp+'&OTYPE=1';
@@ -321,7 +321,7 @@ win.bcpie = {
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null // integer
-					}
+					};
 
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
@@ -345,7 +345,7 @@ win.bcpie = {
 						webapp: data.webapp || null, // string
 						item: data.item || null, // integer
 						content: data.content || null  // $, {}
-					}
+					};
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
@@ -367,7 +367,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 				data = {
 					webapp: data.webapp || undefined
-				}
+				};
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
@@ -383,7 +383,7 @@ win.bcpie = {
 				if (typeof options !== 'object') options = {};
 				data = {
 					webapp: data.webapp || null // string
-				}
+				};
 
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
@@ -401,7 +401,7 @@ win.bcpie = {
 					data = {
 						webapp: data.webapp || null, // string
 						field: data.field || null // string
-					}
+					};
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
 					if (errors.length > 0) return errors;
@@ -419,7 +419,7 @@ win.bcpie = {
 						webapp: data.webapp || null, // string
 						field: data.field || null, // integer
 						content: data.content || null // object
-					}
+					};
 					
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
@@ -440,7 +440,7 @@ win.bcpie = {
 					data = {
 						webapp: data.webapp || null, // string
 						field: data.field || null // integer or blank
-					}
+					};
 					
 					// Catch data errors
 					var errors = bcpie.ajax.webapp.errors(data);
@@ -462,7 +462,7 @@ win.bcpie = {
 					responsePageID: data.responsePageID || null,
 					content: data.content || null,
 					json: data.json || true
-				}
+				};
 				// Catch data errors
 				var errors = bcpie.ajax.webapp.errors(data);
 				if (errors.length > 0) return errors;
@@ -510,7 +510,7 @@ win.bcpie = {
 					data = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null // object
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -531,7 +531,7 @@ win.bcpie = {
 					data = {
 						customerID: data.customerID || null, // integer
 						content: data.content || null
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -552,7 +552,7 @@ win.bcpie = {
 					if (typeof options !== 'object') options = {};
 					data = {
 						customerID: data.customerID || null, // integer
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers';
 					if (data.customerID !== null) options.url += '/'+data.customerID;
@@ -567,7 +567,7 @@ win.bcpie = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
 						zones: data.zones || null // object
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/securezones';
 
@@ -589,7 +589,7 @@ win.bcpie = {
 						mode: data.mode.toLowerCase() || 'get', // 'get'
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/orders'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
@@ -602,7 +602,7 @@ win.bcpie = {
 						mode: data.mode.toLowerCase() || 'get', // 'get'
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null, // object
-					}
+					};
 					options.headers = {'Authorization': bcpie.ajax.token()};
 					options.url = '/webresources/api/v3/sites/current/customers/'+data.customerID+'/addresses'+bcpie.utils.filters(data.filters);
 					options.method = 'GET';
@@ -612,7 +612,7 @@ win.bcpie = {
 		}
 	},
 	utils: {
-		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null},
+		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null;},
 		escape: function(str) { return str.replace(/\\/g,"").replace(/[\-\[\]\\/\{\}\(\)\*\+\?\.\^\$\|\'\"]/g,"\\$&"); },
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
@@ -658,13 +658,13 @@ win.bcpie = {
 			);
 		},
 		serializeObject: function(object) {
-			var o = '',boolFalse,a;
+			var o = '',boolFalse,a,i;
 			if (object instanceof jQuery) {
 				if (object.is('form')) a = object.serializeArray();
 				else if (object.is('select,textarea,input')) a = object.serializeArray(); // [{name:object.attr('name'),value:object.val()}];
 				else a = object.find('input,select,textarea').serializeArray();
-				boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false});
-				for (var i = 0; i < boolFalse.length; i++) {
+				boolFalse = object.find('[type=checkbox]').filter(function(){return $(this).prop('checked') === false;});
+				for (i = 0; i < boolFalse.length; i++) {
 					a.push({name: $(boolFalse[i]).attr('name'), value:null});
 				}
 			}else if ($.isArray(object) && typeof object[0].name !== 'undefined' && typeof object[0].value !== 'undefined') {
@@ -679,7 +679,7 @@ win.bcpie = {
 			}
 			if (o === '') {
 				o = {};
-				for (var i=0; i<a.length; i++) {
+				for (i=0; i<a.length; i++) {
 					if (o[a[i].name] !== undefined) {
 						if (!o[a[i].name].push) o[a[i].name] = [o[a[i].name]];
 						o[a[i].name].push(a[i].value || '');
@@ -690,7 +690,8 @@ win.bcpie = {
 			return o;
 		},
 		closestChildren: function(data,depricatedMatch,depricatedFindAll) {
-			if (data instanceof jQuery) { var depricatedSelector = data;} // for backwards compatibility
+			var depricatedSelector;
+			if (data instanceof jQuery) {depricatedSelector = data;} // for backwards compatibility
 
 			data = {
 				selector: data.selector || depricatedSelector || null,
@@ -729,7 +730,7 @@ win.bcpie = {
 			return {
 				names: classes,
 				selector: '.'+classes.replace(/ /g,'.')
-			}
+			};
 		},
 		xml2json: function(xml) {
 			var obj = {};
@@ -786,7 +787,19 @@ win.bcpie = {
 			return output.toLowerCase();
 		},
 		executeCallback: function(data, depricatedCallback, depricatedData, depricatedStatus, depricatedXhr) {
-			if (data instanceof jQuery) var depricatedSelector = data;
+			function parameter(selector, settings, callback, data, status, xhr) {
+				var deferred = $.Deferred();
+				deferred.resolve(callback({
+					selector: selector || null,
+					settings: settings || null,
+					content: data || null,
+					status: status || null,
+					xhr: xhr || null
+				}));
+				return deferred.promise();
+			}
+			var depricatedSelector;
+			if (data instanceof jQuery) depricatedSelector = data;
 			data = {
 				selector: data.selector || depricatedSelector || null,
 				settings: data.settings || null,
@@ -797,18 +810,6 @@ win.bcpie = {
 			};
 			if (typeof data.callback === 'string') data.callback = win[data.callback];
 			if (typeof data.callback === 'function') {
-				function parameter(selector, settings, callback, data, status, xhr) {
-					var deferred = $.Deferred();
-					deferred.resolve(callback({
-						selector: selector || null,
-						settings: settings || null,
-						content: data || null,
-						status: status || null,
-						xhr: xhr || null
-					}));
-					return deferred.promise();
-				}
-
 				return $.when(parameter(data.selector, data.settings, data.callback, data.content, data.status, data.xhr));
 			}
 		},
@@ -836,13 +837,13 @@ win.bcpie = {
 			number: function(fieldName,value) {
 				if (value === '') {
 					return null;
-				}else if (Number(value) === NaN) {
+				}else if (isNaN(Number(value))) {
 					console.log('The value of "'+fieldName+'" is not a number.');
 					return NaN;
 				}else return Number(value);
 			},
 			boolean: function(fieldName,value) {
-				if (value == null || value.trim() == '' || value.toLowerCase() === 'false' || value == '0' || value === 'off') return false;
+				if (value === null || value.trim() === '' || value.toLowerCase() === 'false' || value == '0' || value === 'off') return false;
 				else if (value.toLowerCase() === 'true' || value === '1' || value === 'on') return true;
 
 				else return null;

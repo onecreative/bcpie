@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Date = function(selector,options){
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Date',
-		version: '2016.06.30',
+		version: '2017.01.03',
 		defaults: {
 			format: 'YYYY', // use Moment parsing, 'calendar', or 'utc'
 			add: '',
@@ -46,7 +46,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 		settings.add = $.parseJSON(bcpie.utils.jsonify(addSplit));
 	}
 	if (settings.subtract !== '') {
-		var subtractSplit = settings.subtract.split(',');
+		subtractSplit = settings.subtract.split(',');
 		for (var i = 0; i < subtractSplit.length; i++) {
 			if ($.isNumeric(subtractSplit[i].charAt(0))) {
 				if (subtractSplit[i].split(':').length === 2) subtractSplit[i] = subtractSplit[i].split(':')[1]+':'+subtractSplit[i].split(':')[0];
@@ -119,7 +119,8 @@ bcpie.extensions.tricks.Date = function(selector,options){
 			targets = settings.target.split(',');
 			for (var i=0; i<targets.length; i++) {
 				if (targets[i] === 'text' && selector.is('input,textarea')) targets[i] = 'value';
-				(targets[i] === 'text') ? selector.text(value) : selector.prop(targets[i],value);
+				if (targets[i] === 'text') selector.text(value);
+				else selector.prop(targets[i],value);
 				if (load === false) selector.trigger(settings.triggeredEvent+settings.eventNamespace);
 			}
 		}

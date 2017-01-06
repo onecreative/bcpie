@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.08.23',
+		version: '2016.11.14',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -848,12 +848,14 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								else msg = $(response).find('.'+messageClass);
 							}else if ($(response).is('font')) msg = $(response);
 
-							if (typeof msg.size !== 'undefined' && messageClass !== '') responseMessage = msg.filter('.'+messageClass);
+							if (typeof msg !== 'undefined' && typeof msg.size !== 'undefined' && messageClass !== '') responseMessage = msg.filter('.'+messageClass);
 							else if (messageClass !== '') responseMessage = $(response).filter('.'+messageClass);
 							
-							if (responseMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) responseMessage = messageBoxContents;
-							else if(responseMessage.find('.search-results').length > 0) responseMessage = responseMessage.find('.search-results').html();
-							else if(responseMessage.find('.webappsearchresults').length > 0) responseMessage = responseMessage.find('.webappsearchresults').html();
+							if (typeof responseMessage === 'object') {
+								if (responseMessage.html().replace(/\n/g,'').trim().length === 0 && settings.restoreTarget === true) responseMessage = messageBoxContents;
+								else if(responseMessage.find('.search-results').length > 0) responseMessage = responseMessage.find('.search-results').html();
+								else if(responseMessage.find('.webappsearchresults').length > 0) responseMessage = responseMessage.find('.webappsearchresults').html();
+							}
 						}
 						if (typeof responseMessage === 'undefined' || responseMessage === '') {
 							if (errorCount > 0) responseMessage = 'Successful.';

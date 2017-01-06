@@ -338,13 +338,13 @@ $(function() {
 					bcpie.ajax.file.save({
 						path: installPaths.fonts+installContent.fonts[i].filename,
 						content: installContent.fonts[i].content
-					},{processData:false});
+					},{processData:false,async:false});
 				}
 				for (var i = 0; i < installContent.images.length; i++) {
 					bcpie.ajax.file.save({
 						path: installPaths.images+installContent.images[i].filename,
 						content: installContent.images[i].content
-					},{processData:false});
+					},{processData:false,async:false});
 				}
 			},
 			uninstall: function(packageJSON,uninstall) {
