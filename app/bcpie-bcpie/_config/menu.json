@@ -19,14 +19,22 @@
 	"menu-bcpie-tools": {
 		"parent": "menu-first-bcpie-bcpie",
 		"weight": 20000,
+		"title": "App Manager",
+		"attr": {
+			"href": "subapps/app-manager.html"
+		}
+	},
+	"menu-bcpie-tools": {
+		"parent": "menu-first-bcpie-bcpie",
+		"weight": 30000,
 		"title": "Tools",
 		"attr": {
-			"href": "subapps/tools.html",
+			"href": "subapps/tools.html"
 		}
 	},
 	"menu-bcpie-docs": {
 		"parent": "menu-first-bcpie-bcpie",
-		"weight": 30000,
+		"weight": 40000,
 		"title": "Docs",
 		"attr": {
 			"href": "subapps/docs.html"

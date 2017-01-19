@@ -12857,9 +12857,7 @@ var Parser = (function (scope) {
         // Test for the conditions that mean we can/want to send/receive blobs or arraybuffers - we need XMLHttpRequest
         // level 2 (so feature-detect against window.FormData), feature detect against window.Blob or window.ArrayBuffer,
         // and then check to see if the dataType is blob/arraybuffer or the data itself is a Blob/ArrayBuffer
-        if (window.FormData && ((options.dataType && (options.dataType == 'blob' || options.dataType == 'arraybuffer'))
-            || (options.data && ((window.Blob && options.data instanceof Blob)
-                || (window.ArrayBuffer && options.data instanceof ArrayBuffer)))
+        if (window.FormData && ((options.dataType && (options.dataType == 'blob' || options.dataType == 'arraybuffer')) || (options.data && ((window.Blob && options.data instanceof Blob) || (window.ArrayBuffer && options.data instanceof ArrayBuffer)))
             ))
         {
             var xhr;
@@ -12916,9 +12914,11 @@ var Parser = (function (scope) {
 })(jQuery);
 
 var doc = document,body = $(doc.body),win = window,settings;
+body.data('bcpie',{});
+body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.01.06',
+		sdk: '2017.01.18',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -13526,6 +13526,22 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				}
 			}
+		},
+		dataList: function(data) {
+			if (typeof data === 'undefined') data = {};
+			if (typeof options !== 'object') options = {};
+			data = {
+				collectionID: data.collectionID || null // integer
+			};
+			if (typeof body.data('bcpie').ajax.dataList === 'undefined') {
+				body.data('bcpie').ajax.dataList = bcpie.ajax.file.get({path:'/_system/apps/bcpie-bcpie/public/utilities/ajax/dataList.json'},{async:false});
+				if (body.data('bcpie').ajax.dataList.status === 200) {
+					body.data('bcpie').ajax.dataList = JSON.parse(body.data('bcpie').ajax.dataList.responseText) || null;
+					if (body.data('bcpie').ajax.dataList === null) delete body.data('bcpie').ajax.dataList;
+				}
+			}
+			if (data.collectionID !== null) return body.data('bcpie').ajax.dataList[data.collectionID];
+			else return body.data('bcpie').ajax.dataList;
 		}
 	},
 	utils: {
@@ -15599,7 +15615,7 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.11.07',
+		version: '2017.01.15',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -15633,9 +15649,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
 
 	// Setup our variables
-	if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
-	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
-	else var copyGroup = $(doc).find(settings.scope);
+	var copyGroup;
+	if (settings.scopeMode === 'closest') copyGroup = selector.closest(settings.scope);
+	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') copyGroup = selector.siblings(settings.scope);
+	else copyGroup = $(doc).find(settings.scope);
 
 	if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
 		if (selector.is('select,textarea,input')) settings.targetAttr = 'value';
@@ -15664,19 +15681,19 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		// Choose which method to use
 		if (settings.checkbox !== 'off' && checkbox.length > 0) {
 			checkboxChange(checkbox,copyFields);
-			for (var i = 0; i < checkbox.length; i++) {
-				checkbox[i].on(settings.event,function(){
+			for (var e = 0; e < checkbox.length; e++) {
+				checkbox[e].on(settings.event,function() {
 					checkboxChange(checkbox,copyFields);
 				});
 			}
 			
 			if (settings.breakOnChange !== false) {
 				selector.on(settings.event,function() {
-					for (var i = 0; i < checkbox.length; i++) {
-						checkbox[i].off(settings.event);
+					for (var f = 0; f < checkbox.length; f++) {
+						checkbox[f].off(settings.event);
 					}
-					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event);
+					for (var g = copyFields.length - 1; g >= 0; g--) {
+						copyFields[g].off(settings.event);
 					}
 					selector.off(settings.event);
 				});
@@ -15763,8 +15780,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			copyVal(selector,copyFields);
 			inputChange(selector,copyFields);
 		}else {
-			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event);
+			for (var e = copyFields.length - 1; e >= 0; e--) {
+				copyFields[e].off(settings.event);
 			}
 			selector.off(settings.event);
 			selector.val('');
@@ -15806,17 +15823,23 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (newSelector.indexOf('=') === -1) newSelector = settings.expressAttr+'="'+newSelector+'"';
 			newSelector = copyGroup.find('['+newSelector+']');
 			copyFields.push(copyGroup.find(newSelector));
-			value = '',combinedVal = '';
+			value = '';
+			combinedVal = '';
 			for (var e = 0; e < copyFields[i].length; e++) {
 				individualField = $(copyFields[i][e]);
 				if (individualField.is('select')) value = individualField.find('option').filter(':selected');
-				else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
+				else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) {
+					if (individualField.filter(':checked').length > 0) value = individualField.filter(':checked');
+					else value = '';
+				} 
 				else value = individualField;
 
-				if (settings.refAttr === 'text') value = value.text();
-				else if (settings.refAttr === 'value') value = value.val();
-				else if (settings.refAttr === 'html') value = value.html();
-				else value = value.attr(settings.refAttr);
+				if (value !== '') {
+					if (settings.refAttr === 'text') value = value.text();
+					else if (settings.refAttr === 'value') value = value.val();
+					else if (settings.refAttr === 'html') value = value.html();
+					else value = value.attr(settings.refAttr);
+				}
 
 				if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
 				if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;
@@ -15959,41 +15982,121 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 };;/*
  * "Trigger". An awesome trick for BC Pie.
  * http://bcpie.com
- * Copyright 2015, ONE Creative
+ * Copyright 2017, ONE Creative
  * Free to use in BC Pie, or as licensed in Dev-in-a-Box from http://www.bcappstore.com/apps/dev-in-a-box
 */
 
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2016.07.02',
+		version: '2017.01.14',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify an event to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
 			scopeMode: 'closest', // find, siblings
-			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state.
+			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state. If left empty, any change will trigger the behavior.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
-			state: 'class', // beginning state of the trigger. Options are 'on', 'off', 'auto', 'class', and 'value'. 'class' and 'value' automatically determine the state by whether the onClass/offClass or onValue/offValue is applied to the element.
-			onAttribute: '', // attribute value(s) to be applied. Format is 'name:value'. Separate multiple attributes with a comma. For example, 'class:hide default,name:phoneNumber,value:555-213-6887'
-			offAttribute: '', // attribute value(s) to be applied. Format is 'name:value'. Separate multiple attributes with a comma. For example, 'class:hide default,name:phoneNumber,value:555-213-6887'
-			onClass: '', // deprecated in favor of onAttribute. css class(es) to be applied. Separate multiples with a space.
-			offClass: '', // deprecated in favor of offAttribute. css class(es) to be applied. Separate multiples with a space.
+			state: 'class', // beginning state of the trigger. Options are 'on', 'off', 'class', and 'value'. 'class' and 'value' automatically determine the state by whether the onClass/offClass or onValue/offValue is applied to the element.
+			onClass: '', // css class(es) to be applied. Separate multiples with a space.
+			offClass: '', // css class(es) to be applied. Separate multiples with a space.
 			toggle: true, // if true, on and off states will be toggled on events. Otherwise, only the on state will occur.
 			onCallback: '', // on callback
 			offCallback: '', // off callback
-			onValue: null, // deprecated in favor of onAttribute. specify default value when trigger is on, or use 'boolean' to indicate a checked state.
-			offValue: null, // deprecated in favor of offAttribute. specify default value when trigger is off
+			onValue: null, // specify default value when trigger is on, or use 'boolean' to indicate a checked state.
+			offValue: null, // specify default value when trigger is off
 			loadEvent: true // determines whether the trick initiates on load, or instead waits for the event to trigger.
 		}
 	});
 
-	// To Do: 
-	// • build 'onAttribute' and 'offAttribute' mechanisms.
-	// • change 'state' mechanism to use 'auto' instead of 'class' and 'value'
-	// • depricate 'onClass', 'offClass', 'onValue', 'offValue', and the 'class' and 'value' states of 'state'
+	settings.methods = {
+		executeTrigger: function(state) {
+			if (state === 'on') {
+				if (settings.onClass !== '') selector.addClass(settings.onClass.names);
+				if (settings.offClass !== '') selector.removeClass(settings.offClass.names);
+				bcpie.utils.executeCallback({
+					selector: selector,
+					settings: settings,
+					callback: settings.onCallback,
+				});
+				settings.methods.changeValue(settings.state);
+			}else if (settings.toggle === true) {
+				if (settings.onClass !== '') selector.removeClass(settings.onClass.names);
+				if (settings.offClass !== '') selector.addClass(settings.offClass.names);
+				bcpie.utils.executeCallback({
+					selector: selector,
+					settings: settings,
+					callback: settings.offCallback,
+				});
+				settings.methods.changeValue(settings.state);
+			}
+		},
+		changeValue: function(state) {
+			if (settings.onValue === 'boolean' && state === 'on') selector.prop('checked',true).attr('checked','checked');
+			else if (settings.offValue === 'boolean' && state === 'off') selector.prop('checked',false).removeAttr('checked');
+			else {
+				if (state === 'off') state = settings.offValue;
+				else if (state === 'on') state = settings.onValue;
+				if (state !== null) {
+					if (selector.is('input,select,textarea')) selector.val(state);
+					else selector.text(state);
+				}
+			}
+			if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
+			
+		},
+		changeTrigger: function(){
+			var matchedValues = 0;
+			if (settings.triggerValue === '') matchedValues = settings.trigger.length;
+			else {
+				for (var e = 0; e < settings.trigger.length; e++) {
+					for (var i=0; i<settings.triggerValue.length; i++) {
+						if ((settings.triggerValue[i] === 'boolean' || settings.triggerValue[i] === 'boolean:on') && $(settings.trigger[e]).is(':checked')) matchedValues ++;
+						else if (settings.triggerValue[i] === 'boolean:off' && !$(settings.trigger[e]).is(':checked')) matchedValues ++;
+						else if (typeof settings.methods.getValue($(settings.trigger[e])) === 'object') {
+							if (settings.methods.getValue($(settings.trigger[e])).indexOf(settings.triggerValue[i]) > -1) matchedValues ++;
+						}else if (settings.methods.getValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
+					}
+				}
+			}
+			if (settings.triggerMode === 'or' && matchedValues > 0) settings.state = 'on';
+			else if (settings.triggerMode === 'and' && matchedValues === settings.trigger.length) settings.state = 'on';
+			else settings.state = 'off';
+
+			settings.methods.executeTrigger(settings.state);
+		},
+		getValue: function(triggerElement) {
+			var value,tempArray = [];
+			if (settings.triggerAttr === 'value') {
+				if(triggerElement.is('[type=radio]'))
+					value = triggerElement.filter(':checked').val();
+				else if(triggerElement.is('[type=checkbox]')) {
+					for (var i = 0; i < settings.triggerValue.length; i++) {
+						if(settings.triggerValue[i] === '' && triggerElement.filter(':checked').size() > 0)
+							value = '';
+						if(triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").size() > 0)
+							value = triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").val();
+					}
+				}else value = triggerElement.val();
+			}
+			else {
+				if (triggerElement.is('select')) {
+					value = triggerElement.find('option').filter(':selected');
+					if (value.length > 1) {
+						for (var e = 0; e < value.length; e++) {
+							tempArray.push($(value[e]).attr(settings.triggerAttr));
+						}
+						value = tempArray;
+					}else value = value.attr(settings.triggerAttr);
+				}else value = triggerElement.attr(settings.triggerAttr);
+			}
+			if (typeof value === 'undefined' || value === null) value = '';
+			if (typeof value === 'string') value = value.trim();
+			return value;
+		}
+	};
 
 	if (settings.trigger === 'self') settings.trigger = selector;
 	else if (settings.scopeMode === 'closest') settings.trigger = selector.closest(settings.scope).find(settings.trigger);
@@ -16019,10 +16122,10 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 
 	// specified special event change, else a generic event of class application and callbacks will be applied
 	if (settings.event === 'change') {
-		if (settings.loadEvent === true) changeTrigger();
-		settings.trigger.on(settings.event,changeTrigger);
+		if (settings.loadEvent === true) settings.methods.changeTrigger();
+		settings.trigger.on(settings.event,settings.methods.changeTrigger);
 	}else {
-		if (settings.loadEvent === true) executeTrigger(settings.state);
+		if (settings.loadEvent === true) settings.methods.executeTrigger(settings.state);
 		settings.trigger.on(settings.event,function(){
 			if (selector.data('bcpie-trigger-state') === 'off') {
 				selector.data('bcpie-trigger-state','on');
@@ -16031,89 +16134,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 				selector.data('bcpie-trigger-state','off');
 				settings.state = selector.data('bcpie-trigger-state');
 			}
-			executeTrigger(settings.state);
+			settings.methods.executeTrigger(settings.state);
 		});
-	}
-
-	function executeTrigger(state) {
-		if (state === 'on') {
-			if (settings.onClass !== '') selector.addClass(settings.onClass.names);
-			if (settings.offClass !== '') selector.removeClass(settings.offClass.names);
-			bcpie.utils.executeCallback({
-				selector: selector,
-				settings: settings,
-				callback: settings.onCallback,
-			});
-			changeValue(settings.state);
-		}else if (settings.toggle === true) {
-			if (settings.onClass !== '') selector.removeClass(settings.onClass.names);
-			if (settings.offClass !== '') selector.addClass(settings.offClass.names);
-			bcpie.utils.executeCallback({
-				selector: selector,
-				settings: settings,
-				callback: settings.offCallback,
-			});
-			changeValue(settings.state);
-		}
-	}
-	function changeValue(state) {
-		if (settings.onValue === 'boolean' && state === 'on') selector.prop('checked',true).attr('checked','checked');
-		else if (settings.offValue === 'boolean' && state === 'off') selector.prop('checked',false).removeAttr('checked');
-		else {
-			if (state === 'off') state = settings.offValue;
-			else if (state === 'on') state = settings.onValue;
-			if (state !== null) {
-				if (selector.is('input,select,textarea')) selector.val(state);
-				else selector.text(state);
-			}
-		}
-		if (selector.is('select,textarea,input')) selector.trigger('change'+settings.eventNamespace); // restores the selector's native change behavior
-		
-	}
-	function changeTrigger(){
-		var matchedValues = 0;
-		for (var e = 0; e < settings.trigger.length; e++) {
-			for (var i=0; i<settings.triggerValue.length; i++) {
-				if (settings.triggerValue[i] === 'boolean' && $(settings.trigger[e]).is(':checked')) matchedValues ++;
-				else if (typeof GetValue($(settings.trigger[e])) === 'object') {
-					if (GetValue($(settings.trigger[e])).indexOf(settings.triggerValue[i]) > -1) matchedValues ++;
-				}else if (GetValue($(settings.trigger[e])) == settings.triggerValue[i]) matchedValues ++;
-			}
-		}
-		if (settings.triggerMode === 'or' && matchedValues > 0) settings.state = 'on';
-		else if (settings.triggerMode === 'and' && matchedValues === settings.trigger.length) settings.state = 'on';
-		else settings.state = 'off';
-
-		executeTrigger(settings.state);
-	}
-	function GetValue(triggerElement) {
-		var value,tempArray = [];
-		if (settings.triggerAttr === 'value') {
-			if(triggerElement.is('[type=radio]'))
-				value = triggerElement.filter(':checked').val();
-			else if(triggerElement.is('[type=checkbox]')) {
-				for (var i = 0; i < settings.triggerValue.length; i++) {
-					if(settings.triggerValue[i] === '' && triggerElement.filter(':checked').size() > 0)
-						value = '';
-					if(triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").size() > 0)
-						value = triggerElement.filter("[value='" + settings.triggerValue[i] + "']:checked").val();
-				}
-			}else value = triggerElement.val();
-		}
-		else {
-			if (triggerElement.is('select')) {
-				value = triggerElement.find('option').filter(':selected');
-				if (value.length > 1) {
-					for (var i = 0; i < value.length; i++) {
-						tempArray.push($(value[i]).attr(settings.triggerAttr));
-					}
-					value = tempArray;
-				}else value = value.attr(settings.triggerAttr);
-			}else value = triggerElement.attr(settings.triggerAttr);
-		}
-		if (typeof value === 'undefined' || value === null) value = '';
-		if (typeof value === 'string') value = value.trim();
-		return value;
 	}
 };;/*
  * "Utility". An awesome trick for BC Pie.

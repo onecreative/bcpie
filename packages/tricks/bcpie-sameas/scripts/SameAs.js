@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2016.11.07',
+		version: '2017.01.15',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -42,9 +42,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
 
 	// Setup our variables
-	if (settings.scopeMode === 'closest') var copyGroup = selector.closest(settings.scope);
-	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') var copyGroup = selector.siblings(settings.scope);
-	else var copyGroup = $(doc).find(settings.scope);
+	var copyGroup;
+	if (settings.scopeMode === 'closest') copyGroup = selector.closest(settings.scope);
+	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') copyGroup = selector.siblings(settings.scope);
+	else copyGroup = $(doc).find(settings.scope);
 
 	if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
 		if (selector.is('select,textarea,input')) settings.targetAttr = 'value';
@@ -73,19 +74,19 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 		// Choose which method to use
 		if (settings.checkbox !== 'off' && checkbox.length > 0) {
 			checkboxChange(checkbox,copyFields);
-			for (var i = 0; i < checkbox.length; i++) {
-				checkbox[i].on(settings.event,function(){
+			for (var e = 0; e < checkbox.length; e++) {
+				checkbox[e].on(settings.event,function() {
 					checkboxChange(checkbox,copyFields);
 				});
 			}
 			
 			if (settings.breakOnChange !== false) {
 				selector.on(settings.event,function() {
-					for (var i = 0; i < checkbox.length; i++) {
-						checkbox[i].off(settings.event);
+					for (var f = 0; f < checkbox.length; f++) {
+						checkbox[f].off(settings.event);
 					}
-					for (var i = copyFields.length - 1; i >= 0; i--) {
-						copyFields[i].off(settings.event);
+					for (var g = copyFields.length - 1; g >= 0; g--) {
+						copyFields[g].off(settings.event);
 					}
 					selector.off(settings.event);
 				});
@@ -172,8 +173,8 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			copyVal(selector,copyFields);
 			inputChange(selector,copyFields);
 		}else {
-			for (var i = copyFields.length - 1; i >= 0; i--) {
-				copyFields[i].off(settings.event);
+			for (var e = copyFields.length - 1; e >= 0; e--) {
+				copyFields[e].off(settings.event);
 			}
 			selector.off(settings.event);
 			selector.val('');
@@ -215,17 +216,23 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (newSelector.indexOf('=') === -1) newSelector = settings.expressAttr+'="'+newSelector+'"';
 			newSelector = copyGroup.find('['+newSelector+']');
 			copyFields.push(copyGroup.find(newSelector));
-			value = '',combinedVal = '';
+			value = '';
+			combinedVal = '';
 			for (var e = 0; e < copyFields[i].length; e++) {
 				individualField = $(copyFields[i][e]);
 				if (individualField.is('select')) value = individualField.find('option').filter(':selected');
-				else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) value = individualField.filter(':checked');
+				else if (individualField.is('input[type=radio]') || individualField.is('input[type=checkbox]')) {
+					if (individualField.filter(':checked').length > 0) value = individualField.filter(':checked');
+					else value = '';
+				} 
 				else value = individualField;
 
-				if (settings.refAttr === 'text') value = value.text();
-				else if (settings.refAttr === 'value') value = value.val();
-				else if (settings.refAttr === 'html') value = value.html();
-				else value = value.attr(settings.refAttr);
+				if (value !== '') {
+					if (settings.refAttr === 'text') value = value.text();
+					else if (settings.refAttr === 'value') value = value.val();
+					else if (settings.refAttr === 'html') value = value.html();
+					else value = value.attr(settings.refAttr);
+				}
 
 				if (typeof value !== 'undefined' && settings.trim === true) value = value.trim();
 				if (settings.copyType === 'math' && e > 0) combinedVal += '+'+value;

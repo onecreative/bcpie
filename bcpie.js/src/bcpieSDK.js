@@ -18,9 +18,7 @@
         // Test for the conditions that mean we can/want to send/receive blobs or arraybuffers - we need XMLHttpRequest
         // level 2 (so feature-detect against window.FormData), feature detect against window.Blob or window.ArrayBuffer,
         // and then check to see if the dataType is blob/arraybuffer or the data itself is a Blob/ArrayBuffer
-        if (window.FormData && ((options.dataType && (options.dataType == 'blob' || options.dataType == 'arraybuffer'))
-            || (options.data && ((window.Blob && options.data instanceof Blob)
-                || (window.ArrayBuffer && options.data instanceof ArrayBuffer)))
+        if (window.FormData && ((options.dataType && (options.dataType == 'blob' || options.dataType == 'arraybuffer')) || (options.data && ((window.Blob && options.data instanceof Blob) || (window.ArrayBuffer && options.data instanceof ArrayBuffer)))
             ))
         {
             var xhr;
@@ -77,9 +75,11 @@
 })(jQuery);
 
 var doc = document,body = $(doc.body),win = window,settings;
+body.data('bcpie',{});
+body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.01.06',
+		sdk: '2017.01.18',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -687,6 +687,22 @@ win.bcpie = {
 					return bcpie.utils.ajax(options);
 				}
 			}
+		},
+		dataList: function(data) {
+			if (typeof data === 'undefined') data = {};
+			if (typeof options !== 'object') options = {};
+			data = {
+				collectionID: data.collectionID || null // integer
+			};
+			if (typeof body.data('bcpie').ajax.dataList === 'undefined') {
+				body.data('bcpie').ajax.dataList = bcpie.ajax.file.get({path:'/_system/apps/bcpie-bcpie/public/utilities/ajax/dataList.json'},{async:false});
+				if (body.data('bcpie').ajax.dataList.status === 200) {
+					body.data('bcpie').ajax.dataList = JSON.parse(body.data('bcpie').ajax.dataList.responseText) || null;
+					if (body.data('bcpie').ajax.dataList === null) delete body.data('bcpie').ajax.dataList;
+				}
+			}
+			if (data.collectionID !== null) return body.data('bcpie').ajax.dataList[data.collectionID];
+			else return body.data('bcpie').ajax.dataList;
 		}
 	},
 	utils: {
