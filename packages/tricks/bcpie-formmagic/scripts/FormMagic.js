@@ -521,7 +521,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function isNumericIfVisible(s, FieldName) {
 		var error = "";
 		if (s.style.display == 'inline') {
-			if (s.value.length == 0) {
+			if (s.value.length === 0) {
 				error = "- " + FieldName + validatelang.Number.MustNumber;
 			} else {
 				var i;
@@ -552,7 +552,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			var _dataObjects = [];
 
 			function initializeControls() {
-				if (_dataObjects.length == 0) {
+				if (_dataObjects.length === 0) {
 					return;
 				}
 
@@ -621,7 +621,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 						// The google answer will be an empty string if the recaptcha instance has 
 						// not been validated
-						return googleAnswer.trim().length != 0;
+						return googleAnswer.trim().length !== 0;
 					}
 					else {
 						return false;
@@ -684,18 +684,18 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			Days:				'days'
 		},
 		validation: {
-			select:				function (required) {return checkDropdown(required.value, required.label)},
-			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
-			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
-			email:				function (required) {return checkEmail(required.value)},
-			date:				function (required) {return checkDate(required.value,required.label)},
-			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label)},
-			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : ''},
-			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image")},
-			recaptcha:			function (required) {return reCaptchaV2IsInvalid(selector[0], "Please prove you're not a robot")},
-			currency:			function (required) {return isCurrency(required.value, required.label)},
-			number:				function (required) {return isNumeric(required.value, required.label)},
-			days:				function (required) {return isNumericIfVisible(required.field, required.label)}
+			select:				function (required) {return checkDropdown(required.value, required.label);},
+			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label);},
+			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label);},
+			email:				function (required) {return checkEmail(required.value);},
+			date:				function (required) {return checkDate(required.value,required.label);},
+			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label);},
+			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : '';},
+			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image");},
+			recaptcha:			function (required) {return reCaptchaV2IsInvalid(selector[0], "Please prove you're not a robot");},
+			currency:			function (required) {return isCurrency(required.value, required.label);},
+			number:				function (required) {return isNumeric(required.value, required.label);},
+			days:				function (required) {return isNumericIfVisible(required.field, required.label);}
 		}
 	};
 
@@ -782,7 +782,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
 		validationTarget.removeClass(validationClass).unwrap();
-		if (rdoChkFlag == true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
+		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');

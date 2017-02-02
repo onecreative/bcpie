@@ -17,6 +17,10 @@
         "docs": "http://bcpie.com/docs/sameas"
     }],
     "requires": [{
+        "id": "to-title-case",
+        "type": "thirdParty",
+        "packageVersion": 1459191565
+    }, {
         "id": "jquery",
         "type": "thirdParty",
         "packageVersion": 1459191565

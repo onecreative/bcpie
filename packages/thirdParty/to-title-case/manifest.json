@@ -1,0 +1,22 @@
+{
+	"id": "to-title-case",
+	"name": "To Title Case for JavaScript",
+	"packageVersion": 1459191565,
+	"description": "A JavaScript method for intelligently converting strings to title case.",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": null,
+	"type": "thirdParty",
+	"assets": [
+		{
+			"filename": "to-title-case.js", 
+			"type": "scripts", 
+			"location": "foot",
+			"version": "2.1",
+			"docs": "http://individed.com/code/to-title-case/"
+		}
+	],
+	"requires": []
+}

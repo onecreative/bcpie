@@ -12918,7 +12918,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.01.18',
+		sdk: '2017.02.01',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -13084,6 +13084,145 @@ win.bcpie = {
 			}
 		},
 		webapp: {
+			save: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					webapp: data.webapp || undefined,
+					content: data.content || {}
+				};
+				options.url = '/api/v2/admin/sites/current/webapps';
+				if (typeof data.webapp !== 'undefined') options.url += '/'+data.webapp;
+				options.data = bcpie.utils.serializeObject(data.content);
+				options.data = JSON.stringify(options.data);
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.method = 'POST';
+				options.processData = false;
+				return bcpie.utils.ajax(options);
+			},
+			get: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					webapp: data.webapp || undefined
+				};
+				// Catch data errors
+				var errors = bcpie.ajax.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
+				options.url = '/api/v2/admin/sites/current/webapps';
+				if (typeof data.webapp !== 'undefined') options.url += '/'+data.webapp;
+				options.headers = {'Authorization': bcpie.ajax.token()};
+				options.method = 'GET';
+				return bcpie.utils.ajax(options);
+			},
+			delete: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					webapp: data.webapp || null // string
+				};
+
+				// Catch data errors
+				var errors = bcpie.ajax.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
+				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
+				options.headers = {Authorization: bcpie.ajax.token()};
+				options.method = 'DELETE';
+				return bcpie.utils.ajax(options);
+			},
+			field: {
+				get: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null // string
+					};
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'GET';
+					return bcpie.utils.ajax(options);
+				},
+				save: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null, // integer
+						content: data.content || null // object
+					};
+					
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					if (data.field === null && data.content !== null && typeof data.content.id === 'undefined') data.content.id = 0;
+					if (data.content !== null) {
+						options.data = bcpie.utils.serializeObject(data.content);
+						options.data = JSON.stringify(options.data);
+					}				
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'POST';
+					options.processData = false;
+					return bcpie.utils.ajax(options);
+				},
+				delete: function(data,options) {
+					if (typeof data === 'undefined') data = {};
+					if (typeof options !== 'object') options = {};
+					data = {
+						webapp: data.webapp || null, // string
+						field: data.field || null // integer or blank
+					};
+					
+					// Catch data errors
+					var errors = bcpie.ajax.webapp.errors(data);
+					if (errors.length > 0) return errors;
+
+					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
+					if (data.field !== null) options.url += '/' + data.field;
+					options.headers = {'Authorization': bcpie.ajax.token()};
+					options.method = 'DELETE';
+					return bcpie.utils.ajax(options);
+				}
+			},
+			search: function(data,options) {
+				if (typeof data === 'undefined') data = {};
+				if (typeof options !== 'object') options = {};
+				data = {
+					webapp: data.webapp || null,
+					formID: data.formID || null,
+					responsePageID: data.responsePageID || null,
+					content: data.content || null,
+					json: data.json || true
+				};
+				// Catch data errors
+				var errors = bcpie.ajax.webapp.errors(data);
+				if (errors.length > 0) return errors;
+
+				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
+				else data.responsePageID = '';
+
+				if (data.json === true) data.json = '&json='+data.json;
+				else data.json = '';
+
+				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
+				options.data = $.param(data.content);
+				// options.contentType = false;
+				options.contentType = options.contentType || 'application/x-www-form-urlencoded'; /* is this better than false? */ 
+				options.method = 'POST';
+				return bcpie.utils.ajax(options);
+				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
+				// return (response.children().length > 0) ? response.children() : response.html();
+			},
 			item: {
 				all: function(data,options) {
 					if (typeof data === 'undefined') data = {};
@@ -13278,126 +13417,6 @@ win.bcpie = {
 					}
 					return bcpie.utils.ajax(options);
 				}
-			},
-			get: function(data,options) {
-				if (typeof data === 'undefined') data = {};
-				if (typeof options !== 'object') options = {};
-				data = {
-					webapp: data.webapp || undefined
-				};
-				// Catch data errors
-				var errors = bcpie.ajax.webapp.errors(data);
-				if (errors.length > 0) return errors;
-
-				options.url = '/api/v2/admin/sites/current/webapps';
-				if (typeof data.webapp !== 'undefined') options.url += '/'+data.webapp;
-				options.headers = {'Authorization': bcpie.ajax.token()};
-				options.method = 'GET';
-				return bcpie.utils.ajax(options);
-			},
-			delete: function(data,options) {
-				if (typeof data === 'undefined') data = {};
-				if (typeof options !== 'object') options = {};
-				data = {
-					webapp: data.webapp || null // string
-				};
-
-				// Catch data errors
-				var errors = bcpie.ajax.webapp.errors(data);
-				if (errors.length > 0) return errors;
-
-				options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp;
-				options.headers = {Authorization: bcpie.ajax.token()};
-				options.method = 'DELETE';
-				return bcpie.utils.ajax(options);
-			},
-			fields: {
-				get: function(data,options) {
-					if (typeof data === 'undefined') data = {};
-					if (typeof options !== 'object') options = {};
-					data = {
-						webapp: data.webapp || null, // string
-						field: data.field || null // string
-					};
-					// Catch data errors
-					var errors = bcpie.ajax.webapp.errors(data);
-					if (errors.length > 0) return errors;
-
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
-					if (data.field !== null) options.url += '/' + data.field;
-					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.method = 'GET';
-					return bcpie.utils.ajax(options);
-				},
-				save: function(data,options) {
-					if (typeof data === 'undefined') data = {};
-					if (typeof options !== 'object') options = {};
-					data = {
-						webapp: data.webapp || null, // string
-						field: data.field || null, // integer
-						content: data.content || null // object
-					};
-					
-					// Catch data errors
-					var errors = bcpie.ajax.webapp.errors(data);
-					if (errors.length > 0) return errors;
-
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
-					if (data.field !== null) options.url += '/' + data.field;
-					if (data.field === null && data.content !== null && typeof data.content.id === 'undefined') data.content.id = 0;
-					if (data.content !== null) options.data = data.content;
-					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.method = 'POST';
-					options.processData = false;
-					return bcpie.utils.ajax(options);
-				},
-				delete: function(data,options) {
-					if (typeof data === 'undefined') data = {};
-					if (typeof options !== 'object') options = {};
-					data = {
-						webapp: data.webapp || null, // string
-						field: data.field || null // integer or blank
-					};
-					
-					// Catch data errors
-					var errors = bcpie.ajax.webapp.errors(data);
-					if (errors.length > 0) return errors;
-
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/fields';
-					if (data.field !== null) options.url += '/' + data.field;
-					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.method = 'DELETE';
-					return bcpie.utils.ajax(options);
-				}
-			},
-			search: function(data,options) {
-				if (typeof data === 'undefined') data = {};
-				if (typeof options !== 'object') options = {};
-				data = {
-					webapp: data.webapp || null,
-					formID: data.formID || null,
-					responsePageID: data.responsePageID || null,
-					content: data.content || null,
-					json: data.json || true
-				};
-				// Catch data errors
-				var errors = bcpie.ajax.webapp.errors(data);
-				if (errors.length > 0) return errors;
-
-				if (data.responsePageID !== null) data.responsePageID = '&PageID='+data.responsePageID;
-				else data.responsePageID = '';
-
-				if (data.json === true) data.json = '&json='+data.json;
-				else data.json = '';
-
-				options.url = '/Default.aspx?CCID='+data.webapp+'&FID='+data.formID+'&ExcludeBoolFalse=True'+data.responsePageID+data.json;
-				options.data = $.param(data.content);
-				// options.contentType = false;
-				options.contentType = options.contentType || 'application/x-www-form-urlencoded'; /* is this better than false? */ 
-				options.method = 'POST';
-				return bcpie.utils.ajax(options);
-				// var response = $(bcpie.utils.ajax(options).responseText).find('.webappsearchresults');
-				// return (response.children().length > 0) ? response.children() : response.html();
 			},
 			errors: function(data) {
 				if (typeof data === 'undefined') data = {};
@@ -15605,7 +15624,31 @@ bcpie.extensions.tricks.Foundation = function(selector,options) {
 			return $(this).children('.dropdown').length === 0;
 		}).removeClass('has-dropdown');
 	}
-};;/*
+};;/* 
+  * To Title Case 2.1 – http://individed.com/code/to-title-case/
+  * Copyright © 2008–2013 David Gouch. Licensed under the MIT License.
+ */
+
+String.prototype.toTitleCase = function(){
+  var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+
+  return this.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title){
+    if (index > 0 && index + match.length !== title.length &&
+      match.search(smallWords) > -1 && title.charAt(index - 2) !== ":" &&
+      (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') &&
+      title.charAt(index - 1).search(/[^\s-]/) < 0) {
+      return match.toLowerCase();
+    }
+
+    if (match.substr(1).search(/[A-Z]|\../) > -1) {
+      return match;
+    }
+
+    return match.charAt(0).toUpperCase() + match.substr(1);
+  });
+};
+
+/*
  * "SameAs". An awesome trick for BC Pie.
  * http://bcpie.com
  * Copyright 2015, ONE Creative
@@ -15628,7 +15671,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkboxLogic: 'and', // or
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
-			convert: 'off', // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: 'off', // 'uppercase', 'lowercase', 'title' and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -15724,6 +15767,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
+			else if (settings.convert === 'title') value = value.toTitleCase();
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {

@@ -1,3 +1,27 @@
+/* 
+  * To Title Case 2.1 – http://individed.com/code/to-title-case/
+  * Copyright © 2008–2013 David Gouch. Licensed under the MIT License.
+ */
+
+String.prototype.toTitleCase = function(){
+  var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+
+  return this.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title){
+    if (index > 0 && index + match.length !== title.length &&
+      match.search(smallWords) > -1 && title.charAt(index - 2) !== ":" &&
+      (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') &&
+      title.charAt(index - 1).search(/[^\s-]/) < 0) {
+      return match.toLowerCase();
+    }
+
+    if (match.substr(1).search(/[A-Z]|\../) > -1) {
+      return match;
+    }
+
+    return match.charAt(0).toUpperCase() + match.substr(1);
+  });
+};
+
 /*
  * "SameAs". An awesome trick for BC Pie.
  * http://bcpie.com
@@ -21,7 +45,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkboxLogic: 'and', // or
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
-			convert: 'off', // 'uppercase', 'lowercase', and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: 'off', // 'uppercase', 'lowercase', 'title' and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -117,6 +141,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
+			else if (settings.convert === 'title') value = value.toTitleCase();
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
