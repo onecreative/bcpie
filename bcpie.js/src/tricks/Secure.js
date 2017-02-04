@@ -94,7 +94,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 		});
 	}
 	function onAutoLogout (response) {
-		if ($(response).filter('[data-loggedin]').data('loggedin') == false) {
+		if ($(response).filter('[data-loggedin]').data('loggedin') === false) {
 			if (settings.onSessionEnd !== '') bcpie.utils.executeCallback({
 				selector: selector,
 				callback: settings.onSessionEnd
