@@ -2,7 +2,7 @@
 {module_pagename collection="pagename" template=""}{% assign pagename = pagename.name | escape -%}
 {module_defaulturl collection="defaulturl" template=""}
 {module_sitehost collection="siteHost" template=""}
-{% if defaulturl.defaulturl == 'http://' or defaulturl.defaulturl == 'https://' -%}{% assign primaryDomain = siteHost.siteHost -%}
+{% if defaulturl.defaulturl == 'http://' or defaulturl.defaulturl == 'https://' -%}{% assign primaryDomain = 'http://' | append: siteHost.siteHost -%}
 {% else -%}{% assign primaryDomain = defaulturl.defaulturl -%}
 {% endif -%}
 <script data-isloggedin="{module_isloggedin}">
