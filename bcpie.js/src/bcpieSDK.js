@@ -79,7 +79,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.02.01',
+		sdk: '2017.02.04',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -1016,7 +1016,7 @@ win.bcpie = {
 	}
 };
 bcpie.globals = $.extend({},bcpie.globals,globals);
-bcpie.globals.currentDomain = (win.location.href.indexOf(bcpie.globals.primaryDomain) > -1) ? bcpie.globals.primaryDomain : bcpie.globals.secureDomain;
+bcpie.globals.currentDomain = (win.location.origin.indexOf(bcpie.globals.primaryDomain) > -1) ? bcpie.globals.primaryDomain : bcpie.globals.secureDomain;
 
 // Initialize tricks
 $(function() {
