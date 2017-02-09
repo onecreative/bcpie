@@ -79,7 +79,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.02.04',
+		sdk: '2017.02.08',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -769,6 +769,20 @@ win.bcpie = {
 				typeof HTMLElement === 'object' ? object instanceof HTMLElement : //DOM2
 					object && typeof object === 'object' && object !== null && object.nodeType === 1 && typeof object.nodeName==='string'
 			);
+		},
+		camelCase: function(string) {
+			// remove all characters that should not be in a variable name
+			// as well underscores an numbers from the beginning of the string
+			string = string.replace(/([^a-zA-Z0-9_\- ])|^[_0-9]+/g, "").trim().toLowerCase();
+			// uppercase letters preceeded by a hyphen or a space
+			string = string.replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
+				return c.toUpperCase();
+			});
+			// uppercase letters following numbers
+			string = string.replace(/([0-9]+)([a-zA-Z])/g, function(a,b,c) {
+				return b + c.toUpperCase();
+			});
+			return string;
 		},
 		serializeObject: function(object) {
 			var o = '',boolFalse,a,i;

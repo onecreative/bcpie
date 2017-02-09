@@ -32,7 +32,7 @@ String.prototype.toTitleCase = function(){
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2017.01.15',
+		version: '2017.02.08',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -45,7 +45,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkboxLogic: 'and', // or
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
-			convert: 'off', // 'uppercase', 'lowercase', 'title' and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: 'off', // 'uppercase', 'lowercase', 'camelcase' and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -141,7 +141,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
 			else if (settings.convert === 'lowercase') value = value.toLowerCase();
 			else if (settings.convert === 'uppercase') value = value.toUpperCase();
-			else if (settings.convert === 'title') value = value.toTitleCase();
+			else if (settings.convert === 'camelcase') value = bcpie.utils.camelCase(value);
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
