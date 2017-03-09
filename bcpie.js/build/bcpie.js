@@ -12918,7 +12918,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.02.08',
+		sdk: '2017.02.27',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -13227,29 +13227,8 @@ win.bcpie = {
 				all: function(data,options) {
 					if (typeof data === 'undefined') data = {};
 					if (typeof options !== 'object') options = {};
-					data = {
-						webapp: data.webapp || null, // integer, string
-						item: null, // doesn't accept an item value
-						filters: data.filters || {}, // object
-						items: data.items || [],
-						finished: data.finished || false
-					};
-					options.async = false;
-					if (data.finished === false) {
-						var response = bcpie.ajax.webapp.item.get(data,options).responseJSON;
-						data.items = data.items.concat(response.items);
-						if (response.links[2].uri !== null) data.filters.skip = response.links[2].uri.split('skip=')[1].split('&')[0];
-						else data.finished = true;
-						return bcpie.ajax.webapp.item.all(data,options);
-					}
-					if (data.finished ===true) {
-						return {
-							totalItemsCount: data.items.length,
-							items: data.items,
-							skip: 0,
-							limit: data.items.length
-						};
-					}
+					data.call = bcpie.ajax.webapp.item.get;
+					return bcpie.utils.getAll(data,options);
 				},
 				get: function(data,options) {
 					if (typeof data === 'undefined') data = {};
@@ -13257,19 +13236,23 @@ win.bcpie = {
 					data = {
 						webapp: data.webapp || null, // integer, string
 						item: data.item || null, // integer
-						filters: data.filters || {} // object
+						filters: data.filters || {limit:null} // object
 					};
+					if (data.filters.limit === 'all' && data.item === null) {
+						data.call = bcpie.ajax.webapp.item.get;
+						return bcpie.utils.getAll(data,options);
+					}else {
+						// Catch data errors
+						var errors = bcpie.ajax.webapp.errors(data);
+						if (errors.length > 0) return errors;
 
-					// Catch data errors
-					var errors = bcpie.ajax.webapp.errors(data);
-					if (errors.length > 0) return errors;
-
-					options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
-					if (data.item !== null) options.url += '/'+data.item;
-					else options.url += bcpie.utils.filters(data.filters);
-					options.headers = {Authorization: bcpie.ajax.token()};
-					options.method = 'GET';
-					return bcpie.utils.ajax(options);
+						options.url = '/api/v2/admin/sites/current/webapps/'+data.webapp+'/items';
+						if (data.item !== null) options.url += '/'+data.item;
+						else options.url += bcpie.utils.filters(data.filters);
+						options.headers = {Authorization: bcpie.ajax.token()};
+						options.method = 'GET';
+						return bcpie.utils.ajax(options);
+					}
 				},
 				save: function(data,options) {
 					if (typeof data === 'undefined') data = {};
@@ -13299,7 +13282,7 @@ win.bcpie = {
 
 						if (typeof bcpie.ajax.webapp.item.save[data.webapp] === 'undefined') {
 							// Retrieve the custom fields list from the server
-							bcpie.ajax.webapp.item.save[data.webapp] = bcpie.ajax.webapp.fields.get({webapp: data.webapp},{async:false});
+							bcpie.ajax.webapp.item.save[data.webapp] = bcpie.ajax.webapp.field.get({webapp: data.webapp},{async:false});
 						}
 
 
@@ -13447,13 +13430,18 @@ win.bcpie = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null // object
 					};
-					options.headers = {'Authorization': bcpie.ajax.token()};
-					options.url = '/webresources/api/v3/sites/current/customers';
-					if (data.customerID !== null) options.url += '/'+data.customerID;
-					options.method = 'GET';
-					options.mimeType = 'application/json';
-					if (data.filters !== null) options.url += bcpie.utils.filters(data.filters);
-					return bcpie.utils.ajax(options);
+					if (data.filters.limit === 'all' && data.customerID === null) {
+						data.call = bcpie.ajax.crm.customers.get;
+						return bcpie.utils.getAll(data,options);
+					}else {
+						options.headers = {'Authorization': bcpie.ajax.token()};
+						options.url = '/webresources/api/v3/sites/current/customers';
+						if (data.customerID !== null) options.url += '/'+data.customerID;
+						else options.url += bcpie.utils.filters(data.filters);
+						options.method = 'GET';
+						options.mimeType = 'application/json';
+						return bcpie.utils.ajax(options);
+					}
 				},
 				logout: function() {
 					if (typeof options !== 'object') options = {};
@@ -13609,20 +13597,6 @@ win.bcpie = {
 					object && typeof object === 'object' && object !== null && object.nodeType === 1 && typeof object.nodeName==='string'
 			);
 		},
-		camelCase: function(string) {
-			// remove all characters that should not be in a variable name
-			// as well underscores an numbers from the beginning of the string
-			string = string.replace(/([^a-zA-Z0-9_\- ])|^[_0-9]+/g, "").trim().toLowerCase();
-			// uppercase letters preceeded by a hyphen or a space
-			string = string.replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
-				return c.toUpperCase();
-			});
-			// uppercase letters following numbers
-			string = string.replace(/([0-9]+)([a-zA-Z])/g, function(a,b,c) {
-				return b + c.toUpperCase();
-			});
-			return string;
-		},
 		serializeObject: function(object) {
 			var o = '',boolFalse,a,i;
 			if (object instanceof jQuery) {
@@ -13752,6 +13726,20 @@ win.bcpie = {
 			}
 			return output.toLowerCase();
 		},
+		camelCase: function(string) {
+			// remove all characters that should not be in a variable name
+			// as well underscores an numbers from the beginning of the string
+			string = string.replace(/([^a-zA-Z0-9_\- ])|^[_0-9]+/g, "").trim().substr(0, 1).toLowerCase() + string.substr(1);
+			// uppercase letters preceeded by a hyphen or a space
+			string = string.replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
+				return c.toUpperCase();
+			});
+			// uppercase letters following numbers
+			string = string.replace(/([0-9]+)([a-zA-Z])/g, function(a,b,c) {
+				return b + c.toUpperCase();
+			});
+			return string;
+		},
 		executeCallback: function(data, depricatedCallback, depricatedData, depricatedStatus, depricatedXhr) {
 			function parameter(selector, settings, callback, data, status, xhr) {
 				var deferred = $.Deferred();
@@ -13781,13 +13769,38 @@ win.bcpie = {
 		},
 		filters: function(filters) {
 			var response = '?limit=';
-			response += filters.limit || 500;
+			response += (typeof filters.limit !== 'undefined' && filters.limit !== 'all') ? filters.limit : 500;
 			response += '&skip=';
 			response += filters.skip || 0;
 			if (typeof filters.order !== 'undefined') response += '&order='+bcpie.utils.encode(filters.order);
 			if ($.isArray(filters.fields)) response += '&fields='+bcpie.utils.encode(filters.fields.toString());
 			if (typeof filters.where === 'object') response += '&where='+bcpie.utils.encode(JSON.stringify(filters.where));
 			return response;
+		},
+		getAll: function(data,options) {
+			if (typeof data === 'undefined') data = {};
+			if (typeof options !== 'object') options = {};
+			data.call = data.call || null;
+			data.filters = data.filters || {};
+			data.items = data.items || [];
+			data.finished = data.finished || false;
+
+			options.async = false;
+			data.filters.limit = (typeof data.filters.limit !== 'number') ? 500 : data.filters.limit;
+			data.filters.skip = (data.items.length === 0) ? 0 : data.filters.skip + data.filters.limit;
+			if (data.finished === false) {
+				var response = data.call(data,options).responseJSON;
+				data.items = data.items.concat(response.items);
+				data.filters.limit = response.limit;
+				if (typeof response.totalItemsCount === 'undefined') return false;
+				else if (response.totalItemsCount === data.items.length) return {
+					totalItemsCount: data.items.length,
+					items: data.items,
+					skip: 0,
+					limit: 'all'
+				};
+				else return bcpie.utils.getAll(data,options);
+			}
 		},
 		ajax: function(options) {
 			var settings = options || {};
@@ -15685,7 +15698,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkboxLogic: 'and', // or
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
-			convert: 'off', // 'uppercase', 'lowercase', 'camelcase' and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: 'off', // 'upper', 'lower', 'title', 'camel' and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -15704,6 +15717,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (settings.copy !== null && settings.copy.indexOf('[') === -1) settings.copy = '['+settings.copy+']';
 	if (typeof settings.prefix !== 'undefined') settings.copy = settings.prefix + settings.copy;
 	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
+	if (settings.convert !== 'off') settings.convert = settings.convert.replace('case','').replace('Case','');
 
 	// Setup our variables
 	var copyGroup;
@@ -15779,9 +15793,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		if (settings.convert !== 'off' && typeof value !== 'undefined') {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
-			else if (settings.convert === 'lowercase') value = value.toLowerCase();
-			else if (settings.convert === 'uppercase') value = value.toUpperCase();
-			else if (settings.convert === 'camelcase') value = bcpie.utils.camelCase(value);
+			else if (settings.convert === 'lower') value = value.toLowerCase();
+			else if (settings.convert === 'upper') value = value.toUpperCase();
+			else if (settings.convert === 'camel') value = bcpie.utils.camelCase(value);
+			else if (settings.convert === 'title') value = value.toTitleCase();
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {
@@ -16047,10 +16062,10 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2017.01.14',
+		version: '2017.03.03',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
-			event: 'click', // specify an event to cause the trigger
+			event: 'click', // specify a comma separated list of events to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
 			scopeMode: 'closest', // find, siblings
@@ -16184,7 +16199,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		settings.trigger.on(settings.event,settings.methods.changeTrigger);
 	}else {
 		if (settings.loadEvent === true) settings.methods.executeTrigger(settings.state);
-		settings.trigger.on(settings.event,function(){
+		settings.trigger.on(settings.event.replace(',',' '),function(){
 			if (selector.data('bcpie-trigger-state') === 'off') {
 				selector.data('bcpie-trigger-state','on');
 				settings.state = selector.data('bcpie-trigger-state');

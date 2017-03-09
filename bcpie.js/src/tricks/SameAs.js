@@ -45,7 +45,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			checkboxLogic: 'and', // or
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
-			convert: 'off', // 'uppercase', 'lowercase', 'camelcase' and 'slug'. 'slug' will change the string to an appropriate url path.
+			convert: 'off', // 'upper', 'lower', 'title', 'camel' and 'slug'. 'slug' will change the string to an appropriate url path.
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -64,6 +64,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (settings.copy !== null && settings.copy.indexOf('[') === -1) settings.copy = '['+settings.copy+']';
 	if (typeof settings.prefix !== 'undefined') settings.copy = settings.prefix + settings.copy;
 	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
+	if (settings.convert !== 'off') settings.convert = settings.convert.replace('case','').replace('Case','');
 
 	// Setup our variables
 	var copyGroup;
@@ -139,9 +140,10 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 
 		if (settings.convert !== 'off' && typeof value !== 'undefined') {
 			if (settings.convert === 'slug') value = bcpie.utils.makeSlug(value);
-			else if (settings.convert === 'lowercase') value = value.toLowerCase();
-			else if (settings.convert === 'uppercase') value = value.toUpperCase();
-			else if (settings.convert === 'camelcase') value = bcpie.utils.camelCase(value);
+			else if (settings.convert === 'lower') value = value.toLowerCase();
+			else if (settings.convert === 'upper') value = value.toUpperCase();
+			else if (settings.convert === 'camel') value = bcpie.utils.camelCase(value);
+			else if (settings.convert === 'title') value = value.toTitleCase();
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {

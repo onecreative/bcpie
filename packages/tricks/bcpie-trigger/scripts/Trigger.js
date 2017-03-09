@@ -8,10 +8,10 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2017.01.14',
+		version: '2017.03.03',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
-			event: 'click', // specify an event to cause the trigger
+			event: 'click', // specify a comma separated list of events to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
 			scopeMode: 'closest', // find, siblings
@@ -145,7 +145,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 		settings.trigger.on(settings.event,settings.methods.changeTrigger);
 	}else {
 		if (settings.loadEvent === true) settings.methods.executeTrigger(settings.state);
-		settings.trigger.on(settings.event,function(){
+		settings.trigger.on(settings.event.replace(',',' '),function(){
 			if (selector.data('bcpie-trigger-state') === 'off') {
 				selector.data('bcpie-trigger-state','on');
 				settings.state = selector.data('bcpie-trigger-state');
