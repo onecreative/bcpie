@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.11.14',
+		version: '2017.03.20',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -907,7 +907,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								selector: selector,
 								settings: settings,
 								callback: window[settings.ajaxError],
-								content: error,
+								content: response,
 								status: status,
 								xhr: xhr
 							});

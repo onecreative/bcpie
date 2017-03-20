@@ -14,7 +14,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			event: 'click', // specify a comma separated list of events to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
-			scopeMode: 'closest', // find, siblings
+			scopeMode: 'find', // closest, siblings
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state. If left empty, any change will trigger the behavior.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.

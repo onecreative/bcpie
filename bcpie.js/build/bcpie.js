@@ -14448,7 +14448,7 @@ bcpie.extensions.tricks.Date = function(selector,options){
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2016.11.14',
+		version: '2017.03.20',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -15347,7 +15347,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								selector: selector,
 								settings: settings,
 								callback: window[settings.ajaxError],
-								content: error,
+								content: response,
 								status: status,
 								xhr: xhr
 							});
@@ -15933,7 +15933,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 bcpie.extensions.tricks.Secure = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Secure',
-		version: '2016.04.26',
+		version: '2017.03.15',
 		defaults: {
 			unsecureLinks: true,
 			onSessionEnd: '', // callback function to call when a session ends.
@@ -15990,7 +15990,7 @@ bcpie.extensions.tricks.Secure = function(selector,options) {
 	}
 	function unsecureLinks () {
 		if (secure === true) {
-			links = selector.find('a').not('[href^="mailto:"]').not('[href="/LogOutProcess.aspx"]');
+			links = selector.find('a').not('[href^="mailto:"]').not('[href="/LogOutProcess.aspx"]').not('[href^="javascript:"]');
 			for (var i=0; i<links.length; i++) {
 				href = $(links[i]).attr("href") || '';
 				if (href.indexOf('http') === -1 && href.indexOf('//') === -1 && href.indexOf('#') === -1) {
@@ -16068,7 +16068,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 			event: 'click', // specify a comma separated list of events to cause the trigger
 			eventNamespace: 'trigger',
 			scope: body, // specify the parent element to search within for a trigger.
-			scopeMode: 'closest', // find, siblings
+			scopeMode: 'find', // closest, siblings
 			triggerValue: '', // value to be used in change event. Separate multiple values with commas. Or use 'boolean' to indicate a checkbox checked state. If left empty, any change will trigger the behavior.
 			triggerMode: 'or', // 'or' or 'and'. For multiple triggers when event is set to 'change', this determines whether one or all triggers need to meet the condition.
 			triggerAttr: 'value', // attribute to obtain the value from when using triggerValue.
