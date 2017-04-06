@@ -15685,14 +15685,14 @@ String.prototype.toTitleCase = function(){
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2017.02.08',
+		version: '2017.03.25',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
 			expressAttr: 'name',
 			refAttr: 'value', // html attribute or 'text'. Default is 'value'.
 			targetAttr: 'value', // html attribute or 'text'. Default is 'value'.
-			scope: 'form', // Uses 'form' or css selectors as values
+			scope: 'form', // Uses 'form' or css selectors as values, or use 'parent' to get the selector's parent
 			scopeMode: 'closest', // or 'find', 'sibling'
 			checkbox: 'off',
 			checkboxLogic: 'and', // or
@@ -15714,14 +15714,19 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 	if (settings.refAttr === 'value' && typeof settings.ref !== 'undefined') settings.refAttr = settings.ref;
 	if (settings.targetAttr === 'value' && typeof settings.target !== 'undefined') settings.targetAttr = settings.target;
 	if (settings.copyType === 'simple') settings.copyType = 'concat';
-	if (settings.copy !== null && settings.copy.indexOf('[') === -1) settings.copy = '['+settings.copy+']';
+	if (settings.copy === null) {
+		settings.copy = selector.attr(settings.expressAttr);
+		settings.scope = 'parent';
+	}
+	if (settings.copy !== '' && settings.copy.indexOf('[') === -1) settings.copy = '['+settings.copy+']';
 	if (typeof settings.prefix !== 'undefined') settings.copy = settings.prefix + settings.copy;
 	if (typeof settings.suffix !== 'undefined') settings.copy = settings.copy + settings.suffix;
 	if (settings.convert !== 'off') settings.convert = settings.convert.replace('case','').replace('Case','');
 
 	// Setup our variables
 	var copyGroup;
-	if (settings.scopeMode === 'closest') copyGroup = selector.closest(settings.scope);
+	if (settings.scope === 'parent') copyGroup = selector.parent();
+	else if (settings.scopeMode === 'closest') copyGroup = selector.closest(settings.scope);
 	else if (settings.scopeMode === 'sibling' || settings.scopeMode === 'siblings') copyGroup = selector.siblings(settings.scope);
 	else copyGroup = $(doc).find(settings.scope);
 
@@ -16062,7 +16067,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2017.03.03',
+		version: '2017.04.05',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify a comma separated list of events to cause the trigger
@@ -16177,7 +16182,8 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 	else settings.trigger = $(doc).find(settings.scope).find(settings.trigger);
 
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
-		settings.triggerValue = settings.triggerValue.split(',');
+	if (setting.triggerValue !== '' && settings.event === 'click') settings.event = 'change';
+	settings.triggerValue = settings.triggerValue.split(',');
 
 	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);
 	if (settings.offClass !== '') settings.offClass = bcpie.utils.classObject(settings.offClass);

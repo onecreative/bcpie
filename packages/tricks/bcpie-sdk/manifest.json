@@ -28,13 +28,11 @@
 			"id": "jquery",
 			"type": "thirdParty",
 			"packageVersion": 1459191565
-		},
-		{
+		}, {
 			"id": "js-cookie",
 			"type": "thirdParty",
 			"packageVersion": 1459191565
-		},
-		{
+		}, {
 			"id": "moment",
 			"type": "thirdParty",
 			"packageVersion": 1459191565
