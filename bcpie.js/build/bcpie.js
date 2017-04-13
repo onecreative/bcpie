@@ -12918,7 +12918,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.02.27',
+		sdk: '2017.04.11',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -13430,7 +13430,7 @@ win.bcpie = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null // object
 					};
-					if (data.filters.limit === 'all' && data.customerID === null) {
+					if (data.filters !== null && data.filters.limit === 'all' && data.customerID === null) {
 						data.call = bcpie.ajax.crm.customers.get;
 						return bcpie.utils.getAll(data,options);
 					}else {
@@ -13762,9 +13762,8 @@ win.bcpie = {
 				status: data.status || depricatedStatus || null,
 				xhr: data.xhr || depricatedXhr || null
 			};
-			if (typeof data.callback === 'string') data.callback = win[data.callback];
-			if (typeof data.callback === 'function') {
-				return $.when(parameter(data.selector, data.settings, data.callback, data.content, data.status, data.xhr));
+			if ([undefined,null,''].indexOf(data.callback) === -1 && typeof data.callback === 'string' && typeof win[data.callback] === 'function') {
+				return $.when(parameter(data.selector, data.settings, win[data.callback], data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {
@@ -16067,7 +16066,7 @@ bcpie.extensions.tricks.ThemeClean = function(selector,options) {
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2017.04.05',
+		version: '2017.04.08',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify a comma separated list of events to cause the trigger
@@ -16182,7 +16181,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 	else settings.trigger = $(doc).find(settings.scope).find(settings.trigger);
 
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
-	if (setting.triggerValue !== '' && settings.event === 'click') settings.event = 'change';
+	if (settings.triggerValue !== '' && settings.event === 'click') settings.event = 'change';
 	settings.triggerValue = settings.triggerValue.split(',');
 
 	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);

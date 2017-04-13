@@ -79,7 +79,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.02.27',
+		sdk: '2017.04.11',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -591,7 +591,7 @@ win.bcpie = {
 						customerID: data.customerID || null, // integer
 						filters: data.filters || null // object
 					};
-					if (data.filters.limit === 'all' && data.customerID === null) {
+					if (data.filters !== null && data.filters.limit === 'all' && data.customerID === null) {
 						data.call = bcpie.ajax.crm.customers.get;
 						return bcpie.utils.getAll(data,options);
 					}else {
@@ -923,9 +923,8 @@ win.bcpie = {
 				status: data.status || depricatedStatus || null,
 				xhr: data.xhr || depricatedXhr || null
 			};
-			if (typeof data.callback === 'string') data.callback = win[data.callback];
-			if (typeof data.callback === 'function') {
-				return $.when(parameter(data.selector, data.settings, data.callback, data.content, data.status, data.xhr));
+			if ([undefined,null,''].indexOf(data.callback) === -1 && typeof data.callback === 'string' && typeof win[data.callback] === 'function') {
+				return $.when(parameter(data.selector, data.settings, win[data.callback], data.content, data.status, data.xhr));
 			}
 		},
 		filters: function(filters) {

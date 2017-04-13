@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.Trigger = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'Trigger',
-		version: '2017.04.05',
+		version: '2017.04.08',
 		defaults: {
 			trigger: 'self', // use a css selector to specify which element will trigger the behavior. Default is 'self'.
 			event: 'click', // specify a comma separated list of events to cause the trigger
@@ -123,7 +123,7 @@ bcpie.extensions.tricks.Trigger = function(selector,options) {
 	else settings.trigger = $(doc).find(settings.scope).find(settings.trigger);
 
 	if (settings.triggerValue === true || settings.triggerValue === false) settings.triggerValue = settings.triggerValue.toString();
-	if (setting.triggerValue !== '' && settings.event === 'click') settings.event = 'change';
+	if (settings.triggerValue !== '' && settings.event === 'click') settings.event = 'change';
 	settings.triggerValue = settings.triggerValue.split(',');
 
 	if (settings.onClass !== '') settings.onClass = bcpie.utils.classObject(settings.onClass);
