@@ -12918,7 +12918,7 @@ body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.04.11',
+		sdk: '2017.05.13',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -12960,10 +12960,12 @@ win.bcpie = {
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				if (data.path.split('/').pop().indexOf('.') === -1) {
 					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
-					data.path = data.path+'?meta';
+					if (bcpie.utils.isAdmin() === true) data.path = data.path+'?meta';
 				}
-				options.url = '/api/v2/admin/sites/current/storage'+data.path;
-				options.headers = {Authorization: bcpie.ajax.token()};
+				if (bcpie.utils.isAdmin() === true) {
+					options.url = '/api/v2/admin/sites/current/storage'+data.path;
+					options.headers = {Authorization: bcpie.ajax.token()};
+				}else options.url = data.path;
 				options.method = 'GET';
 				if (typeof options.dataType !== 'undefined' && (options.dataType.toLowerCase() === 'binary' || options.dataType.toLowerCase() === 'arraybuffer')) options.processData = false;
 
@@ -12981,13 +12983,14 @@ win.bcpie = {
 				
 				if (data.path.indexOf('/') !== 0) data.path = '/'+data.path;
 				
-				options.url = '/api/v2/admin/sites/current/storage'+data.path;
-				if (data.path.charAt(data.path.length - 1) === '/' || data.type === 'folder') options.url += '?type=folder';
-				else options.url += '?version='+data.version;
-				
-				options.headers = {Authorization: bcpie.ajax.token()};
+				if (bcpie.utils.isAdmin() === true) {
+					options.url = '/api/v2/admin/sites/current/storage'+data.path;
+					if (data.path.charAt(data.path.length - 1) === '/' || data.type === 'folder') options.url += '?type=folder';
+					else options.url += '?version='+data.version;
+					options.headers = {Authorization: bcpie.ajax.token()};
+				}else options.url = data.path;
 
-				if (typeof data.content === 'string' || typeof data.content.length === 'undefined') {
+				if (bcpie.utils.isAdmin() === true && (typeof data.content === 'string' || typeof data.content.length === 'undefined')) {
 					options.method = 'PUT';
 					options.contentType = 'application/octet-stream';
 					options.processData = false;
