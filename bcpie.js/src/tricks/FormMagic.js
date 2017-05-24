@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2017.03.20',
+		version: '2017.05.24',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -50,6 +50,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'ajaxSuccess' : null, // specify a function to run after an Ajax submission 'success' response. Or 'refresh' to reload the page.
 			'ajaxError' : null, // specify a function to run after an Ajax submission 'error' response
 			'ajaxComplete' : null, // specify a function to run after an Ajax submission 'complete' response
+			'async' : true, // if submitMode:ajax, this determines the async mode
 			'onStep' : null, // specify a function to run on multistep step (either direction)
 			'onPrev' : null, // specify a function to run on step backwards
 			'onNext' : null // specify a function to run on step forward
@@ -820,6 +821,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					type: 'POST',
 					url: thisURL,
 					data: selector.serialize(),
+					async: settings.async,
 					success: function(response,status,xhr) {
 
 						// Retrieve Message
