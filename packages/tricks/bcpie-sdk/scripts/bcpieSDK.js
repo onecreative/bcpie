@@ -833,7 +833,7 @@ win.bcpie = {
 		classObject: function(classes) {
 			return {
 				names: classes,
-				selector: '.'+classes.replace(/ /g,'.')
+				selector: '.'+classes.replace(/\s/g,'.')
 			};
 		},
 		xml2json: function(xml) {
@@ -883,7 +883,7 @@ win.bcpie = {
 			var output = '',
 				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-			string = string.replace(/ /g, '-').replace().replace(/-{2,}/g, "-");
+			string = string.replace(/\s/g, '-').replace().replace(/-{2,}/g, "-");
 
 			for (var i = 0; i < string.length; i++) {
 				if (valid.indexOf(string.charAt(i)) != -1) output += string.charAt(i);
@@ -893,7 +893,7 @@ win.bcpie = {
 		camelCase: function(string) {
 			// remove all characters that should not be in a variable name
 			// as well underscores an numbers from the beginning of the string
-			string = string.replace(/([^a-zA-Z0-9_\- ])|^[_0-9]+/g, "").trim().substr(0, 1).toLowerCase() + string.substr(1);
+			string = string.replace(/([^a-zA-Z0-9_\-\s])|^[_0-9]+/g, "").trim().substr(0, 1).toLowerCase() + string.substr(1);
 			// uppercase letters preceeded by a hyphen or a space
 			string = string.replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
 				return c.toUpperCase();

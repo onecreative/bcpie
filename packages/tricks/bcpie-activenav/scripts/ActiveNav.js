@@ -50,7 +50,7 @@ bcpie.extensions.tricks.ActiveNav = function(selector,options,settings) {
 	function classObject(classes) {
 		return {
 			names: classes,
-			selector: '.'+classes.replace(/ /g,'.')
+			selector: '.'+classes.replace(/\s/g,'.')
 		};
 	}
 	function makeActive(activeLinks, first) {
