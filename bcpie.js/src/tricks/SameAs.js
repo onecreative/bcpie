@@ -32,7 +32,7 @@ String.prototype.toTitleCase = function(){
 bcpie.extensions.tricks.SameAs = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'SameAs',
-		version: '2017.03.25',
+		version: '2017.06.24',
 		defaults: {
 			copy: null,
 			copyType: 'concat', // concat,math
@@ -46,6 +46,7 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			clearOnUncheck: true,
 			decimals: 'off', // rounds numbers to specified decimal when copyType is set to math
 			convert: 'off', // 'upper', 'lower', 'title', 'camel' and 'slug'. 'slug' will change the string to an appropriate url path.
+			encoding: 'off', // 'escape', 'unescape', 'url' or 'off'
 			trim: false,
 			bothWays: false,
 			breakOnChange: false, // Requires bothWays:false
@@ -149,6 +150,14 @@ bcpie.extensions.tricks.SameAs = function(selector,options) {
 			else if (settings.convert === 'upper') value = value.toUpperCase();
 			else if (settings.convert === 'camel') value = bcpie.utils.camelCase(value);
 			else if (settings.convert === 'title') value = value.toTitleCase();
+		}
+
+		if (settings.encoding !== 'off' && typeof value !== 'undefined') {
+			if (settings.encoding === 'escape') value = bcpie.utils.escape(value);
+			else if (settings.encoding === 'unescape') value = bcpie.utils.unescape(value);
+			else if (settings.encoding === 'encode') value = bcpie.utils.encode(value);
+			else if (settings.encoding === 'decode') value = bcpie.utils.decode(value);
+			else if (settings.encoding === 'json') value = bcpie.utils.jsonify(value);
 		}
 
 		if (settings.targetAttr === 'text' || settings.targetAttr === 'value') {

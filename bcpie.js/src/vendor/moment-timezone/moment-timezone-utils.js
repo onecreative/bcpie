@@ -1,6 +1,6 @@
 //! moment-timezone-utils.js
-//! version : 0.5.3
-//! author : Tim Wood
+//! version : 0.5.13
+//! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
 

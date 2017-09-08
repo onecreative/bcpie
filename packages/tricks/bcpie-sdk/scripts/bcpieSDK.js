@@ -717,7 +717,20 @@ win.bcpie = {
 	},
 	utils: {
 		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null;},
-		escape: function(str) { return str.replace(/\\/g,"").replace(/[\-\[\]\\/\{\}\(\)\*\+\?\.\^\$\|\'\"]/g,"\\$&"); },
+		escape: function(str) { 
+			var entityMap = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;',
+				'/': '&#x2F;',
+				'`': '&#x60;',
+				'=': '&#x3D;'
+			};
+			return (typeof str === 'undefined') ? '' : String(str).replace(/[&<>"'`=\/]/g, function (s) {return entityMap[s];}); 
+		},
+		unescape: function(str) {return (typeof str === 'undefined') ? '' : $('<div/>').html(str).text();},
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
 			bcpie.utils.jsonify.token = /[^,(:){}\[\]]+/g;
