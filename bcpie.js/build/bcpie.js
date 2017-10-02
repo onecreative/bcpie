@@ -15093,6 +15093,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			IP: { Illegal: "- Please enter a valid IP Address" }
 		};
 	}else if (typeof validatelang === 'undefined') eval($.ajax({url:'/BcJsLang/ValidationFunctions.aspx?lang='+jslang,method:'get',async:false}).responseText);
+	if (selector.find('[type=submit]').length > 0 && settings.fieldNameAttr !== 'type') selector.find('[type=submit]').removeAttr(settings.fieldNameAttr);
 
 	function formfield(strng, actiontype) {
 
