@@ -74,12 +74,18 @@
     });
 })(jQuery);
 
-var doc = document,body = $(doc.body),win = window,settings;
+var doc = document,
+	body = $(doc.body),
+	win = window,settings, 
+	browserLanguage = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
+if (typeof browserLanguage === 'undefined') browserLanguage = 'EN';
+browserLanguage = browserLanguage.toLocaleLowerCase();
+
 body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.05.13',
+		sdk: '2017.09.29',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -89,7 +95,7 @@ win.bcpie = {
 		paramArray: win.location.search.split(/(?=&#?[a-zA-Z0-9])/g),
 		hash: win.location.hash,
 		browser: {
-			language: (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage)).toLocaleLowerCase()
+			language: browserLanguage
 		}
 	},
 	ajax: {
@@ -122,7 +128,7 @@ win.bcpie = {
 				if (data.path.split('/').pop().indexOf('.') === -1) {
 					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
 					if (bcpie.utils.isAdmin() === true) data.path = data.path+'?meta';
-				}
+				}else data.path = data.path+'?version='+moment().format('x');
 				if (bcpie.utils.isAdmin() === true) {
 					options.url = '/api/v2/admin/sites/current/storage'+data.path;
 					options.headers = {Authorization: bcpie.ajax.token()};

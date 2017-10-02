@@ -8,7 +8,7 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2017.05.24',
+		version: '2017.10.02',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
@@ -67,7 +67,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 
 	if (typeof validatelang === 'undefined' && jslang === 'EN') {
-		var validatelang = {
+		validatelang = {
 			Currency: { MustNumber: " must be a number and cannot be empty\n", NoSymbol: " amount you entered must be a number without currency symbol\n" },
 			Number: { MustNumber: " must be a number and cannot be empty\n", NoDecimal: " must be a number (no decimal points) and cannot be empty\n" },
 			Float: { MustNumber: " must be a number and may contain a decimal point.\n" },
@@ -80,7 +80,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		};
 	}else if (typeof validatelang === 'undefined') eval($.ajax({url:'/BcJsLang/ValidationFunctions.aspx?lang='+jslang,method:'get',async:false}).responseText);
 
-		function formfield(strng, actiontype) {
+	function formfield(strng, actiontype) {
 
 		switch (actiontype) {
 			// makes first letter upper and all else lower, removes (.) and (,)
@@ -165,6 +165,31 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					error = "- " + FieldName + validatelang.Number.NoDecimal;
 					return error;
 				}
+			}
+		}
+		return error;
+	}
+
+	function isNumericGreaterThan(s, FieldName, minValue) {
+		var error = "";
+		var inputNumber = 0;
+		
+		if (s.length == 0) {
+			error = "- " + FieldName + validatelang.Number.MustNumber;
+		} else {
+			var i;
+			for (i = 0; i < s.length; i++) {
+				var c = s.charAt(i);
+				if ((c < "0") || (c > "9")) {
+					error = "- " + FieldName + validatelang.Number.NoDecimal;
+					return error;
+				}
+				inputNumber = inputNumber * 10 + parseInt(c);
+			}
+			
+			if (inputNumber <= minValue){
+				error = "- " + FieldName + validatelang.Number.GreaterThan.replace(/\{0\}/g, minValue)  ;
+				return error;
 			}
 		}
 		return error;
@@ -424,14 +449,13 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 	function reCaptchaV2IsInvalid(f, messageWhenRobot) {
 		if (typeof f['g-recaptcha-response'] != "undefined") {
-			var hidden = f['bc-recaptcha-stoken'];
+			var hidden = f['bc-recaptcha-token'];
 			var captchaId = hidden.getAttribute('data-recaptcha-id');
 			var isValid = reCaptchaV2Manager.isInstanceVerified(captchaId);
 
 			if (!isValid)
 				return "- " + messageWhenRobot;
 		}
-
 		return "";
 	}
 
@@ -557,16 +581,15 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 					return;
 				}
 
-				retrieveSTokensWithAjax(_dataObjects.length, function(tokens) {
+				retrieveTokensWithAjax(_dataObjects.length, function(tokens) {
 					for(var i=0; i<_dataObjects.length && i<tokens.length; i++) {
 						var crtDataObject = _dataObjects[i];
-						var hidden = document.getElementById('stoken' + crtDataObject.id);
-						var stoken = tokens[i];
-						hidden.value = stoken;
+
+						var hidden = document.getElementById('token' + crtDataObject.id);
+						hidden.value = tokens[i];
 
 						var renderParams = {
 							'sitekey': crtDataObject.sitekey,
-							'stoken': stoken,
 							'type': crtDataObject.type,
 							'theme': crtDataObject.theme,
 							'size': crtDataObject.size
@@ -582,7 +605,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				});
 			}
 
-			function retrieveSTokensWithAjax(count, callback) {
+			function retrieveTokensWithAjax(count, callback) {
 				var req = new XMLHttpRequest();
 				req.onreadystatechange = function() {
 					if (req.readyState == 4 && req.status == 200) {
@@ -685,18 +708,18 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			Days:				'days'
 		},
 		validation: {
-			select:				function (required) {return checkDropdown(required.value, required.label)},
-			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
-			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label)},
-			email:				function (required) {return checkEmail(required.value)},
-			date:				function (required) {return checkDate(required.value,required.label)},
-			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label)},
-			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : ''},
-			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image")},
-			recaptcha:			function (required) {return reCaptchaV2IsInvalid(selector[0], "Please prove you're not a robot")},
-			currency:			function (required) {return isCurrency(required.value, required.label)},
-			number:				function (required) {return isNumeric(required.value, required.label)},
-			days:				function (required) {return isNumericIfVisible(required.field, required.label)}
+			select:				function (required) {return checkDropdown(required.value, required.label);},
+			radio:				function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label);},
+			checkbox:			function (required) {return checkSelected(selector.find('['+settings.fieldNameAttr+'="'+required.name+'"]'), required.label);},
+			email:				function (required) {return checkEmail(required.value);},
+			date:				function (required) {return checkDate(required.value,required.label);},
+			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label);},
+			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : '';},
+			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image");},
+			recaptcha:			function (required) {return '';}, // this is handled differently.
+			currency:			function (required) {return isCurrency(required.value, required.label);},
+			number:				function (required) {return isNumeric(required.value, required.label);},
+			days:				function (required) {return isNumericIfVisible(required.field, required.label);}
 		}
 	};
 
@@ -708,9 +731,8 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		required.value = (typeof required.field.val() === 'undefined' || required.field.val() === null) ? '' : required.field.val();
 
 		// verify field types and make adjustments to them as needed.
-		if (required.type === 'text' || required.type === 'hidden' || required.type === 'password') {
-			required.type = fieldCheck.types[required.name] || 'text';
-		}
+		required.type = fieldCheck.types[required.name] || required.type || 'text';
+		if (required.type === 'hidden' || required.type === 'password') required.type = 'text';
 
 		for (var i=0; i<settings.customErrorFields.length; i++) {
 			if (required.field.is(settings.customErrorFields[i])) {
@@ -751,7 +773,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				case 'radio' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
 				case 'checkbox' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
 				case 'captcha' : validationTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
-				case 'recaptcha' : validationTarget = (selector.find('#g-recaptcha-response').length > 0) ? selector.find('#g-recaptcha-response') : required.field; break;
+				case 'recaptcha' : validationTarget = (selector.find('.g-recaptcha-response').length > 0) ? selector.find('.g-recaptcha-response') : required.field; break;
 				default : validationTarget = required.field;
 			}
 
@@ -783,7 +805,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
 		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
 		validationTarget.removeClass(validationClass).unwrap();
-		if (rdoChkFlag == true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
+		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
@@ -859,10 +881,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								else if(responseMessage.find('.webappsearchresults').length > 0) responseMessage = responseMessage.find('.webappsearchresults').html();
 							}
 						}
-						if (typeof responseMessage === 'undefined' || responseMessage === '') {
-							if (errorCount > 0) responseMessage = 'Successful.';
-							else responseMessage = 'Unsuccessful.';
-						}
+						if (typeof responseMessage === 'undefined') responseMessage = '';
 
 						// Response Status
 						if (settings.beforeResponseMode !== 'off' && settings.beforeResponseMessage.length > 0) settings.beforeResponseTarget.remove();
@@ -874,7 +893,6 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								// put dialog code here
 							}else {
 								if (settings.responseTarget !== selector) settings.responseTarget = body.find(settings.responseTarget);
-							
 								if (settings.responseMode === 'replace') settings.responseTarget = settings.responseTarget.html(responseMessage).fadeIn();
 								else if (settings.responseMode === 'append') settings.responseTarget = settings.responseTarget.append(responseMessage).fadeIn();
 								else if (settings.responseMode === 'prepend') settings.responseTarget = settings.responseTarget.prepend(responseMessage).fadeIn();
@@ -882,6 +900,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 								else if (settings.responseMode === 'after') settings.responseTarget = settings.responseTarget.after(responseMessage).fadeIn();
 							}
 						}
+						
 						if (errorCount === 0) {
 							if (settings.formOnSuccessResponse === 'remove') selector.remove();
 							else if (settings.formOnSuccessResponse === 'hide') selector.fadeOut(0);
@@ -1153,6 +1172,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				runValidation(required[i],i,required.length);
 			}
 		}
+		if (selector.find('.g-recaptcha-response').length > 0 && grecaptcha.getResponse() === '') errorCount ++;
 		if (errorCount === 0) {
 			if (settings.validationSuccess !== null) {
 				$.when(bcpie.utils.executeCallback({

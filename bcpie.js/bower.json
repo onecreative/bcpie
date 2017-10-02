@@ -5,7 +5,7 @@
 	"authors": [
 		"Adam Cook <adam@onecreative.pro>"
 	],
-	"main": "build/bcpie.min.js",
+	"main": "build/bcpie.js",
 	"license": "MIT",
 	"private": true,
 	"ignore": [

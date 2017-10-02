@@ -1,0 +1,39 @@
+{
+	"id": "foundation-6",
+	"name": "Foundation 6",
+	"packageVersion": 1464361119,
+	"description": "The most advanced responsive front-end framework in the world.",
+	"distributor": {
+		"name": "ONE Creative",
+		"website": "onecreative.pro"
+	},
+	"image": "foundation.png",
+	"type": "frameworks",
+	"assets": [
+		{
+			"filename": "foundation.js", 
+			"type": "scripts", 
+			"location": "foot",
+			"version": "6.4.3",
+			"docs": "http://foundation.zurb.com/sites/docs/"
+		},
+		{
+			"filename":"foundation.css", 
+			"type":"styles",
+			"version": "6.4.3",
+			"docs": "http://foundation.zurb.com/sites/docs/"
+		}
+	],
+	"requires": [
+		{
+			"id": "jquery",
+			"type": "thirdParty",
+			"packageVersion": 1459191565
+		},
+		{
+			"id": "what-input",
+			"type": "thirdParty",
+			"packageVersion": 1459191565
+		}
+	]
+}

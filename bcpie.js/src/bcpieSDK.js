@@ -74,12 +74,18 @@
     });
 })(jQuery);
 
-var doc = document,body = $(doc.body),win = window,settings;
+var doc = document,
+	body = $(doc.body),
+	win = window,settings, 
+	browserLanguage = (navigator.languages) ? navigator.languages[0] : (navigator.language || navigator.userLanguage);
+if (typeof browserLanguage === 'undefined') browserLanguage = 'EN';
+browserLanguage = browserLanguage.toLocaleLowerCase();
+
 body.data('bcpie',{});
 body.data('bcpie').ajax = {}; // for ajax results
 win.bcpie = {
 	active: {
-		sdk: '2017.05.13',
+		sdk: '2017.09.29',
 		tricks: {} // populated automatically
 	},
 	globals: {
@@ -89,7 +95,7 @@ win.bcpie = {
 		paramArray: win.location.search.split(/(?=&#?[a-zA-Z0-9])/g),
 		hash: win.location.hash,
 		browser: {
-			language: (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage)).toLocaleLowerCase()
+			language: browserLanguage
 		}
 	},
 	ajax: {
@@ -122,7 +128,7 @@ win.bcpie = {
 				if (data.path.split('/').pop().indexOf('.') === -1) {
 					if (data.path.charAt(data.path.length - 1) !== '/') data.path = data.path+'/';
 					if (bcpie.utils.isAdmin() === true) data.path = data.path+'?meta';
-				}
+				}else data.path = data.path+'?version='+moment().format('x');
 				if (bcpie.utils.isAdmin() === true) {
 					options.url = '/api/v2/admin/sites/current/storage'+data.path;
 					options.headers = {Authorization: bcpie.ajax.token()};
@@ -717,7 +723,20 @@ win.bcpie = {
 	},
 	utils: {
 		isAdmin: function() { return bcpie.ajax.token().length > 10 && win.location.origin.match(/https:\/\/.*?-apps.worldsecuresystems.com/) !== null;},
-		escape: function(str) { return str.replace(/\\/g,"").replace(/[\-\[\]\\/\{\}\(\)\*\+\?\.\^\$\|\'\"]/g,"\\$&"); },
+		escape: function(str) { 
+			var entityMap = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;',
+				'/': '&#x2F;',
+				'`': '&#x60;',
+				'=': '&#x3D;'
+			};
+			return (typeof str === 'undefined') ? '' : String(str).replace(/[&<>"'`=\/]/g, function (s) {return entityMap[s];}); 
+		},
+		unescape: function(str) {return (typeof str === 'undefined') ? '' : $('<div/>').html(str).text();},
 		jsonify: function(str) {
 			bcpie.utils.jsonify.brace = /^[{\[]/;
 			bcpie.utils.jsonify.token = /[^,(:){}\[\]]+/g;
@@ -833,7 +852,7 @@ win.bcpie = {
 		classObject: function(classes) {
 			return {
 				names: classes,
-				selector: '.'+classes.replace(/ /g,'.')
+				selector: '.'+classes.replace(/\s/g,'.')
 			};
 		},
 		xml2json: function(xml) {
@@ -883,7 +902,7 @@ win.bcpie = {
 			var output = '',
 				valid = '-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-			string = string.replace(/ /g, '-').replace().replace(/-{2,}/g, "-");
+			string = string.replace(/\s/g, '-').replace().replace(/-{2,}/g, "-");
 
 			for (var i = 0; i < string.length; i++) {
 				if (valid.indexOf(string.charAt(i)) != -1) output += string.charAt(i);
@@ -893,7 +912,7 @@ win.bcpie = {
 		camelCase: function(string) {
 			// remove all characters that should not be in a variable name
 			// as well underscores an numbers from the beginning of the string
-			string = string.replace(/([^a-zA-Z0-9_\- ])|^[_0-9]+/g, "").trim().substr(0, 1).toLowerCase() + string.substr(1);
+			string = string.replace(/([^a-zA-Z0-9_\-\s])|^[_0-9]+/g, "").trim().substr(0, 1).toLowerCase() + string.substr(1);
 			// uppercase letters preceeded by a hyphen or a space
 			string = string.replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
 				return c.toUpperCase();
