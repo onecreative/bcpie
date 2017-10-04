@@ -8,13 +8,12 @@
 bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	var settings = bcpie.extensions.settings(selector,options,{
 		name: 'FormMagic',
-		version: '2017.10.02',
+		version: '2017.10.04',
 		defaults: {
 			'submitMode' : 'standard', // 'ajax', 'webapp', 'webapp.item', 'off'
 			'submitEvent' : 'submit',
 			'submitField' : '[type="submit"]', // comma separated list of fields that can be used to submit the form. CSS syntax.
 			'validateMode' : 'inline', // 'alert', 'off'
-			'inlineSuccess' : true, // When true, inline validation will also show success messages, not just errors.
 			'steps' : '', // multistep container selectors, separated by comma
 			'prev' : '', // back button selector for multistep form
 			'next' : '', // Continue button selector for multistep form
@@ -31,17 +30,18 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			'formOnErrorResponse' : null, // null, 'hide', 'show'
 			'buttonOnSubmit' : 'off', // disable,hide
 			'buttonOnResponse' : 'off', // disable,hide
-			'requiredClass' : 'required',
-			'errorGroupClass' : 'error-group',
+			'validationGroupElement' : 'div', // the default parent element to receive the validationGroupClass. It will be the closest matching parent.
+			'validationGroupClass' : 'validation-group',
+			'validationMessageElement' : 'small',
+			'validationMessageClass' : 'validation-message',
+			'validationInputClass' : 'validation-input',
 			'errorClass' : 'error',
-			'successGroupClass' : 'success-group',
-			'successClass' : 'success',
+			'validClass' : 'valid',
+			'requiredClass' : 'required',
 			'systemMessageClass' : 'system-message',
 			'systemErrorMessageClass' : 'system-error-message',
 			'fieldTitleAttr' : 'label', // or specify a field attribute
 			'fieldNameAttr' : 'name', // specify which attribute has the field name
-			'errorGroupElement' : 'div',
-			'errorMessageElement' : 'small',
 			'customErrorFields' : '', // takes a comma delimited list of selectors to match against during validation
 			'customError' : null, // specify a custom validation function to run against a comma delimeted list of selectors
 			'beforeValidation' : null, // specify a function to run before validation
@@ -569,92 +569,89 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 		return validatelang.IP.Illegal;
 	}
 
-
 	/* reCaptchaV2Manager - manages all ReCaptcha V2 operations 
 	*/
-	if (typeof reCaptchaV2Manager == 'undefined') {
-		var reCaptchaV2Manager = (function(){
-			var _controlInstances = {};
-			var _dataObjects = [];
+	var reCaptchaV2Manager = (function(){
+		var _controlInstances = {};
+		var _dataObjects = [];
 
-			function initializeControls() {
-				if (_dataObjects.length == 0) {
-					return;
-				}
-
-				retrieveTokensWithAjax(_dataObjects.length, function(tokens) {
-					for(var i=0; i<_dataObjects.length && i<tokens.length; i++) {
-						var crtDataObject = _dataObjects[i];
-
-						var hidden = document.getElementById('token' + crtDataObject.id);
-						hidden.value = tokens[i];
-
-						var renderParams = {
-							'sitekey': crtDataObject.sitekey,
-							'type': crtDataObject.type,
-							'theme': crtDataObject.theme,
-							'size': crtDataObject.size
-						};
-
-						if (typeof _controlInstances[crtDataObject.id] == "undefined") {
-							_controlInstances[crtDataObject.id] = grecaptcha.render('recaptcha' + crtDataObject.id, renderParams);
-						}
-						else {
-							grecaptcha.reset(_controlInstances[crtDataObject.id], renderParams);
-						}
-					}
-				});
+		function initializeControls() {
+			if (_dataObjects.length == 0) {
+				return;
 			}
 
-			function retrieveTokensWithAjax(count, callback) {
-				var req = new XMLHttpRequest();
-				req.onreadystatechange = function() {
-					if (req.readyState == 4 && req.status == 200) {
-						var tokens = req.responseText.split(';');
-						callback(tokens);
-					}
-				};
+			retrieveTokensWithAjax(_dataObjects.length, function(tokens) {
+				for(var i=0; i<_dataObjects.length && i<tokens.length; i++) {
+					var crtDataObject = _dataObjects[i];
 
-				req.open('GET', '/CaptchaHandler.ashx?RegenerateV2=true&count=' + count + '&rand=' + Math.random(), true);
-				req.send();
-			}
+					var hidden = document.getElementById('token' + crtDataObject.id);
+					hidden.value = tokens[i];
 
-			return {
-				/* Needs to be assigned as the onload handler for the google reCaptcha V2 library.
-				*/
-				onLoadHandler: function() {
-					window.setTimeout(initializeControls, 1);
-				},
-				/* Use this method to register the parameters for each reCaptcha instance that will be rendered as a control 
-				** during the onLoadHandler.
-				*/
-				registerInstance: function(data) {
-					if(data) {
-						_dataObjects.push(data);
-					}
-				},
-				/* Call this method reinitialize all ReCaptcha V2 controls corresponding to the registered instances.
-				*/
-				reloadControls: function() {
-					initializeControls();
-				},
-				/* Checks if the validation has been performed on the given captcha control.
-				*/
-				isInstanceVerified: function(captchaId){
-					if(typeof _controlInstances[captchaId] != "undefined") {
-						var googleAnswer = grecaptcha.getResponse(_controlInstances[captchaId]);
+					var renderParams = {
+						'sitekey': crtDataObject.sitekey,
+						'type': crtDataObject.type,
+						'theme': crtDataObject.theme,
+						'size': crtDataObject.size
+					};
 
-						// The google answer will be an empty string if the recaptcha instance has 
-						// not been validated
-						return googleAnswer.trim().length != 0;
+					if (typeof _controlInstances[crtDataObject.id] == "undefined") {
+						_controlInstances[crtDataObject.id] = grecaptcha.render('recaptcha' + crtDataObject.id, renderParams);
 					}
 					else {
-						return false;
+						grecaptcha.reset(_controlInstances[crtDataObject.id], renderParams);
 					}
 				}
+			});
+		}
+
+		function retrieveTokensWithAjax(count, callback) {
+			var req = new XMLHttpRequest();
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					var tokens = req.responseText.split(';');
+					callback(tokens);
+				}
 			};
-		})();
-	}
+
+			req.open('GET', '/CaptchaHandler.ashx?RegenerateV2=true&count=' + count + '&rand=' + Math.random(), true);
+			req.send();
+		}
+
+		return {
+			/* Needs to be assigned as the onload handler for the google reCaptcha V2 library.
+			*/
+			onLoadHandler: function() {
+				window.setTimeout(initializeControls, 1);
+			},
+			/* Use this method to register the parameters for each reCaptcha instance that will be rendered as a control 
+			** during the onLoadHandler.
+			*/
+			registerInstance: function(data) {
+				if(data) {
+					_dataObjects.push(data);
+				}
+			},
+			/* Call this method reinitialize all ReCaptcha V2 controls corresponding to the registered instances.
+			*/
+			reloadControls: function() {
+				initializeControls();
+			},
+			/* Checks if the validation has been performed on the given captcha control.
+			*/
+			isInstanceVerified: function(captchaId){
+				if(typeof _controlInstances[captchaId] != "undefined") {
+					var googleAnswer = grecaptcha.getResponse(_controlInstances[captchaId]);
+
+					// The google answer will be an empty string if the recaptcha instance has 
+					// not been validated
+					return googleAnswer.trim().length != 0;
+				}
+				else {
+					return false;
+				}
+			}
+		};
+	})();
 
 	if (settings.steps === '' && typeof settings.containers !== 'undefined') settings.steps = settings.containers;
 	if (settings.prev === ''  && typeof settings.backButton !== 'undefined') settings.prev = settings.backButton;
@@ -676,7 +673,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 
 	// setup some local variables
 	var requiredFields,required=[],submitCount=0,
-		errorArray=[],errorElement='<'+settings.errorGroupElement+' class="'+settings.errorGroupClass+'"></'+settings.errorGroupElement+'>',newRequired,pass={},
+		errorArray=[],errorElement='<'+settings.validationGroupElement+' class="'+settings.validationGroupClass+'"></'+settings.validationGroupElement+'>',newRequired,pass={},
 		validationTarget,successMessage,messageElement,selectorResponse,onChangeBinding,errorElementExists,errorCount=0,autoRequire,currentName,submitField,
 		paymentMethods = selector.find('['+settings.fieldNameAttr+'="PaymentMethodType"]'), onlyCCMethod = false,
 		multistep = {containers: selector.find(settings.steps), step: 0},
@@ -717,7 +714,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 			password:			function (required) {pass.value = required.value; pass.label = required.label; return (required.value !== "" && required.value.length < 6) ? "- Password must be 6 characters or longer" : isEmpty(required.value,required.label);},
 			passwordconfirm:	function (required) {return (pass.value.length > 0 && pass.value !== required.value) ? pass.label+' and '+required.label+' do not match' : '';},
 			captcha:			function (required) {return captchaIsInvalid(selector[0], "Enter Word Verification in box", "Please enter the correct Word Verification as seen in the image");},
-			recaptcha:			function (required) {return '';}, // this is handled differently.
+			recaptcha:			function (required) {return (grecaptcha.getResponse($('.g-recaptcha').index(selector.find('.g-recaptcha'))) === '') ? 'Please prove you\'re not a robot' : '';},
 			currency:			function (required) {return isCurrency(required.value, required.label);},
 			number:				function (required) {return isNumeric(required.value, required.label);},
 			days:				function (required) {return isNumericIfVisible(required.field, required.label);}
@@ -770,43 +767,21 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 				alert(errorArray);
 			}
 		}else if (settings.validateMode==='inline') {
-			switch (required.type) {
-				case 'radio' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag=true; break;
-				case 'checkbox' : validationTarget = selector.find('label[for="'+required.name+'"]'); rdoChkFlag = true; break;
-				case 'captcha' : validationTarget = (selector.find('#recaptcha_widget_div').length > 0) ? selector.find('#recaptcha_widget_div') : required.field; break;
-				case 'recaptcha' : validationTarget = (selector.find('.g-recaptcha-response').length > 0) ? selector.find('.g-recaptcha-response') : required.field; break;
-				default : validationTarget = required.field;
-			}
-
-			errorElementExists = false;
-			successElementExists = false;
-			if (validationTarget.parent().is(settings.errorGroupElement+'.'+settings.errorGroupClass.replace(' ','.'))) errorElementExists = true;
-			if (validationTarget.parent().is(settings.successGroupElement+'.'+settings.successGroupClass.replace(' ','.'))) successElementExists = true;
-
-			if (required.message !=='') {
-				if (errorElementExists === true) {
-					// just replace the error message
-					validationTarget.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).text(required.message);
+			validationTarget = (required.field.is('[data-validation-group]') && required.field.data('validationGroup') !== '') ? required.field.closest(required.field.data('validationGroup')) : required.field.closest(settings.validationGroupElement);
+			if (validationTarget.length > -1) {
+				if (!validationTarget.is('.'+settings.validationGroupClass)) validationTarget.addClass(settings.validationGroupClass);
+				if (!required.field.is('.'+settings.validationInputClass)) required.field.addClass(settings.validationInputClass);
+				if (validationTarget.find('.'+settings.validationMessageClass).length === 0) validationTarget.append('<'+settings.validationMessageElement+' class="'+settings.validationMessageClass+'" />');
+				validationTarget.find('.'+settings.validationMessageClass).text(required.message);
+				if (required.message !== '') {
+					if (validationTarget.is('.'+settings.validClass)) validationTarget.removeClass(settings.validClass);
+					if (!validationTarget.is('.'+settings.errorClass)) validationTarget.addClass(settings.errorClass);
 				}else {
-					if (successElementExists === true) removeInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
-					addInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
+					if (validationTarget.is('.'+settings.errorClass)) validationTarget.removeClass(settings.errorClass);
+					if (!validationTarget.is('.'+settings.validClass)) validationTarget.addClass(settings.validClass);
 				}
-			}else {
-				if (errorElementExists === true) removeInlineValidation(required,validationTarget,settings.errorGroupElement,settings.errorGroupClass,settings.errorMessageElement,settings.errorClass,rdoChkFlag);
-				if (settings.inlineSuccess === true) addInlineValidation(required,validationTarget,settings.successGroupElement,settings.successGroupClass,settings.successMessageElement,settings.successClass,rdoChkFlag);
 			}
 		}
-	}
-	function addInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
-		// add the message into new element
-		validationTarget.addClass(validationClass).wrap('<'+messageGroupElement+' class="'+messageGroupClass+'" />');
-		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').addClass(validationClass);
-		validationTarget.parent().append('<'+messageElement+' class="'+validationClass+'">'+required.message+'</'+messageElement+'>');
-	}
-	function removeInlineValidation(required,validationTarget,messageGroupElement,messageGroupClass,messageElement,validationClass,rdoChkFlag) {
-		validationTarget.siblings(messageElement+'.'+validationClass.replace(' ','.')).remove();
-		validationTarget.removeClass(validationClass).unwrap();
-		if (rdoChkFlag === true) selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(validationClass);
 	}
 	function buttonSubmitBehaviour(behavior){
 		var submitButton = selector.find('[type="submit"]');
@@ -1042,7 +1017,7 @@ bcpie.extensions.tricks.FormMagic = function(selector,options) {
 	}
 	function resetRequiredField(required) {
 		if (required.field.is('.'+settings.errorClass)) {
-			required.field.siblings(settings.errorMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
+			required.field.siblings(settings.validationMessageElement+'.'+settings.errorClass.replace(' ','.')).remove();
 			required.field.removeClass(settings.errorClass).unwrap();
 			if (required.type === 'checkbox' || required.type === 'radio') selector.find('['+settings.fieldNameAttr+'="' + required.name + '"]').removeClass(settings.errorClass);
 			--errorCount;
