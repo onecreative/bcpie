@@ -13,37 +13,37 @@
 		{
 			"filename":"font-awesome.css", 
 			"type":"styles",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"fontawesome-webfont.eot", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"fontawesome-webfont.svg", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"fontawesome-webfont.ttf", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"fontawesome-webfont.woff", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"fontawesome-webfont.woff2", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}, {
 			"filename":"FontAwesome.otf", 
 			"type":"fonts",
-			"version": "4.5.0",
+			"version": "4.7.0",
 			"docs": "https://fortawesome.github.io/Font-Awesome/"
 		}
 	],

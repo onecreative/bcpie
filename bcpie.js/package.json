@@ -11,7 +11,7 @@
     "url": "https://github.com/onecreative/bcpie.git"
   },
   "author": "",
-  "license": "Adam Cook <adam@bcpie.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/onecreative/bcpie/issues"
   },
@@ -29,6 +29,18 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.11",
-    "streamqueue": "^1.1.1"
+    "streamqueue": "^1.1.1",
+    "@bower_components/alertify-js": "MohammadYounes/AlertifyJS#*",
+    "@bower_components/jquery": "jquery/jquery-dist#^1.5",
+    "@bower_components/jquery.mobilephonenumber": "git://github.com/stripe/jquery.mobilePhoneNumber.git#*",
+    "@bower_components/js-cookie": "js-cookie/js-cookie#*",
+    "@bower_components/js-expression-eval": "silentmatt/js-expression-eval#*",
+    "@bower_components/moment": "moment/moment#>= 2.9.0",
+    "@bower_components/moment-duration-format": "git://github.com/jsmreese/moment-duration-format.git#*",
+    "@bower_components/moment-parseformat": "gr2m/moment-parseformat#*",
+    "@bower_components/moment-timezone": "moment/moment-timezone#*"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
   }
 }
